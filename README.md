@@ -54,6 +54,34 @@ Choose your graphics and controls, then **Save & Exit**.
 
 For Raspberry Pi, use a 64-bit Linux installation with a working desktop graphics stack. Hardware GLES support depends on the installed graphics libraries and drivers; see the package’s platform notes.
 
+## Screenshots
+
+Click any screenshot to open the full image.
+
+<p align="center">
+  <a href="docs/screenshots/EUR.png"><img src="docs/screenshots/EUR.png" width="18%" alt="European theatre"></a>
+  <a href="docs/screenshots/PHIL.png"><img src="docs/screenshots/PHIL.png" width="18%" alt="Philippines theatre"></a>
+  <a href="docs/screenshots/ARCTIC.png"><img src="docs/screenshots/ARCTIC.png" width="18%" alt="Arctic theatre"></a>
+  <a href="docs/screenshots/FLIGHT.png"><img src="docs/screenshots/FLIGHT.png" width="18%" alt="In flight"></a>
+  <a href="docs/screenshots/KIOWA.png"><img src="docs/screenshots/KIOWA.png" width="18%" alt="Kiowa helicopter"></a>
+</p>
+
+<p align="center">
+  <a href="docs/screenshots/TARGET_CAM.png"><img src="docs/screenshots/TARGET_CAM.png" width="18%" alt="Target camera"></a>
+  <a href="docs/screenshots/SCUD.png"><img src="docs/screenshots/SCUD.png" width="18%" alt="Scud launcher"></a>
+  <a href="docs/screenshots/SCUD_FROM_HUD.png"><img src="docs/screenshots/SCUD_FROM_HUD.png" width="18%" alt="Scud target from the cockpit"></a>
+  <a href="docs/screenshots/ROCKETS.png"><img src="docs/screenshots/ROCKETS.png" width="18%" alt="Rockets in flight"></a>
+  <a href="docs/screenshots/MAST.png"><img src="docs/screenshots/MAST.png" width="18%" alt="Mast-mounted sight"></a>
+</p>
+
+<p align="center">
+  <a href="docs/screenshots/SplashScreenGs2000.png"><img src="docs/screenshots/SplashScreenGs2000.png" width="18%" alt="Title"></a>
+  <a href="docs/screenshots/BASE_OVERVIEW.png"><img src="docs/screenshots/BASE_OVERVIEW.png" width="18%" alt="Airbase overview"></a>
+  <a href="docs/screenshots/BRIDGE.png"><img src="docs/screenshots/BRIDGE.png" width="18%" alt="Bridge and river"></a>
+  <a href="docs/screenshots/BRIEFING.png"><img src="docs/screenshots/BRIEFING.png" width="18%" alt="Mission briefing"></a>
+  <a href="docs/screenshots/RESOLUTION.png"><img src="docs/screenshots/RESOLUTION.png" width="18%" alt="Rendering resolution"></a>
+</p>
+
 ## Controller setup (Full HOTAS Support)
 
 Select your joystick or HOTAS, use **Basic Controls** to assign the main axes and buttons, and use **Advanced Controls** for individual commands. **Collective Mode** chooses how the controller changes lift or height; the on-screen preview helps check assignments before flying.
@@ -172,22 +200,6 @@ See [testing instructions](test/TESTING.md), [save-format documentation](distrib
 Please include the version/build, operating system, relevant graphics or controller settings, and the shortest steps that reproduce the problem. For an in-mission issue, attach the related `.g2r` recording when available and note the mission time. Include any automatically generated report archive relevant to the failure.
 
 Do not upload original game data files with bug reports or contributions.
-
-<!-- Maintainer: add the repository’s issue tracker link here. -->
-
-## Screenshots
-
-### Mission preparation
-
-Choose aircraft, fuel and ordnance for the flight.
-
-![Squadron aircraft and weapon loadout screen](docs/screenshots/LoadoutMenu.png)
-
-### The familiar introduction
-
-The original title sequence, rendered using the player’s own game data.
-
-![Gunship 2000 title sequence running in GoShip 2000](docs/screenshots/SplashScreenGs2000.png)
 
 ## Licence and credits
 
