@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # GoShip 2000
 
 **Gunship 2000 (MS-DOS, 1991) port for modern desktop platforms**
@@ -232,3 +233,6 @@ Reverse-engineering research for this project was supported by **[REA — Revers
 - [Third-party licences and notices](Licenses.txt)
 
 [^tested-version]: Compatibility has been tested only with the Steam edition of **Gunship 2000, version 469.085 (Islands & Ice)**. Other releases, language editions and patched versions have not been tested; compatibility is not guaranteed.
+=======
+
+>>>>>>> origin/main
