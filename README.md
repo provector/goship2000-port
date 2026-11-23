@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # GoShip 2000
 
 **Gunship 2000 (MS-DOS, 1991) port for modern desktop platforms**
@@ -9,7 +8,7 @@
 
 **Requirements**: 1.5Ghz Potato CPU (Slowest tested on was AMD GX-215JJ) and 1Gb (linux)/2Gb (windows) of RAM for Legacy Mode (320x200, 10fps/60fps). Recommended 4Gb of RAM for smooth operations and large replays, and a half decent modern cpu for higher resolutions.
 
-**DIRECT DOWNLOAD (Latest Release 1.RC1-W3.3)**: [*[Windows]()*] [*[Linux]()*] [*[Arm64]()*] (*Upon first run game will do a one time asset processing, it might take a moment*)
+**DIRECT DOWNLOAD (Latest Release 1.RC1-W3.3)**: [*[Windows x64](../../releases/download/1.RC3-W3/goship2000-prod-windows-amd64-v1.RC1-W3.3.zip)*] [*[Linux x64](../../releases/download/1.RC3-W3/goship2000-prod-linux-amd64-v1.RC1-W3.3.tar.gz)*] [*[Arm64](../../releases/download/1.RC3-W3/goship2000-prod-linux-arm64-v1.RC1-W3.3.tar.gz)*] (*Upon first run game will do a one time asset processing, it might take a moment*)
 
 *For almost 30 years **Gunship 2000** had a special place in my heart. Fond of childhood memories I revisited it now and then to replay the experience, but even on the original retro hardware the experience had some issue surviving the tooth of time. Now after a lot of work put into getting this port to life I can say with all confidence that Gunship 2000 **was way ahead of its time** in the technical terms. Designed to work on 286 cpu with no coprocessor and 640kb of RAM, the game full potential was locked for decades behind 10 ticks per second engine lock. (It's a shame Island&Ice addition from 1993 didn't address those issues like the amiga version did). As a programmer it was my dream to address those problems with game for years, but due to the lack of the source code anywhere on the internet (it was most likely lost in time) and the ancient assembly programming code in the original, the sheer scope of that project was beyond my available time and assembly analysis abilities. Now thanks to the recent advancements in large language models and reverse engineering frameworks this dream project finally became a reality, bringing **60 fps** and **floating point** rendering pipeline and **higher resolutions** with **Full HOTAS Support**. Playing the game with HOTAS on higher settings now really feels like a **true helicopter simulator** (for its time). As of the time of writing this already hundreds of compute hours went into the project, including countless hours of human retesting/document reading and analysis, dosbox comparisons, long nights...*
 
@@ -233,6 +232,3 @@ Reverse-engineering research for this project was supported by **[REA — Revers
 - [Third-party licences and notices](Licenses.txt)
 
 [^tested-version]: Compatibility has been tested only with the Steam edition of **Gunship 2000, version 469.085 (Islands & Ice)**. Other releases, language editions and patched versions have not been tested; compatibility is not guaranteed.
-=======
-
->>>>>>> origin/main
