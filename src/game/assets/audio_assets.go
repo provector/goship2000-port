@@ -238,6 +238,9 @@ func (reader *preparedReader) loadAudio() (*AudioAssets, error) {
 			if reader.outputs[o.Path] != o {
 				return nil, fmt.Errorf("unregistered packed music %s", t.Key)
 			}
+			if reader.observed != nil {
+				reader.observed[o.Path] = true
+			}
 			music, e := reader.packs.music(o, t.Frames, t.LoopStartFrame)
 			if e != nil {
 				return nil, e

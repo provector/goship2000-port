@@ -19,28 +19,30 @@ import (
 // OfficeAssets owns immutable prepared data. Scene composition always copies a
 // picture before changing it; native scratch-bank aliasing is not a disk asset.
 type OfficeAssets struct {
-	Root     string
-	Metadata OfficeMetadata
-	Images   map[string][]byte
-	Palette  color.Palette
-	Fonts    map[int]*BitmapFont
-	Menus    *MenuAssets
-	Startup  *StartupAssets
-	Missions *MissionAssets
-	Audio    *AudioAssets
-	World    *worlddata.Bundle
-	Cockpit  *cockpitdata.Assets
-	Debrief  *DebriefAssets
-	Replay   *ReplayAssets
-	Editor   *EditorAssets
+	PreparationVersion int `json:"-"`
+	Root               string
+	Metadata           OfficeMetadata
+	Images             map[string][]byte
+	Palette            color.Palette
+	Fonts              map[int]*BitmapFont
+	Menus              *MenuAssets
+	Startup            *StartupAssets
+	Missions           *MissionAssets
+	Audio              *AudioAssets
+	World              *worlddata.Bundle
+	Cockpit            *cockpitdata.Assets
+	Debrief            *DebriefAssets
+	Replay             *ReplayAssets
+	Editor             *EditorAssets
 }
 
 type preparedReader struct {
-	packs     *packedStore
-	observed  map[string]bool
-	canonical map[string]leafProof
-	root      string
-	outputs   map[string]Output
+	historical *historicalProjection
+	packs      *packedStore
+	observed   map[string]bool
+	canonical  map[string]leafProof
+	root       string
+	outputs    map[string]Output
 }
 
 func newPreparedReader(root string) (*preparedReader, error) {
@@ -182,7 +184,7 @@ func (reader *preparedReader) loadOffice() (*OfficeAssets, error) {
 	if err != nil {
 		return nil, err
 	}
-	assets := &OfficeAssets{Root: reader.root, Images: map[string][]byte{}, Fonts: map[int]*BitmapFont{}}
+	assets := &OfficeAssets{PreparationVersion: manifest.PreparationVersion, Root: reader.root, Images: map[string][]byte{}, Fonts: map[int]*BitmapFont{}}
 	if err = json.Unmarshal(raw, &assets.Metadata); err != nil {
 		return nil, fmt.Errorf("office metadata: %w", err)
 	}

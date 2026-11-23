@@ -491,7 +491,7 @@ func exportOfficeMetadata(out *OutputWriter, alloc *pathAllocator, m *Manifest) 
 	for _, name := range []string{"BASE.PIC", "BASE_AN.PIC", "BASE_AN1.PIC", "BASE_AN2.PIC", "POINTER.PIC"} {
 		found := false
 		for _, r := range m.Resources {
-			if r.name == name && r.Source.SHA256 == baseCatalogHash && r.Source.Kind == "archive_entry" {
+			if r.name == name && r.fromCatalog("GS2000.CAT") && r.Source.Kind == "archive_entry" {
 				doc.Assets = append(doc.Assets, officePreparedAsset(r, false))
 				found = true
 				break
@@ -511,7 +511,7 @@ func exportOfficeMetadata(out *OutputWriter, alloc *pathAllocator, m *Manifest) 
 		name := fmt.Sprintf("SCENE_%02d.THR", selector)
 		found := false
 		for _, r := range m.Resources {
-			if r.name == name && r.Source.SHA256 == catalogHashes["GS2000.DAT"] {
+			if r.name == name && r.fromCatalog("GS2000.DAT") {
 				t, err := officeTheatreGeometry(r, selector)
 				if err != nil {
 					return err
@@ -559,7 +559,7 @@ func exportOfficeMetadata(out *OutputWriter, alloc *pathAllocator, m *Manifest) 
 func exportOfficeLettering(out *OutputWriter, alloc *pathAllocator, m *Manifest, doc *OfficeMetadata) error {
 	var sheet, paletteSource *Resource
 	for _, r := range m.Resources {
-		if r.Source.SHA256 != baseCatalogHash {
+		if !r.fromCatalog("GS2000.CAT") {
 			continue
 		}
 		if r.name == "BASE_AN.PIC" {

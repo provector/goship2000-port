@@ -28,11 +28,11 @@ func (c *FrontEnd) exportFilmToMission() error {
 	}
 	m := launch.Final.Mission
 	if len(launch.GeneratedSource) > 0 {
-		resources, err := filmResourceIdentity(c.Office.Assets)
+		compatible, err := filmMatchesInstalledResources(f, c.Office.Assets)
 		if err != nil {
 			return err
 		}
-		if !filmResourceCompatible(f, resources) {
+		if !compatible {
 			return fmt.Errorf("the selected film needs a different resource profile")
 		}
 		var groups gamestate.GenerationIndex

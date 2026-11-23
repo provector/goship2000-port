@@ -444,8 +444,13 @@ func (c *FrontEnd) handleGPS(a Actions) error {
 		p.filterSceneInstances()
 	}
 	modern := p.filmPlayback == nil || p.filmPlayback.Practice || replay.HeldInput(p.filmPlayback.Film.Header.InputSchema)
+	confirmPartial := c.simulationProfile == "" || c.filmIsolation != nil && c.filmIsolation.Mode == "practice"
+	if playback := p.filmPlayback; playback != nil {
+		confirmPartial = playback.Film.Header.InputSchema == replay.RouteConfirmationInput
+	}
+	g.SetPartialRouteConfirmation(confirmPartial)
 	g.SetNativeSelectors(modern)
-	current := p.filmPlayback == nil || p.filmPlayback.Practice || (p.filmPlayback.Film.Header.InputSchema == replay.Q32InputCompatibility || p.filmPlayback.Film.Header.InputSchema == replay.R1InputCompatibility)
+	current := p.filmPlayback == nil || p.filmPlayback.Practice || (p.filmPlayback.Film.Header.InputSchema == replay.Q32InputCompatibility || replay.WingmanInput(p.filmPlayback.Film.Header.InputSchema))
 	g.SetEntryOnlySelectors(current)
 	if !current {
 		a.Selector1Down = false

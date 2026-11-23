@@ -293,3 +293,23 @@ func BenchmarkDiagnosticDisabledDebugGate(b *testing.B) {
 		}
 	}
 }
+
+func TestPreparationErrorArchiveExistsBeforeWindowDismissal(t *testing.T) {
+	root := t.TempDir()
+	s, e := StartSession(root, "test startup", "text and terminal logging off")
+	if e != nil {
+		t.Fatal(e)
+	}
+	defer s.Close()
+	e = StartupFailure("Read originals", fmt.Errorf("selected original test, destination cache: FONTS.GS2 missing"))
+	files, _ := filepath.Glob(filepath.Join(root, "reports", "*", "incident-*", "error_report.zip"))
+	if len(files) != 1 || !strings.Contains(e.Error(), files[0]) {
+		t.Fatalf("archive path missing: %v; %v", e, files)
+	}
+	data := readReport(t, files[0])
+	for _, k := range []string{"log.txt", "report.txt"} {
+		if !strings.Contains(data[k], "FONTS.GS2 missing") {
+			t.Fatalf("missing cause in %s", k)
+		}
+	}
+}

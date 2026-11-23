@@ -15,24 +15,26 @@ func legacyRosterPath(original string) (string, error) {
 	if original == "" {
 		return "", nil
 	}
+	dir, err := assetdata.OriginalDirectory(original)
+	if os.IsNotExist(err) {
+		return "", nil
+	}
+	if err != nil {
+		return "", err
+	}
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		return "", err
+	}
 	var found []string
-	for _, dir := range []string{original, filepath.Join(original, "GS2000CD")} {
-		entries, err := os.ReadDir(dir)
-		if os.IsNotExist(err) {
+	for _, v := range entries {
+		if !strings.EqualFold(v.Name(), "ROSTER.DAT") {
 			continue
 		}
-		if err != nil {
-			return "", err
+		if !v.Type().IsRegular() {
+			return "", fmt.Errorf("expected a regular legacy roster: %s", v.Name())
 		}
-		for _, v := range entries {
-			if !strings.EqualFold(v.Name(), "roster.dat") {
-				continue
-			}
-			if !v.Type().IsRegular() {
-				return "", fmt.Errorf("legacy roster must be a regular non-symlink file: %s", v.Name())
-			}
-			found = append(found, filepath.Join(dir, v.Name()))
-		}
+		found = append(found, filepath.Join(dir, v.Name()))
 	}
 	if len(found) > 1 {
 		return "", fmt.Errorf("two ROSTER.DAT inputs exist under %s; configure the game directory explicitly", original)
@@ -50,15 +52,17 @@ func importLegacyRoster(original string) (SaveState, error) {
 		return state, err
 	}
 	// Record offsets are a supported-release interpretation, never guessed from size alone.
-	executable := filepath.Join(filepath.Dir(path), "GS.GS2")
+	var executable string
 	entries, err := os.ReadDir(filepath.Dir(path))
 	if err != nil {
 		return state, err
 	}
 	for _, entry := range entries {
 		if strings.EqualFold(entry.Name(), "GS.GS2") {
+			if executable != "" || !entry.Type().IsRegular() {
+				return state, fmt.Errorf("ambiguous or nonregular GS.GS2 beside roster")
+			}
 			executable = filepath.Join(filepath.Dir(path), entry.Name())
-			break
 		}
 	}
 	code, err := assetdata.ReadLimitedFile(executable, 16<<20)

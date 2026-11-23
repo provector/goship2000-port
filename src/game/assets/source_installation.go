@@ -10,9 +10,7 @@ import (
 )
 
 // SourceInstallation binds logical source names to one complete supplied game
-// directory. Physical provenance/export paths remain untouched. Original DOS
-// lookup was case-insensitive; this supported import profile deliberately requires
-// its original uppercase filesystem/member names and diagnoses case variants.
+// directory. Physical provenance/export paths remain untouched. Logical DOS names are case-insensitive.
 // It never combines individually matching files from different installations.
 type SourceInstallation struct {
 	Root  string
@@ -103,17 +101,12 @@ func ResolveSourceInstallation(m *Manifest) (*SourceInstallation, error) {
 			return nil, fmt.Errorf("conflicting source identities at %s", r.Source.Path)
 		}
 		physical[r.Source.Path] = r.Source.SHA256
-		c.files[name] = append(c.files[name], r)
+		c.files[strings.ToUpper(name)] = append(c.files[strings.ToUpper(name)], r)
 	}
 	for _, role := range []SourceRole{RoleMainExecutable, rolePictureCatalog, roleScreenCatalog, roleBuilderCatalog, roleBitmapFonts} {
 		want := IslandIce469085.Source(role)
 		rows := c.files[want.Name]
 		if len(rows) == 0 {
-			for name := range c.files {
-				if strings.EqualFold(name, want.Name) {
-					return nil, fmt.Errorf("unsupported filesystem case %s; supported profile requires %s", name, want.Name)
-				}
-			}
 			return nil, fmt.Errorf("supported installation source %s missing", want.Name)
 		}
 		dir := path.Dir(rows[0].Source.Path)
@@ -123,7 +116,7 @@ func ResolveSourceInstallation(m *Manifest) (*SourceInstallation, error) {
 			return nil, fmt.Errorf("mixed source installation: %s is outside %s", rows[0].Source.Path, c.Root)
 		}
 		for _, r := range rows {
-			if r.Source.SHA256 != want.SHA256 {
+			if (role == RoleMainExecutable || role == roleBitmapFonts) && r.Source.SHA256 != want.SHA256 {
 				return nil, fmt.Errorf("unsupported source identity for %s at %s", want.Name, r.Source.Path)
 			}
 		}
@@ -142,38 +135,28 @@ func ResolveSourceInstallation(m *Manifest) (*SourceInstallation, error) {
 }
 
 func (c *SourceInstallation) Loose(name string) (*Resource, error) {
-	rows := c.files[name]
-	if len(rows) == 0 {
-		for actual := range c.files {
-			if strings.EqualFold(actual, name) {
-				return nil, fmt.Errorf("unsupported filesystem case %s; expected %s", actual, name)
-			}
-		}
-	}
+	rows := c.files[strings.ToUpper(name)]
 	if len(rows) != 1 || rows[0].Source.Kind != "loose_file" {
 		return nil, fmt.Errorf("logical loose source %s unavailable in %s", name, c.Root)
 	}
 	return rows[0], nil
 }
 func (c *SourceInstallation) Archive(container, member string) (*Resource, error) {
-	rows := c.files[container]
-	known, ok := catalogHashes[container]
+	rows := c.files[strings.ToUpper(container)]
+	_, ok := catalogHashes[strings.ToUpper(container)]
 	if !ok || len(rows) == 0 {
 		return nil, fmt.Errorf("logical archive %s unavailable in %s", container, c.Root)
 	}
 	var result *Resource
 	for _, r := range rows {
-		if r.Source.Kind != "archive_entry" || r.Source.SHA256 != known {
+		if r.Source.Kind != "archive_entry" {
 			return nil, fmt.Errorf("unsupported archive identity %s", container)
 		}
 		n, e := sourceMemberName(r)
 		if e != nil {
 			return nil, e
 		}
-		if strings.EqualFold(n, member) && n != member {
-			return nil, fmt.Errorf("unsupported archive member case %s/%s; expected %s", container, n, member)
-		}
-		if n == member {
+		if strings.EqualFold(n, member) {
 			if result != nil {
 				return nil, fmt.Errorf("ambiguous logical member %s/%s", container, member)
 			}

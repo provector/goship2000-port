@@ -229,13 +229,19 @@ func (f *Film) R11Mechanics() bool {
 const R1Compatibility = "native-wingmen-stepR1-v1"
 const R1AuthoredCompatibility = "native-wingmen-stepR1-authored-v1"
 const R1InputCompatibility = "logical-operations-v10"
+const RouteConfirmationInput = "logical-operations-v11"
+
+// WingmanInput includes the same flight and GPS controls under either route-finish rule.
+func WingmanInput(schema string) bool {
+	return schema == R1InputCompatibility || schema == RouteConfirmationInput
+}
 
 func (f *Film) R1Mechanics() bool {
 	return f != nil && (f.R11Mechanics() || f.Header.Simulation == R1Compatibility || f.Header.Simulation == R1AuthoredCompatibility)
 }
 
 func HeldInput(schema string) bool {
-	return schema == Q31PreviousInputCompatibility || schema == Q31InputCompatibility || schema == Q32InputCompatibility || schema == R1InputCompatibility
+	return schema == Q31PreviousInputCompatibility || schema == Q31InputCompatibility || schema == Q32InputCompatibility || WingmanInput(schema)
 }
 
 func ContinuousInput(schema string) bool {
@@ -244,9 +250,9 @@ func ContinuousInput(schema string) bool {
 
 func (f *Film) SupportInput() bool {
 	if f != nil && f.R1Mechanics() {
-		return f.Header.InputSchema == R1InputCompatibility
+		return WingmanInput(f.Header.InputSchema)
 	}
-	if f != nil && f.Header.InputSchema == R1InputCompatibility {
+	if f != nil && WingmanInput(f.Header.InputSchema) {
 		return false
 	}
 	if f != nil && f.P6Mechanics() {

@@ -381,7 +381,7 @@ func (p *RenderingPreview) draw(a *cockpit.Assets) (err error) {
 		in.HeadingPerturbation = scene.Environment.CompassShown
 	}
 	visual, nativeRotors := p.presentationVisual(scene, float64(p.visualTime)/float64(time.Second), p.presentation.mode == "smooth")
-	if (p.presentation.mode == "smooth" || nativeRotors || parkedModels) && !p.Inspection {
+	if (p.presentation.mode == "smooth" || nativeRotors || parkedModels || len(scene.Instances) != len(p.Scene.Instances)) && !p.Inspection {
 		copy(p.Frame, p.presentation.referenceBase)
 		if len(p.skyMask) > 0 {
 			scene.SkyMask = p.skyMask

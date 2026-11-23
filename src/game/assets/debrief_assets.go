@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"image/color"
 	"sort"
+	"strings"
 )
 
 const debriefSchema = 4
@@ -392,8 +393,8 @@ func exportDebriefMetadata(out *OutputWriter, alloc *pathAllocator, m *Manifest)
 		return e
 	}
 	sort.Slice(d.Sources, func(i, j int) bool {
-		if d.Sources[i].Path != d.Sources[j].Path {
-			return d.Sources[i].Path < d.Sources[j].Path
+		if ap, bp := strings.ToUpper(d.Sources[i].Path), strings.ToUpper(d.Sources[j].Path); ap != bp {
+			return ap < bp
 		}
 		return d.Sources[i].Offset < d.Sources[j].Offset
 	})

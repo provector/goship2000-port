@@ -371,12 +371,9 @@ func (p *RenderingPreview) drawTargetView(dst []byte, in cockpit.Inputs, a *cock
 		center = render3d.Point{X: 160, Y: 164}
 	}
 	row := int(p.Flight.Avionics.Target) - 1
-	var instance *render3d.Instance
-	for i := range p.instances {
-		if p.instances[i].ID == target.ID {
-			instance = &p.instances[i]
-			break
-		}
+	instance := findInstance(p.instances, target.ID)
+	if displayPanel && instance == nil {
+		instance = findInstance(display.Instances, target.ID)
 	}
 	if instance == nil {
 		return nil
@@ -451,6 +448,9 @@ func (p *RenderingPreview) drawTargetView(dst []byte, in cockpit.Inputs, a *cock
 			scene.Instances = display.Instances
 		} else if p.p4Mechanics {
 			scene.Instances = append([]render3d.Instance(nil), p.Scene.Instances...)
+			if displayPanel {
+				scene = p.displayAirSupport(scene)
+			}
 		} else {
 			scene.Instances = append([]render3d.Instance(nil), p.instances...)
 		}

@@ -237,6 +237,9 @@ func (reader *preparedReader) loadStartup() (*StartupAssets, error) {
 		var pixels []byte
 		var media *packedFile
 		if reader.packs != nil {
+			if reader.observed != nil {
+				reader.observed[doc.Pixels.Path] = true
+			}
 			media = reader.packs.catalog.Files[doc.Pixels.Path]
 			if media == nil || media.Codec != "frames" || media.Size != doc.Pixels.Size || reader.outputs[doc.Pixels.Path] != doc.Pixels {
 				return nil, fmt.Errorf("invalid packed intro indices")

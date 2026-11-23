@@ -51,7 +51,8 @@ type Session struct {
 	closed       atomic.Bool
 	mu           sync.Mutex
 	dir, saves   string
-	lastProgress MissionContext // journal worker only
+	flushMu      sync.Mutex
+	lastProgress MissionContext // protected by flushMu
 	context      MissionContext
 	ring, delta  history
 	notices      []string
@@ -193,6 +194,8 @@ func recordHistory(line string) {
 // Flush each batch off the UI thread. Two half-budget generations evict old
 // complete lines without rewriting the retained diagnostic history.
 func (s *Session) flush() {
+	s.flushMu.Lock()
+	defer s.flushMu.Unlock()
 	s.mu.Lock()
 	ctx := s.context
 	delta := s.delta
@@ -290,15 +293,37 @@ func SetMission(mission, film, phase string, step uint64) {
 // Report is called at a significant boundary, never per frame. Retain the
 // small immutable incident request before handing expensive work to a worker.
 func Report(key, reason, disposition string) bool {
+	_, ok := requestReport(key, reason, disposition, false)
+	return ok
+}
+
+// StartupFailure runs on the preparation worker. Publish the complete cause before
+// the modal error is shown: closing the window must not lose the only evidence.
+func StartupFailure(stage string, cause error) error {
+	Error("assets", "Asset preparation failed", "stage", stage, "error", cause)
+	Phase(stage)
+	file, ok := requestReport("asset-preparation", cause.Error(), "Asset preparation failed.", true)
+	if !ok {
+		return fmt.Errorf("Asset preparation failed. Diagnostic archive unavailable. %w", cause)
+	}
+	return fmt.Errorf("Asset preparation failed. Report: %s\n%w", file, cause)
+}
+func StartupWarning(message, detail string) {
+	Warn("startup", message, "detail", detail)
+	if s := currentSession.Load(); s != nil {
+		s.notice(message)
+	}
+}
+func requestReport(key, reason, disposition string, wait bool) (string, bool) {
 	s := currentSession.Load()
 	if s == nil {
-		return false
+		return "", false
 	}
 	s.mu.Lock()
 	key = s.context.Film + "/" + key
 	if s.closed.Load() || s.seen[key] {
 		s.mu.Unlock()
-		return false
+		return "", false
 	}
 	s.seen[key] = true
 	s.wg.Add(1)
@@ -308,7 +333,7 @@ func Report(key, reason, disposition string) bool {
 	if s.dir == "" {
 		defer s.wg.Done()
 		s.failure("report request", fmt.Errorf("recovery storage unavailable"))
-		return false
+		return "", false
 	}
 	dir, e := os.MkdirTemp(s.dir, "incident-")
 	if e == nil {
@@ -317,12 +342,20 @@ func Report(key, reason, disposition string) bool {
 	if e != nil {
 		defer s.wg.Done()
 		s.failure("report request", e)
-		return false
+		return "", false
 	}
 	replay.PinReportFilm(filepath.Join(s.saves, "replays"), dir, req.Context.Film)
+	if wait {
+		defer s.wg.Done()
+		s.flush()
+		if !s.makeReport(dir, s.dir, "error_report.zip", req, lines) {
+			return "", false
+		}
+		return filepath.Join(dir, "error_report.zip"), true
+	}
 	s.notice(disposition + " Preparing diagnostics.")
 	go func() { defer s.wg.Done(); s.makeReport(dir, s.dir, "error_report.zip", req, lines) }()
-	return true
+	return "", true
 }
 func (s *Session) makeReport(dir, session, file string, req reportRequest, lines []string) bool {
 	final := filepath.Join(dir, file)

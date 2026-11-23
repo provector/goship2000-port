@@ -256,3 +256,68 @@ func TestImportedRosterReopensFromPacks(t *testing.T) {
 		t.Fatal("import identity, seventh record or pilot state differed")
 	}
 }
+
+func TestFreshManagedRosterRejectsPartialImportAndPreservesEstablishedPacks(t *testing.T) {
+	for _, mode := range []string{"absent", "truncated", "unsupported"} {
+		t.Run(mode, func(t *testing.T) {
+			app, original := t.TempDir(), t.TempDir()
+			dir := filepath.Join(app, "saves")
+			if mode != "absent" {
+				b := syntheticLegacyRoster()
+				if mode == "truncated" {
+					b = b[:10]
+				}
+				if err := os.WriteFile(filepath.Join(original, "ROSTER.DAT"), b, 0600); err != nil {
+					t.Fatal(err)
+				}
+				code := []byte("unsupported")
+				if mode == "truncated" {
+					if source := os.Getenv("GS2000_TEST_ORIGINAL"); source != "" {
+						var readErr error
+						code, readErr = os.ReadFile(filepath.Join(source, "GS.GS2"))
+						if readErr != nil {
+							t.Fatal(readErr)
+						}
+					}
+				}
+				if err := os.WriteFile(filepath.Join(original, "GS.GS2"), code, 0600); err != nil {
+					t.Fatal(err)
+				}
+			}
+			s, err := OpenManagedCareer(dir, original, app, true)
+			if err != nil {
+				t.Fatal(err)
+			}
+			before := s.State()
+			template, err := defaultRoster(app)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if before.Slots[0] == nil || before.Slots[0].Name != template.Slots[0].Name || before.Legacy != nil {
+				t.Fatal("missing checked default roster")
+			}
+			s.Close()
+			if _, err = os.Stat(filepath.Join(dir, "imports")); !os.IsNotExist(err) {
+				t.Fatal("partial import committed", err)
+			}
+			if err = os.WriteFile(filepath.Join(original, "ROSTER.DAT"), []byte("changed"), 0600); err != nil {
+				t.Fatal(err)
+			}
+			reopened, err := OpenManagedCareer(dir, original, app, true)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if !reflect.DeepEqual(before, reopened.State()) {
+				t.Fatal("legacy source replaced existing data")
+			}
+			reopened.Close()
+			if err = os.WriteFile(filepath.Join(dir, "player0.g2pak"), []byte("invalid port pack"), 0600); err != nil {
+				t.Fatal(err)
+			}
+			if broken, e := OpenManagedCareer(dir, original, app, true); e == nil {
+				broken.Close()
+				t.Fatal("corrupt port career replaced")
+			}
+		})
+	}
+}

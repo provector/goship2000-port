@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	assetdata "gunship2000-assets/game/assets"
 	"gunship2000-assets/game/configuration"
@@ -87,7 +86,8 @@ func startFrontEnd(paths ApplicationPaths, rebuild bool, missionSeed *int64, bra
 	var assets *assetdata.OfficeAssets
 	err := menuui.PreparationWindow(func(progress func(assetdata.PreparationProgress)) error {
 		var e error
-		services := managedassets.FrontEndServices(progress)
+		stage := "Locate original installation"
+		services := managedassets.FrontEndServices(func(p assetdata.PreparationProgress) { stage = p.Stage; progress(p) })
 		services.SourceSelected = func(path string) error {
 			d, err := configuration.LoadAt(filepath.Join(paths.Directory, configuration.Filename), paths.install())
 			if err != nil {
@@ -105,13 +105,13 @@ func startFrontEnd(paths ApplicationPaths, rebuild bool, missionSeed *int64, bra
 			return nil
 		}
 		assets, e = managedassets.Ensure(sharedPaths(paths), rebuild, os.Stdout, services)
-		return e
+		if e != nil {
+			return diagnostics.StartupFailure(stage, fmt.Errorf("%s (original %s, destination %s): %w", stage, paths.Original, paths.Assets, e))
+		}
+		return nil
 	})
 	if err != nil {
-		if errors.Is(err, managedassets.ErrOriginalUnavailable) {
-			_ = configurationWarning(err.Error())
-		}
-		return startupError(fmt.Errorf("%w; for legacy/canonical office-only assets, configure a new assets directory and the original installation for upgrade", err))
+		return startupError(err)
 	}
 	store, err := gamestate.OpenManagedCareerAt(paths.Saves, paths.Original, paths.Directory, paths.install(), true)
 	if err != nil {

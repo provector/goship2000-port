@@ -110,8 +110,8 @@ func TestInventoryNestedEditorPreparation(t *testing.T) {
 			for _, r := range m.Resources {
 				if r.Source.Kind == "archive_entry" && r.Source.Record.NameReadable == "EDITOR.PIC" {
 					want := "GS2000.CAT/EDITOR.PIC"
-					if prefix != "" {
-						want = prefix + "/" + want
+					if filepath.Clean(m.InputDirectory) != filepath.Clean(leaf) {
+						t.Fatal("wrong physical installation", m.InputDirectory)
 					}
 					if r.ExportPath != want {
 						t.Fatal("physicalprovenance rewritten", r.ExportPath)
@@ -123,77 +123,74 @@ func TestInventoryNestedEditorPreparation(t *testing.T) {
 }
 func TestInventorySourceFailuresRetainCause(t *testing.T) {
 	original := sourceInstallationInventoryOriginal(t)
-	core := []string{"GS.GS2", "GS2000.CAT", "GS2000.DAT", "MBUILDER.CAT", "FONTS.GS2"}
-	for _, name := range []string{"missing", "case", "duplicate", "conflicting", "truncated", "wrong-builder", "unknown-main"} {
+	var required []string
+	for name := range preparationFiles() {
+		required = append(required, name)
+	}
+	for _, name := range []string{"missing", "conflicting member", "truncated", "unknown-main", "used installation"} {
 		t.Run(name, func(t *testing.T) {
-			root := filepath.Join(t.TempDir(), "input")
-			copyFiles(t, original, root, core)
+			root := t.TempDir()
+			copyFiles(t, original, root, required)
 			switch name {
-			case "wrong-builder":
-				if e := os.Rename(filepath.Join(root, "MBUILDER.CAT"), filepath.Join(root, "UNRELATED.CAT")); e != nil {
-					t.Fatal(e)
-				}
-			case "unknown-main":
-				p := filepath.Join(root, "GS.GS2")
-				b, e := os.ReadFile(p)
-				if e != nil {
-					t.Fatal(e)
-				}
-				b[len(b)-1] ^= 1
-				if e = os.WriteFile(p, b, 0600); e != nil {
-					t.Fatal(e)
-				}
 			case "missing":
 				if e := os.Remove(filepath.Join(root, "MBUILDER.CAT")); e != nil {
 					t.Fatal(e)
 				}
-			case "case":
-				if e := os.Rename(filepath.Join(root, "GS2000.CAT"), filepath.Join(root, "gs2000.cat")); e != nil {
+			case "truncated":
+				if e := os.Truncate(filepath.Join(root, "MBUILDER.CAT"), 30); e != nil {
 					t.Fatal(e)
 				}
-			case "duplicate":
-				copyFiles(t, original, filepath.Join(root, "second"), core)
-			case "conflicting":
+			case "unknown-main":
+				if e := os.WriteFile(filepath.Join(root, "GS.GS2"), []byte("unknown executable layout"), 0600); e != nil {
+					t.Fatal(e)
+				}
+			case "conflicting member":
 				p := filepath.Join(root, "GS2000.CAT")
 				b, e := os.ReadFile(p)
 				if e != nil {
 					t.Fatal(e)
 				}
-				b[len(b)-1] ^= 1
+				copy(b[50:62], b[26:38])
 				if e = os.WriteFile(p, b, 0600); e != nil {
 					t.Fatal(e)
 				}
-			case "truncated":
-				p := filepath.Join(root, "MBUILDER.CAT")
-				b, e := os.ReadFile(p)
+			case "used installation":
+				if e := os.Rename(filepath.Join(root, "GS2000.CAT"), filepath.Join(root, "gs2000.cat")); e != nil {
+					t.Fatal(e)
+				}
+				for _, n := range []string{"SETUP.DAT", "notes.txt", "ROSTER.DAT", "saved.SIM"} {
+					if e := os.WriteFile(filepath.Join(root, n), []byte("unrelated"), 0600); e != nil {
+						t.Fatal(e)
+					}
+				}
+				copyFiles(t, original, filepath.Join(root, "backup"), []string{"GS.GS2", "GS2000.CAT"})
+				f, e := os.Create(filepath.Join(root, "backup.img"))
 				if e != nil {
 					t.Fatal(e)
 				}
-				if e = os.WriteFile(p, b[:30], 0600); e != nil {
+				if e = f.Truncate(1 << 30); e != nil {
+					t.Fatal(e)
+				}
+				if e = f.Close(); e != nil {
 					t.Fatal(e)
 				}
 			}
 			m, e := PrepareAssetsWithAudio(root, filepath.Join(t.TempDir(), "out"), nil)
-			if name == "unknown-main" {
-				if e != nil {
-					t.Fatal(e)
+			if name == "used installation" {
+				if e != nil || m.EditorMetadata == "" {
+					t.Fatal("failed to generate editor", e)
 				}
-				if m.OfficeMetadata != "" || m.EditorMetadata != "" {
-					t.Fatal("unsupported release acquired frontend capability")
-				}
-				for _, v := range m.UnsupportedVersionOperations {
-					if strings.Contains(v.Reason, "GS.GS2") && strings.Contains(v.Reason, "unsupported") {
-						return
+				want := preparationFiles()
+				for _, r := range m.Resources {
+					if _, ok := want[strings.ToUpper(filepath.Base(r.Source.Path))]; !ok {
+						t.Fatalf("consumed unrelated %s", r.Source.Path)
 					}
 				}
-				t.Fatal("unsupported release cause missing", m.UnsupportedVersionOperations)
+				return
 			}
-			if e == nil {
-				t.Fatal("unsafe installation published typed metadata")
-			}
-			want := map[string]string{"missing": "MBUILDER.CAT missing", "case": "unsupported filesystem case", "duplicate": "ambiguous source installation", "conflicting": "unsupported source identity", "truncated": "directory", "wrong-builder": "MBUILDER.CAT missing"}[name]
-			if !strings.Contains(e.Error(), want) {
-				t.Fatalf("wrong diagnosis expected%s: %v", want, e)
+			want := map[string]string{"missing": "MBUILDER.CAT", "truncated": "directory", "unknown-main": "executable/table layout", "conflicting member": "conflicting member"}[name]
+			if e == nil || !strings.Contains(e.Error(), want) {
+				t.Fatalf("expected %s, got %v", want, e)
 			}
 		})
 	}
@@ -210,7 +207,7 @@ func TestInventoryKeepsAudioOnlyPartialScope(t *testing.T) {
 	input := filepath.Join(t.TempDir(), "input")
 	copyFiles(t, original, input, names)
 	output := filepath.Join(t.TempDir(), "output")
-	m, e := PrepareAssetsWithAudio(input, output, nil)
+	m, e := prepareAssets(input, output)
 	if e != nil {
 		t.Fatal("partial raw/audio extraction blocked", e)
 	}

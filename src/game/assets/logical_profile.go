@@ -65,7 +65,7 @@ const LogicalPreparation34 = "bab62032ddbbbd781f402a7500689778e8c8c9785b98520b9f
 // and checking the exact manifest and catalogue of a previously verified generation.
 var verifiedGeneration struct {
 	sync.Mutex
-	key string
+	key, profile string
 }
 
 func LogicalResourceProfile(root string) (string, error) {
@@ -89,22 +89,34 @@ func LogicalResourceProfile(root string) (string, error) {
 		cacheKey := Hash(raw) + r.packs.catalogHash
 		verifiedGeneration.Lock()
 		match := cacheKey == verifiedGeneration.key
+		cached := verifiedGeneration.profile
 		verifiedGeneration.Unlock()
 		if match {
-			return LogicalPreparation34, nil
+			return cached, nil
 		}
-		data, err := canonicalLogicalResourceDataMode(r, &m, true)
-		if err != nil {
-			return "", err
+		var profile string
+		if m.PreparationVersion == PreparationVersion {
+			profile, e = verifiedRuntimeProfile(r, &m)
+		} else {
+			var data []byte
+			data, e = canonicalLogicalResourceDataMode(r, &m, true)
+			if e == nil && (m.PreparationVersion != 34 || Hash(data) != decodedPreparation34) {
+				e = fmt.Errorf("historical packed preparation %d resource identity differs", m.PreparationVersion)
+			}
+			profile = LogicalPreparation34
 		}
-		if m.PreparationVersion != 34 || Hash(data) != decodedPreparation34 {
-			return "", fmt.Errorf("packed logical resource identity differs from Preparation34")
+		if e != nil {
+			return "", e
 		}
 		verifiedGeneration.Lock()
-		verifiedGeneration.key = cacheKey
+		verifiedGeneration.key, verifiedGeneration.profile = cacheKey, profile
 		verifiedGeneration.Unlock()
-		return LogicalPreparation34, nil
+		return profile, nil
 	}
+	if m.PreparationVersion == PreparationVersion {
+		return verifiedRuntimeProfile(r, &m)
+	}
+
 	hash, e := canonicalLogicalResourceProfile(r, &m)
 	if e != nil {
 		return "", e
@@ -189,6 +201,9 @@ func canonicalLogicalResourceDataMode(reader *preparedReader, m *Manifest, decod
 			if path.IsAbs(p) || path.Clean(p) != p || strings.Contains(p, "\\") {
 				return "", fmt.Errorf("unsafe logical source %q", p)
 			}
+			if reader.historical != nil {
+				return strings.ToUpper(p), nil
+			}
 			return p, nil
 		}
 		prefix := inst.Root + "/"
@@ -250,6 +265,9 @@ func canonicalLogicalResourceDataMode(reader *preparedReader, m *Manifest, decod
 					return nil, fmt.Errorf("archive member raw name invalid")
 				}
 				name := bytes.SplitN(raw, []byte{0}, 2)[0]
+				if reader.historical != nil {
+					name = bytes.ToUpper(name)
+				}
 				export = escapedPath([]byte(v)) + "/" + escapedPath(name)
 			} else if s.Source.Kind == "loose_file" {
 				export = "loose/" + escapedPath([]byte(v))
@@ -282,7 +300,7 @@ func canonicalLogicalResourceDataMode(reader *preparedReader, m *Manifest, decod
 			outputs[o.Path] = &logicalProfileOutput{out: o}
 		}
 	}
-	if reader.packs != nil {
+	if reader.packs != nil && m.PreparationVersion <= 34 {
 		// The supported runtime subset was measured from the complete Preparation34
 		// frontend on a flat installation. Normalize nested source prefixes first.
 		names := make([]string, 0, len(reader.packs.catalog.Files))
@@ -362,7 +380,7 @@ func canonicalLogicalResourceDataMode(reader *preparedReader, m *Manifest, decod
 			// Only converter provenance varies here. Audio bytes, source revision,
 			// protocol, tables, channels and every playback parameter remain in the
 			// complete fingerprint. The physical file hash was verified above.
-			if o.out.Kind == "audio metadata" && m.PreparationVersion == 34 {
+			if o.out.Kind == "audio metadata" && m.PreparationVersion >= 34 {
 				doc, _ := v.(map[string]any)
 				component, _ := doc["component"].(map[string]any)
 				platform, _ := component["platform"].(string)
@@ -415,6 +433,11 @@ func canonicalLogicalResourceDataMode(reader *preparedReader, m *Manifest, decod
 			// spell a path is semantic text and must retain its exact bytes.
 			fields := []string{}
 			_, sourceKind := q["payload_sha256"]
+			if legacy := reader.historical; legacy != nil && sourceKind {
+				if prev := legacy.sources[sourceKey(q)]; prev != nil && prev["payload_sha256"] == q["payload_sha256"] {
+					return prev, nil // Physical spelling and archive offsets are historical metadata.
+				}
+			}
 			if m.PreparationVersion >= 33 && sourceKind && q["kind"] == "loose_file" && q["payload_sha256"] == Phil1BadAtlasSHA256 && q["sha256"] == Phil1BadAtlasSHA256 {
 				if name, ok := q["path"].(string); ok && strings.EqualFold(path.Base(name), "PHIL1BMP.GS2") {
 					out["payload_sha256"], out["sha256"] = Phil1CleanAtlasSHA256, Phil1CleanAtlasSHA256
@@ -469,6 +492,15 @@ func canonicalLogicalResourceDataMode(reader *preparedReader, m *Manifest, decod
 			if context == "world_metadata" {
 				if _, isBundle := q["geometries"]; isBundle {
 					if sources, ok := out["source_sha256"].(map[string]any); ok {
+						// Restore provenance-only entries that new preparation never reads.
+						// All live inputs and the full geometry/tables still come from this generation.
+						if reader.historical != nil {
+							for n, h := range reader.historical.worldSources {
+								if _, present := sources[n]; !present {
+									sources[n] = h
+								}
+							}
+						}
 						if m.PreparationVersion >= 33 && sources["PHIL1BMP.GS2"] == Phil1BadAtlasSHA256 {
 							sources["PHIL1BMP.GS2"] = Phil1CleanAtlasSHA256
 						}

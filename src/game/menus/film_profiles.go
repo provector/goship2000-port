@@ -10,6 +10,19 @@ import (
 const legacyOResources = "b1cc3f3185ce46ee6798eadd293cbcf7448cfaf0e202f707a62d76e4aef5088a"
 const compatiblePreparation25Resources = "bd62e0f4d916662f0cf1f9aea060ad4179e80ebf1a4585cfd459b2043dbc7771" // Bound after reproducible preparation/media comparison.
 const compatiblePreparation26Resources = "7b875d78e1671bddd7e526c6647e2c3f5e1cdfec14918de1ded771db510f60ea" // Exact source/media comparison: evidence/stepP/startup/preparation26-final-identities.json.
+
+// Playback and Export must use the same verified resource contract.
+func filmMatchesInstalledResources(f *replay.Film, a *assetdata.OfficeAssets) (bool, error) {
+	current, err := filmResourceIdentity(a)
+	if err != nil {
+		return false, err
+	}
+	if a.PreparationVersion >= 35 && current != assetdata.LogicalPreparation34 {
+		return current == f.Header.Resources, nil
+	}
+	return filmResourceCompatible(f, current), nil
+}
+
 func filmResourceCompatible(f *replay.Film, current string) bool {
 	// Old Resources strings remain immutable. Only complete, independently
 	// validated semantic bundles reach this function; no path-derived hashes

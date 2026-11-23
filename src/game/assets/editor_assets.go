@@ -441,6 +441,7 @@ func prepareEditorMetadata(m *Manifest, p *AssetVersionProfile) (editorMetadata,
 	sort.Slice(mapRows, func(i, j int) bool { return mapRows[i].Source.Record.Index < mapRows[j].Source.Record.Index })
 	for _, r := range mapRows {
 		name, _ := sourceMemberName(r)
+		name = strings.ToUpper(name)
 		v := editorPreparedMap{Name: strings.TrimSuffix(name, "MIS.PIC")}
 		v.Pixels, e = preparedOutput(r.Outputs, "decoded_indices")
 		if e != nil {

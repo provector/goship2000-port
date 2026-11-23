@@ -25,20 +25,21 @@ func ConfigurationWarning(message string) error {
 	defer rl.CloseWindow()
 	branding.SetSetupIcon()
 	rl.SetTargetFPS(30)
+	scroll := 0
 	for !rl.WindowShouldClose() {
 		if rl.IsKeyPressed(rl.KeyEnter) || rl.IsKeyPressed(rl.KeyEscape) || rl.IsMouseButtonPressed(rl.MouseButtonLeft) {
 			break
 		}
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.NewColor(0, 0, 90, 255))
-		drawStartupText(message, 20, 25, 720, 20)
+		scrollStartupText(message, 25, 206, &scroll)
 		rl.DrawRectangle(290, 245, 180, 32, rl.Maroon)
 		rl.DrawText("OK / Enter", 320, 251, 18, rl.White)
 		rl.EndDrawing()
 	}
 	return nil
 }
-func drawStartupText(text string, x, y, width, font int, colors ...color.RGBA) {
+func drawStartupText(text string, x, y, width, font int, colors ...color.RGBA) int {
 	ink := rl.White
 	if len(colors) > 0 {
 		ink = colors[0]
@@ -75,6 +76,22 @@ func drawStartupText(text string, x, y, width, font int, colors ...color.RGBA) {
 		}
 		y += font + 6
 	}
+	return y
+}
+
+func scrollStartupText(text string, top, height int, scroll *int) {
+	delta := int(rl.GetMouseWheelMove()) * 40
+	if rl.IsKeyDown(rl.KeyDown) {
+		delta -= 8
+	}
+	if rl.IsKeyDown(rl.KeyUp) {
+		delta += 8
+	}
+	*scroll = max(0, *scroll-delta)
+	rl.BeginScissorMode(14, int32(top), 732, int32(height))
+	end := drawStartupText(text, 20, top-*scroll, 720, 16, rl.Yellow)
+	rl.EndScissorMode()
+	*scroll = min(*scroll, max(0, end+*scroll-top-height))
 }
 
 // The worker owns preparation and emits actual stage events. A usable cache
@@ -121,6 +138,7 @@ func PreparationWindow(work func(func(assetdata.PreparationProgress)) error) err
 	rl.SetExitKey(rl.KeyNull)
 	finished := false
 	var failure error
+	scroll := 0
 	for {
 		select {
 		case current = <-updates:
@@ -148,8 +166,8 @@ func PreparationWindow(work func(func(assetdata.PreparationProgress)) error) err
 		rl.ClearBackground(rl.NewColor(0, 0, 255, 255))
 		rl.DrawText("Preparing GoShip 2000 assets", 20, 20, 24, rl.Yellow)
 		if finished {
-			drawStartupText(failure.Error(), 20, 65, 720, 16, rl.Yellow)
-			rl.DrawText("Preparation failed - Enter to close", 20, 260, 18, rl.Yellow)
+			scrollStartupText(failure.Error(), 65, 180, &scroll)
+			rl.DrawText("Up/Down or wheel to scroll - Enter to close", 20, 260, 18, rl.Yellow)
 		} else {
 			rl.DrawRectangle(16, 60, 728, 225, rl.NewColor(128, 0, 0, 255))
 			rl.DrawRectangleLines(16, 60, 728, 225, rl.Yellow)

@@ -18,7 +18,7 @@ func profileResourcesForTest() []*Resource {
 		if role == rolePictureCatalog || role == roleScreenCatalog {
 			kind = "archive_entry"
 		}
-		resources = append(resources, &Resource{name: s.Name, Source: SourceLocation{Path: s.Name, Kind: kind, SHA256: s.SHA256, PayloadSHA256: s.SHA256}})
+		resources = append(resources, &Resource{name: s.Name, Source: SourceLocation{Path: s.Name, Container: s.Name, Kind: kind, SHA256: s.SHA256, PayloadSHA256: s.SHA256}})
 	}
 	for _, role := range []SourceRole{roleOfficeScreen, roleOfficePalette} {
 		s := p.Source(role)
@@ -26,7 +26,7 @@ func profileResourcesForTest() []*Resource {
 		if role == roleOfficePalette {
 			parent = p.Source(rolePictureCatalog)
 		}
-		resources = append(resources, &Resource{name: s.Name, Source: SourceLocation{Path: parent.Name, Kind: "archive_entry", SHA256: parent.SHA256, PayloadSHA256: s.SHA256}})
+		resources = append(resources, &Resource{name: s.Name, Source: SourceLocation{Path: parent.Name, Container: parent.Name, Kind: "archive_entry", SHA256: parent.SHA256, PayloadSHA256: s.SHA256}})
 	}
 	return resources
 }
@@ -39,7 +39,10 @@ func TestSupportedOfficeVersionRequiresSourceCombination(t *testing.T) {
 	}
 	for i := range resources {
 		original := resources[i].Source
-		if i < 4 {
+		if i < 2 {
+			resources[i].Source.Container = "wrong"
+			resources[i].Source.SHA256 = "other"
+		} else if i < 4 {
 			resources[i].Source.SHA256 = "unknown"
 		} else {
 			resources[i].Source.PayloadSHA256 = "unknown"

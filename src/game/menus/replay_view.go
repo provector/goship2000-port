@@ -553,6 +553,7 @@ func (c *FrontEnd) replayFrame(pointer bool) []byte {
 		if v.Actor >= 0 && v.Actor < len(p.Initialized.Entities) {
 			parkingFocus = p.Initialized.Entities[v.Actor].ID
 		}
+		scene = p.displayAirSupport(scene)
 		scene, _ = p.parkedPresentation(scene, parkingFocus)
 		if v.Actor >= 0 && v.Actor < len(p.Initialized.Entities) {
 			id := p.Initialized.Entities[v.Actor].ID

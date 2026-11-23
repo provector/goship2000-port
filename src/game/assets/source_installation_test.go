@@ -69,7 +69,6 @@ func TestInstallationLogicalIdentityAndIsolation(t *testing.T) {
 			}
 			m.Resources = append(m.Resources, q.Resources...)
 		},
-		"filesystem-case": func(m *Manifest) { m.Resources[0].Source.Path = "gs.gs2" },
 		"unsupported-hash": func(m *Manifest) {
 			m.Resources[0].Source.SHA256 = strings.Repeat("b", 64)
 			m.Resources[0].Source.PayloadSHA256 = m.Resources[0].Source.SHA256
@@ -96,9 +95,9 @@ func TestInstallationLogicalIdentityAndIsolation(t *testing.T) {
 	if _, e = c.Archive("GS2000.CAT", "ABSENT.PIC"); e == nil {
 		t.Fatal("missingmember synthesized")
 	}
-	// Raw12 bytes retain DOS member identity; a case variation is not silently
-	// normalized under this explicit supported import policy.
+	// DOS case folding preserves the actual physical path and raw directory record.
 	changed := cloneSource(base)
+	changed.Resources[0].Source.Path = "gs.gs2"
 	rec := changed.Resources[1].Source.Record
 	raw, _ := hex.DecodeString(rec.RawHex)
 	copy(raw[:12], make([]byte, 12))
@@ -109,8 +108,11 @@ func TestInstallationLogicalIdentityAndIsolation(t *testing.T) {
 	if e != nil {
 		t.Fatal(e)
 	}
-	if _, e = caseContext.Archive("GS2000.CAT", "TEST.PIC"); e == nil || !strings.Contains(e.Error(), "member case") {
+	if _, e = caseContext.Archive("GS2000.CAT", "TEST.PIC"); e != nil {
 		t.Fatal("member case policy missing", e)
+	}
+	if r, e := caseContext.Loose("GS.GS2"); e != nil || r.Source.Path != "gs.gs2" {
+		t.Fatal("physical path lost", e)
 	}
 	// Duplicate member in one valid container is also ambiguous, even identical.
 	m := cloneSource(base)
@@ -168,5 +170,24 @@ func TestPreparedRealInstallationContext(t *testing.T) {
 		if _, e = c.Loose(w + "SMP.GS2"); e != nil {
 			t.Fatal(w, e)
 		}
+	}
+}
+
+func TestConflictingDOSInputNames(t *testing.T) {
+	dir := t.TempDir()
+	for _, n := range []string{"GS.GS2", "gs.gs2"} {
+		f, e := os.OpenFile(filepath.Join(dir, n), os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0600)
+		if os.IsExist(e) {
+			t.Skip("filesystem represents the two spellings by a single entry")
+		}
+		if e != nil {
+			t.Fatal(e)
+		}
+		if e = f.Close(); e != nil {
+			t.Fatal(e)
+		}
+	}
+	if _, e := selectedFiles(dir, map[string]bool{"GS.GS2": true}); e == nil || !strings.Contains(e.Error(), "conflicting DOS input") {
+		t.Fatal(e)
 	}
 }

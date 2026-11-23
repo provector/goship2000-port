@@ -1,6 +1,7 @@
 package menus
 
 import (
+	"encoding/binary"
 	"gunship2000-assets/game/cockpit"
 	"gunship2000-assets/game/render3d"
 	"math"
@@ -44,8 +45,46 @@ func (p *RenderingPreview) presentationDiscontinuity(projectileReturn, playerCon
 	return true
 }
 
+// Air support starts outside the canonical scene. Publish its reached pose only
+// to display lists: reference images feed avionics and historical checkpoints.
+func (p *RenderingPreview) displayAirSupport(scene render3d.Scene) render3d.Scene {
+	if p.Initialized == nil || p.Initialized.Support == nil {
+		return scene
+	}
+	cfg := &p.Initialized.Support.Configuration
+	for _, row := range cfg.Rows {
+		if row < 0 || row >= len(p.Initialized.Entities) || cfg.ControllerKind(row) != 0x11 {
+			continue
+		}
+		e := &p.Initialized.Entities[row]
+		if e.Kind != 0x11 || e.Participation != 1 || !e.Visible || e.Exclusion != "" {
+			continue
+		}
+		if findInstance(scene.Instances, e.ID) != nil {
+			continue
+		}
+		flags := binary.LittleEndian.Uint16(e.Object.Raw[:])
+		// Cap the slice at its length so append cannot write into a canonical
+		// scene or a previous frame's backing array.
+		scene.Instances = append(scene.Instances[:len(scene.Instances):len(scene.Instances)], render3d.Instance{
+			ID: e.ID, ModelID: e.ModelID, Pose: render3d.Pose{H0: e.Pose.H0, H1: e.Pose.H1, Height: e.Pose.Height},
+			Angles: e.Pose.Angles, Callback: uint8(flags >> 8), Oriented: flags&8 != 0,
+		})
+	}
+	return scene
+}
+
+func findInstance(instances []render3d.Instance, id string) *render3d.Instance {
+	for i := range instances {
+		if instances[i].ID == id {
+			return &instances[i]
+		}
+	}
+	return nil
+}
+
 func (p *RenderingPreview) snapshotPresentation() presentationSnapshot {
-	s := presentationSnapshot{Camera: p.Scene.Camera, Instances: append([]render3d.Instance(nil), p.Scene.Instances...), Cockpit: p.Cockpit}
+	s := presentationSnapshot{Camera: p.Scene.Camera, Instances: append([]render3d.Instance(nil), p.displayAirSupport(p.Scene).Instances...), Cockpit: p.Cockpit}
 	if s.Cockpit.Map != nil {
 		m := *s.Cockpit.Map
 		s.Cockpit.Map = &m
@@ -120,7 +159,7 @@ func (p *RenderingPreview) presentationInputs() (render3d.Scene, cockpit.Inputs)
 	scene, in := p.Scene, p.Cockpit
 	h := &p.presentation
 	if h.mode != "smooth" || p.Inspection || !h.ready {
-		return scene, in
+		return p.displayAirSupport(scene), in
 	}
 	a, b := h.previous, h.current
 	t := math.Max(0, math.Min(1, h.alpha))

@@ -32,7 +32,7 @@ func exportWorldAssetsProgress(writer *OutputWriter, alloc *pathAllocator, m *Ma
 		r := res[s.Name]
 		if r == nil {
 			reason = append(reason, s.Name+" missing")
-		} else if !p.SourceMatches(role, r.Source.PayloadSHA256) {
+		} else if role == RoleSimulationExecutable && !p.SourceMatches(role, r.Source.PayloadSHA256) {
 			reason = append(reason, s.Name+" unsupported identity")
 		}
 	}
@@ -51,15 +51,9 @@ func exportWorldAssetsProgress(writer *OutputWriter, alloc *pathAllocator, m *Ma
 	for name, r := range res {
 		b.Sources[name] = r.Source.PayloadSHA256
 	}
-	setup := res["SETUP.DAT"]
-	if setup == nil || len(setup.Payload) != p.WorldLayout.SetupBytes {
-		return fmt.Errorf("world preparation requires38-byte SETUP.DAT graphics context")
-	}
-	b.GraphicsMode = setup.Payload[p.WorldLayout.SetupModeOffset]
-	b.GraphicsOptions = setup.Payload[p.WorldLayout.SetupOptionsOffset]
-	if b.GraphicsMode != 0 {
-		b.Notes = append(b.Notes, "Configured non-VGA driver mode is outside the selected-VGA renderer; raw assets are retained.")
-	}
+	// The native renderer implements the released VGA profile. DOS device preferences
+	// are user persistence, independent of this port's own graphics configuration.
+	b.GraphicsMode, b.GraphicsOptions = 0, 0xdf
 	at := p.WorldLayout.SineFile
 	if at < 0 || at+2050 > len(gs.Payload) {
 		return fmt.Errorf("source sine table bounds")
@@ -123,7 +117,7 @@ func exportWorldAssetsProgress(writer *OutputWriter, alloc *pathAllocator, m *Ma
 
 	geometries, e := worlddata.ParseModels(obj.Payload, types.Payload)
 	if e != nil {
-		return fmt.Errorf("model conversion:%w", e)
+		return fmt.Errorf("OBJFILE / OBJTYPES.DAT model conversion: %w", e)
 	}
 	for _, g := range geometries {
 		b.Models = append(b.Models, g.ID)
@@ -194,7 +188,7 @@ func exportWorldAssetsProgress(writer *OutputWriter, alloc *pathAllocator, m *Ma
 		return nil
 	}
 	// Preserve complete raw carriers and each exact model record alongside GLB.
-	for _, name := range []string{"GS2.GS2", "OBJFILE", "OBJTYPES.DAT", "SETUP.DAT"} {
+	for _, name := range []string{"GS2.GS2", "OBJFILE", "OBJTYPES.DAT"} {
 		if e = write("raw/"+name, res[name].Payload); e != nil {
 			return e
 		}
@@ -267,7 +261,7 @@ func loadWorldAssets(reader *preparedReader, m Manifest) (*worlddata.Bundle, err
 	}
 	for _, role := range []SourceRole{RoleSimulationExecutable, RoleModelGeometry, RoleModelTypes} {
 		src := p.Source(role)
-		if !p.SourceMatches(role, b.Sources[src.Name]) {
+		if (role == RoleSimulationExecutable || m.PreparationVersion < 35) && !p.SourceMatches(role, b.Sources[src.Name]) {
 			return nil, fmt.Errorf("world source identity for%s is unsupported", src.Name)
 		}
 	}

@@ -426,6 +426,9 @@ func PrepareAssetsWithAudio(input, output string, prepareAudio func(string, *Man
 	return PrepareAssetsWithProgress(input, output, prepareAudio, nil)
 }
 func PrepareAssetsWithProgress(input, output string, prepareAudio func(string, *Manifest) error, progress func(PreparationProgress)) (*Manifest, error) {
+	return prepareSelected(input, output, prepareAudio, progress, preparationFiles(), preparationMembers)
+}
+func prepareSelected(input, output string, prepareAudio func(string, *Manifest) error, progress func(PreparationProgress), filesRequired map[string]bool, membersRequired map[string]string) (*Manifest, error) {
 	emit := func(stage string, n, total int) {
 		if progress != nil {
 			progress(PreparationProgress{Stage: stage, Completed: n, Total: total})
@@ -454,13 +457,17 @@ func PrepareAssetsWithProgress(input, output string, prepareAudio func(string, *
 	alloc := &pathAllocator{}
 	var total int64
 	var planned uint64
-	err = filepath.WalkDir(in, func(p string, d fs.DirEntry, walkErr error) error {
-		if walkErr != nil {
-			return walkErr
-		}
-		if d.IsDir() {
-			return nil
-		}
+	in, err = OriginalDirectory(in)
+	if err != nil {
+		return nil, err
+	}
+	files, err := selectedFiles(in, filesRequired)
+	if err != nil {
+		return nil, err
+	}
+	m.InputDirectory = in
+	process := func(d fs.DirEntry) error {
+		p := filepath.Join(in, d.Name())
 		if d.Type()&os.ModeSymlink != 0 {
 			return fmt.Errorf("refusing input symlink: %s", p)
 		}
@@ -478,7 +485,7 @@ func PrepareAssetsWithProgress(input, output string, prepareAudio func(string, *
 		if total > maxTotalBytes {
 			return errors.New("total input exceeds512MiB")
 		}
-		raw, e := os.ReadFile(p)
+		raw, e := ReadLimitedFile(p, maxSourceBytes)
 		if e != nil {
 			return e
 		}
@@ -487,15 +494,43 @@ func PrepareAssetsWithProgress(input, output string, prepareAudio func(string, *
 		}
 		rel, _ := filepath.Rel(in, p)
 		rel = filepath.ToSlash(rel)
-		name := filepath.Base(p)
+		name := strings.ToUpper(filepath.Base(p))
 		sourceHash := Hash(raw)
+		// Executable table offsets and audio command addresses are edition-specific.
+		// Reject an unknown binary before a converter uses its fixed layout.
+		for _, spec := range IslandIce469085.Sources {
+			switch spec.Role {
+			case RoleMainExecutable, RoleSimulationExecutable, RoleLogoPlayer, RoleIntroPlayer, roleAudioLOG, roleAudioGS3, RoleAudioGS4, RoleAudioADigital, RoleAudioDDigital:
+				if name == spec.Name && sourceHash != spec.SHA256 {
+					return fmt.Errorf("%s: unsupported executable/table layout for %s", rel, IslandIce469085.Name)
+				}
+			}
+		}
 		if knownHash, ok := catalogHashes[name]; ok {
 			entries, e := parseDirectory(raw)
 			if e != nil {
 				return fmt.Errorf("%s: %w", rel, e)
 			}
+			members := map[string]bool{}
+			for _, member := range strings.Fields(membersRequired[name]) {
+				members[member] = false
+			}
 			for _, record := range entries {
+				key := strings.ToUpper(string(record.Name))
+				seen, want := members[key]
+				if membersRequired != nil && !want {
+					continue
+				}
+				if membersRequired != nil && seen {
+					return fmt.Errorf("%s: conflicting member %s", rel, key)
+				}
+				members[key] = true
 				planned += record.Length
+			}
+			for _, member := range strings.Fields(membersRequired[name]) {
+				if !members[member] {
+					return fmt.Errorf("%s: missing member %s", rel, member)
+				}
 			}
 			if planned > maxTotalBytes {
 				return errors.New("planned raw extraction exceeds512MiB (including shared ranges)")
@@ -503,10 +538,14 @@ func PrepareAssetsWithProgress(input, output string, prepareAudio func(string, *
 			m.Containers = append(m.Containers, Container{rel, sourceHash, "LE16 count;24-byte records: name12,opaque4,lengthLE32,absoluteOffsetLE32; Steps2/8/20", sourceHash == knownHash, len(entries), 2 + 24*len(entries)})
 			for i := range entries {
 				record := entries[i]
+				member := strings.ToUpper(string(record.Name))
+				if !members[member] {
+					continue
+				}
 				payload := raw[int(record.Offset):int(record.End)]
 				format, basis, _ := identify(payload, string(record.Name))
-				r := &Resource{Source: SourceLocation{rel, sourceHash, "archive_entry", rel, &record, record.Offset, record.Length, Hash(payload)}, Format: format, Basis: basis, Extraction: "pending", backing: raw, Payload: payload, name: string(record.Name)}
-				r.ExportPath = alloc.reserve(escapedPath([]byte(rel)) + "/" + escapedPath(record.Name))
+				r := &Resource{Source: SourceLocation{rel, sourceHash, "archive_entry", rel, &record, record.Offset, record.Length, Hash(payload)}, Format: format, Basis: basis, Extraction: "pending", backing: raw, Payload: payload, name: member}
+				r.ExportPath = alloc.reserve(name + "/" + escapedPath([]byte(member)))
 				m.Resources = append(m.Resources, r)
 			}
 		} else {
@@ -522,14 +561,16 @@ func PrepareAssetsWithProgress(input, output string, prepareAudio func(string, *
 				if planned > maxTotalBytes {
 					return errors.New("planned raw extraction exceeds512MiB")
 				}
-				r.ExportPath = alloc.reserve("loose/" + escapedPath([]byte(rel)))
+				r.ExportPath = alloc.reserve("loose/" + escapedPath([]byte(name)))
 			}
 			m.Resources = append(m.Resources, r)
 		}
 		return nil
-	})
-	if err != nil {
-		return nil, err
+	}
+	for _, d := range files {
+		if err := process(d); err != nil {
+			return nil, fmt.Errorf("%s: %w", d.Name(), err)
+		}
 	}
 	m.Summary.Containers = len(m.Containers)
 	if err = os.MkdirAll(filepath.Dir(out), 0755); err != nil {
@@ -546,22 +587,7 @@ func PrepareAssetsWithProgress(input, output string, prepareAudio func(string, *
 		_, _ = WriteNew(out, "manifest.json", data)
 		return m, e
 	}
-	// Core UI catalogs distinguish a frontend installation from deliberately
-	// partial raw/audio-only inputs, which also contain GS.GS2. Only the former
-	// may enter the complete typed frontend path and must have a common owner.
-	// Case-fold here only recognizes intent for a precise later diagnosis; it
-	// never aliases or changes the inventory's physical/member identities.
-	knownMain, frontendCatalog := false, false
-	for _, r := range m.Resources {
-		if r.Source.Kind == "loose_file" && r.Source.PayloadSHA256 == officeCodeHash {
-			knownMain = true
-		}
-		name := strings.ToUpper(filepath.Base(r.Source.Path))
-		if name == "GS2000.CAT" || name == "GS2000.DAT" || name == "MBUILDER.CAT" {
-			frontendCatalog = true
-		}
-	}
-	if knownMain && frontendCatalog {
+	if membersRequired != nil {
 		if _, e := ResolveSourceInstallation(m); e != nil {
 			return fail(fmt.Errorf("supported source installation: %w", e))
 		}
@@ -589,7 +615,7 @@ func PrepareAssetsWithProgress(input, output string, prepareAudio func(string, *
 	var officePalette *Palette
 	var officeSource string
 	for _, r := range m.Resources {
-		if r.Source.SHA256 == baseCatalogHash && r.name == "BASE.PAL" {
+		if r.fromCatalog("GS2000.CAT") && r.name == "BASE.PAL" {
 			palettes, _, _, e := pictureHeader(r.Payload)
 			if e == nil && len(palettes) == 1 && palettes[0].First == 0 && palettes[0].Last == 255 && Hash(r.Payload) == officePaletteHash {
 				officePalette = &palettes[0]
@@ -837,7 +863,7 @@ func convertResource(out *OutputWriter, r *Resource, a *pathAllocator, m *Manife
 		c.Errors = append(c.Errors, "bitmap font layout export unsupported: source identity is not recognized by a supported profile")
 		m.UnsupportedVersionOperations = append(m.UnsupportedVersionOperations, UnsupportedVersionOperation{"bitmap font layout export", IslandIce469085.Name, c.Errors[len(c.Errors)-1]})
 	}
-	if r.Source.SHA256 == baseCatalogHash && r.name == "BASE.PAL" && office != nil {
+	if r.fromCatalog("GS2000.CAT") && r.name == "BASE.PAL" && office != nil {
 		c.Palette = PaletteAssociation{officeSource, officePaletteHash, "Step10 all256 source/installed RGB6 entries at completed office", "prior_runtime_verified", false}
 		c.RuntimeValidation = "prior all256 installed RGB6 entries matched this source; Step10"
 	}
@@ -876,11 +902,10 @@ func convertResource(out *OutputWriter, r *Resource, a *pathAllocator, m *Manife
 					c.Status = "converted_diagnostic_grayscale"
 					var selected *Palette
 					suffix := ".diagnostic-grayscale.png"
-					if expected, ok := baselinePictures[r.name]; ok && r.Source.SHA256 == baseCatalogHash {
+					if expected, ok := baselinePictures[r.name]; ok && office != nil && r.fromCatalog("GS2000.CAT") {
 						if c.PixelSHA256 != expected {
 							decodeErr = errors.New("decoded indices differ from prior full-runtime-validated hash")
-						} else if office == nil {
-							decodeErr = errors.New("verified office palette source unavailable")
+
 						} else {
 							selected = office
 							suffix = ".png"
@@ -889,11 +914,10 @@ func convertResource(out *OutputWriter, r *Resource, a *pathAllocator, m *Manife
 							c.Palette = PaletteAssociation{officeSource, officePaletteHash, "Step10 all256 source/installed RGB6 entries at completed office", "prior_runtime_verified", false}
 						}
 					}
-					if expected, ok := officeAtlasPictures[r.name]; ok && r.Source.SHA256 == baseCatalogHash {
+					if expected, ok := officeAtlasPictures[r.name]; ok && office != nil && r.fromCatalog("GS2000.CAT") {
 						if c.PixelSHA256 != expected {
 							decodeErr = errors.New("office atlas differs from saved independent decode")
-						} else if office == nil {
-							decodeErr = errors.New("office atlas palette source unavailable")
+
 						} else {
 							selected = office
 							suffix = ".png"
@@ -903,7 +927,7 @@ func convertResource(out *OutputWriter, r *Resource, a *pathAllocator, m *Manife
 						}
 					}
 					if decodeErr == nil {
-						if office != nil && r.Source.SHA256 == baseCatalogHash {
+						if office != nil && r.fromCatalog("GS2000.CAT") {
 							if association, ok := menuPaletteAssociation(r.name, officeSource); ok {
 								selected, suffix = office, ".png"
 								c.Status, c.Palette = "converted_supported_colour", association

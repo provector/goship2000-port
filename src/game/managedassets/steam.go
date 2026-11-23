@@ -4,7 +4,7 @@ import (
 	"fmt"
 	assetdata "gunship2000-assets/game/assets"
 	"gunship2000-assets/game/configuration"
-	"io/fs"
+
 	"os"
 	"path/filepath"
 	"strconv"
@@ -97,57 +97,46 @@ func readVDF(path string) (map[string]vdfValue, error) {
 }
 
 func supportedSteamData(dir string) bool {
-	// Bind the candidate to one supported simulation, frontend and catalogue.
-	// Full preparation subsequently validates every required resource in that tree.
-	files, e := os.ReadDir(dir)
-	if e != nil {
+	entries, err := os.ReadDir(dir)
+	if err != nil {
 		return false
 	}
 	names := map[string]bool{}
-	for _, f := range files {
-		if f.Type().IsRegular() {
-			names[f.Name()] = true
+	for _, d := range entries {
+		if d.Type().IsRegular() {
+			names[strings.ToUpper(d.Name())] = true
 		}
 	}
-	for _, s := range assetdata.IslandIce469085.Sources {
-		switch s.Name {
-		case "GS.GS2", "GS2.GS2", "GS2000.CAT", "GS2000.DAT", "MBUILDER.CAT", "FONTS.GS2":
-			if !names[s.Name] {
-				return false
-			}
-			data, e := assetdata.ReadLimitedFile(filepath.Join(dir, s.Name), 32<<20)
-			if e != nil || assetdata.Hash(data) != s.SHA256 {
-				return false
-			}
+	for _, name := range []string{"GS.GS2", "GS2.GS2", "GS2000.CAT", "GS2000.DAT", "MBUILDER.CAT", "FONTS.GS2"} {
+		if !names[name] {
+			return false
 		}
 	}
 	return true
 }
 
-// Probe only the selected tree. An unusually large tree keeps its precedence
-// and is left for the full preparer to validate, as in T4.
-func probeConfiguredSource(root string) (matched, incomplete bool) {
-	root, err := filepath.EvalSymlinks(root)
-	if err != nil || filepath.Dir(root) == root {
+// A partly installed game keeps precedence so the preparer can identify the
+// missing or conflicting input, without borrowing it from a second installation.
+func probeConfiguredSource(root string) (bool, bool) {
+	dir, err := assetdata.OriginalDirectory(root)
+	if err != nil {
+		// Keep an ambiguous or inaccessible configured installation selected so its
+		// diagnosis reaches the user instead of silently discovering another copy.
+		return false, !os.IsNotExist(err)
+	}
+	entries, err := os.ReadDir(dir)
+	if err != nil {
 		return false, false
 	}
-	count := 0
-	_ = filepath.WalkDir(root, func(p string, d fs.DirEntry, err error) error {
-		if err != nil {
-			return nil
+	if supportedSteamData(dir) {
+		return true, false
+	}
+	for _, d := range entries {
+		if strings.EqualFold(d.Name(), "GS.GS2") || strings.EqualFold(d.Name(), "GS2000.CAT") {
+			return false, true
 		}
-		count++
-		if count > 4096 {
-			incomplete = true
-			return filepath.SkipAll
-		}
-		if d.Name() == "GS.GS2" && d.Type().IsRegular() && supportedSteamData(filepath.Dir(p)) {
-			matched = true
-			return filepath.SkipAll
-		}
-		return nil
-	})
-	return matched, incomplete
+	}
+	return false, false
 }
 
 func discoverSteam() string { return steamInstallation(steamRoots(), supportedSteamData) }

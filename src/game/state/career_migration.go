@@ -10,6 +10,7 @@ import (
 	"sort"
 	"strings"
 
+	"gunship2000-assets/game/diagnostics"
 	"gunship2000-assets/internal/userpack"
 )
 
@@ -177,7 +178,15 @@ func (s *SaveStore) openPacked(app, install, original string, startup bool) erro
 		}
 		if fresh {
 			state, e := importLegacyRoster(original)
-			if e == nil && state.Legacy == nil && original != "" {
+			if e == nil {
+				e = state.Validate()
+			}
+			if original != "" && (e != nil || state.Legacy == nil) {
+				reason := "ROSTER.DAT was not found"
+				if e != nil {
+					reason = e.Error()
+				}
+				diagnostics.StartupWarning("Original roster skipped. Using the default roster.", reason)
 				state, e = defaultRoster(install)
 			}
 			if e != nil {

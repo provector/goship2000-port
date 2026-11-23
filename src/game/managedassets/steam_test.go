@@ -60,7 +60,7 @@ func TestConfiguredNestedInstallPrecedesSteam(t *testing.T) {
 		t.Skip("requires the supported installation fixture")
 	}
 	root := t.TempDir()
-	nested := filepath.Join(root, "my collection", "custom layout")
+	nested := filepath.Join(root, "gs2000cd")
 	if e := os.MkdirAll(nested, 0700); e != nil {
 		t.Fatal(e)
 	}

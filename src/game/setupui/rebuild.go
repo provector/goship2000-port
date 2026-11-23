@@ -5,8 +5,11 @@ import (
 	"github.com/rivo/tview"
 	"gunship2000-assets/game/assets"
 	"gunship2000-assets/game/configuration"
+	"gunship2000-assets/game/diagnostics"
 	"gunship2000-assets/game/managedassets"
+	"gunship2000-assets/internal/branding"
 	"io"
+	"os"
 	"path/filepath"
 	"strings"
 	"time"
@@ -42,7 +45,9 @@ func (u *UI) runRebuild() {
 	go func() {
 		defer u.writers.Done()
 		var logs strings.Builder
+		stage := "Locate original installation"
 		services := managedassets.FrontEndServices(func(p assets.PreparationProgress) {
+			stage = p.Stage
 			select {
 			case updates <- p:
 			default:
@@ -58,7 +63,17 @@ func (u *UI) runRebuild() {
 		})
 		services.SourceSelected = func(path string) error { discovered = path; return nil }
 		paths := configuration.Paths{Directory: dir, Original: configuration.Relative(dir, c.Original), Assets: configuration.Relative(dir, c.Assets), Saves: configuration.SavePath(dir, data, c.Saves), AssetsOrigin: "configured-default-managed", Config: c}
+		session, sessionErr := diagnostics.StartSession(paths.Saves, branding.ProductTitle+" "+branding.Flavor, "SETUP rebuild")
+		if sessionErr != nil {
+			fmt.Fprintln(os.Stderr, "SETUP diagnostics:", sessionErr)
+		}
+		if session != nil {
+			defer session.Close()
+		}
 		_, err := managedassets.Ensure(paths, true, io.MultiWriter(&logs), services)
+		if err != nil {
+			err = diagnostics.StartupFailure(stage, fmt.Errorf("%s (original %s, destination %s): %w", stage, paths.Original, paths.Assets, err))
+		}
 		done <- err
 	}()
 	go func() {

@@ -211,7 +211,7 @@ func recognizeOfficeProfile(resources []*Resource) (*AssetVersionProfile, error)
 		source := p.Source(role)
 		found, matched, conflicting := false, false, false
 		for _, r := range resources {
-			if filepath.Base(r.Source.Path) != source.Name {
+			if !strings.EqualFold(filepath.Base(r.Source.Path), source.Name) {
 				continue
 			}
 			if role == rolePictureCatalog || role == roleScreenCatalog {
@@ -222,7 +222,7 @@ func recognizeOfficeProfile(resources []*Resource) (*AssetVersionProfile, error)
 				continue
 			}
 			found = true
-			if p.SourceMatches(role, r.Source.SHA256) {
+			if r.fromCatalog(source.Name) || p.SourceMatches(role, r.Source.SHA256) {
 				matched = true
 			} else {
 				conflicting = true
@@ -248,7 +248,7 @@ func recognizeOfficeProfile(resources []*Resource) (*AssetVersionProfile, error)
 		}
 		matched := false
 		for _, r := range resources {
-			if r.name == s.Name && r.Source.Kind == "archive_entry" && p.SourceMatches(parentRole, r.Source.SHA256) && r.Source.PayloadSHA256 == s.SHA256 {
+			if r.name == s.Name && r.Source.Kind == "archive_entry" && r.fromCatalog(p.Source(parentRole).Name) && r.Source.PayloadSHA256 == s.SHA256 {
 				matched = true
 			}
 		}

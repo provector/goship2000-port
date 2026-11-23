@@ -43,13 +43,21 @@ func PackPrepared(loose, dest string) error {
 	if err = DecodeObject(raw, &m); err != nil {
 		return err
 	}
-	r.canonical = map[string]leafProof{}
-	proof, err := canonicalLogicalResourceDataMode(r, &m, true)
-	if err != nil {
-		return err
+	if m.PreparationVersion != 34 && m.PreparationVersion != PreparationVersion {
+		return fmt.Errorf("unsupported preparation %d", m.PreparationVersion)
 	}
-	if m.PreparationVersion != 34 || Hash(proof) != decodedPreparation34 {
-		return fmt.Errorf("unverified Preparation34 logical inventory; retained source")
+	// Retain canonical proofs for conversion-only leaves referenced by historical metadata.
+	if m.PreparationVersion >= 35 {
+		// Conversion-only files will not be in the pack. Capture their historical
+		// projection while the verified loose bytes are still available.
+		_, r.historical, err = releaseProjection()
+		if err != nil {
+			return err
+		}
+	}
+	r.canonical = map[string]leafProof{}
+	if _, err = canonicalLogicalResourceDataMode(r, &m, true); err != nil {
+		return err
 	}
 	if err = os.Mkdir(dest, 0700); err != nil {
 		return err
@@ -169,6 +177,17 @@ func PackPrepared(loose, dest string) error {
 	}
 	if err = os.WriteFile(filepath.Join(dest, "manifest.json"), raw, 0600); err != nil {
 		return err
+	}
+	// Current profiles verify every included pack and load the full frontend.
+	// Older packs use their historical fingerprint, so check capability separately.
+	if m.PreparationVersion < 35 {
+		loaded, err := LoadFrontEndAssets(dest)
+		if err != nil {
+			return err
+		}
+		if err = ValidateCurrentFrontEndCapabilities(loaded); err != nil {
+			return err
+		}
 	}
 	_, err = LogicalResourceProfile(dest)
 	return err

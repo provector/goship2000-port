@@ -240,7 +240,7 @@ func exportMenuMetadata(out *OutputWriter, alloc *pathAllocator, m *Manifest) er
 	var roster *Resource
 	for _, name := range []string{"ROSTER.SCN", "MEMO.SCN", "THEATER.SCN"} {
 		for _, r := range m.Resources {
-			if r.name != name || r.Source.SHA256 != profile.Source(roleScreenCatalog).SHA256 {
+			if r.name != name || !r.fromCatalog("GS2000.DAT") {
 				continue
 			}
 			screen, e := parseMenuScreen(r)
@@ -262,7 +262,7 @@ func exportMenuMetadata(out *OutputWriter, alloc *pathAllocator, m *Manifest) er
 	}
 	for _, name := range []string{"ROSTER.PIC", "PATCHES.PIC", "MEMO.PIC", "THEATER.PIC"} {
 		for _, r := range m.Resources {
-			if r.name == name && r.Source.SHA256 == baseCatalogHash {
+			if r.name == name && r.fromCatalog("GS2000.CAT") {
 				if r.Conversion.Status != "converted_supported_colour" {
 					return fmt.Errorf("required menu picture %s has no supported colour decode", name)
 				}
@@ -293,7 +293,7 @@ func exportMenuMetadata(out *OutputWriter, alloc *pathAllocator, m *Manifest) er
 	for selector := 0; selector < 4; selector++ {
 		name := fmt.Sprintf("SCENE_%02d.THR", selector)
 		for _, r := range m.Resources {
-			if r.name != name || r.Source.SHA256 != profile.Source(roleScreenCatalog).SHA256 {
+			if r.name != name || !r.fromCatalog("GS2000.DAT") {
 				continue
 			}
 			chunks, e := officeChunks(r.Payload, r.Source.Offset)

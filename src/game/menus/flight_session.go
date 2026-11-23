@@ -564,7 +564,7 @@ func (c *FrontEnd) advanceFlight(seconds float64) (err error) {
 			}
 		}
 		if live != nil {
-			current := p.filmPlayback == nil || p.filmPlayback.Practice || p.filmPlayback.Film.Header.InputSchema == replay.Q32InputCompatibility || p.filmPlayback.Film.Header.InputSchema == replay.R1InputCompatibility
+			current := p.filmPlayback == nil || p.filmPlayback.Practice || p.filmPlayback.Film.Header.InputSchema == replay.Q32InputCompatibility || replay.WingmanInput(p.filmPlayback.Film.Header.InputSchema)
 			if current {
 				if p.threatFeedbackMechanics {
 					r.State.Collective = r.liveControls.ApplyCollectiveWithSupply(*live, &r.Axes, r.State, keyboardCollective, p.Initialized.Switches&4 == 0, r.Systems.Damage, r.Systems.DamageMasks[0], power.FuelSupplyFailed)

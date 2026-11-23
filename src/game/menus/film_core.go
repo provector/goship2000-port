@@ -336,6 +336,9 @@ func (c *FrontEnd) beginFilmRecording(final *FinalPreflightConfiguration) {
 			f.Header.Simulation = replay.R12Compatibility
 		}
 		f.Header.InputSchema = replay.R1InputCompatibility
+		if c.simulationProfile == "" {
+			f.Header.InputSchema = replay.RouteConfirmationInput
+		}
 	}
 	if final.Mission.Inputs.MissionType == gamestate.MissionSimulated {
 		f.Header.Simulation = replay.P4AuthoredCompatibility
@@ -694,11 +697,11 @@ func NewFilmPlayback(a *assetdata.OfficeAssets, f *replay.Film, options configur
 	if e := f.Validate(); e != nil {
 		return nil, e
 	}
-	resources, e := filmResourceIdentity(a)
+	compatible, e := filmMatchesInstalledResources(f, a)
 	if e != nil {
 		return nil, e
 	}
-	if !filmResourceCompatible(f, resources) || f.Header.ClockPolicy != flight.NativeClockPolicy {
+	if !compatible || f.Header.ClockPolicy != flight.NativeClockPolicy {
 		return nil, fmt.Errorf("film needs a different resource or clock profile")
 	}
 	var launch filmLaunch

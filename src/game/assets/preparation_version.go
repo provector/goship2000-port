@@ -7,7 +7,7 @@ const (
 	officeMetadataSchema   = 1
 	AudioMetadataSchema    = 9
 	audioMetadataSchema    = AudioMetadataSchema
-	PreparationVersion     = 34
+	PreparationVersion     = 35
 	PreparationGenerator   = "gunship2000-port/assets"
 )
 

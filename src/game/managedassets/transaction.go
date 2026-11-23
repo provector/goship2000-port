@@ -110,7 +110,7 @@ func Ensure(paths configuration.Paths, rebuild bool, log io.Writer, s Services) 
 		if _, pe := os.Lstat(filepath.Join(target, "packs.json")); os.IsNotExist(pe) {
 			if data, re := assetdata.ReadLimitedFile(filepath.Join(target, "manifest.json"), 64<<20); re == nil {
 				var candidate assetdata.Manifest
-				if json.Unmarshal(data, &candidate) == nil && candidate.PreparationVersion == assetdata.PreparationVersion {
+				if json.Unmarshal(data, &candidate) == nil && (candidate.PreparationVersion == 34 || candidate.PreparationVersion == assetdata.PreparationVersion) {
 					emit("Pack existing prepared assets", 0, 1)
 					if pe = s.Pack(target, generated); pe == nil {
 						manifest = &candidate
@@ -152,13 +152,26 @@ func Ensure(paths configuration.Paths, rebuild bool, log io.Writer, s Services) 
 			loose = filepath.Join(staging, "conversion")
 			output = loose
 		}
+		diagnostics.Info("assets", "Selected installation for conversion", "original", input, "staging", output, "destination", target)
 		manifest, err = s.Prepare(input, output)
+		if manifest != nil {
+			diagnostics.Info("assets", "Preparation manifest summary", "version", manifest.PreparationVersion, "result", manifest.Result, "inputs", len(manifest.Resources), "counts", manifest.Summary, "unsupported_operations", manifest.UnsupportedVersionOperations, "fatal", manifest.FatalError)
+		}
 		if err == nil && s.Pack != nil {
 			emit("Create and validate asset packs", 0, 1)
 			err = s.Pack(loose, generated)
 		}
 		if err != nil {
-			return nil, fmt.Errorf("asset generation failed (previous assets unchanged; attempt retained at %s): %w", staging, err)
+			var details []string
+			if manifest != nil {
+				for _, op := range manifest.UnsupportedVersionOperations {
+					details = append(details, op.Operation+": "+op.Reason)
+				}
+			}
+			if len(details) > 0 {
+				err = fmt.Errorf("%w; preparation manifest: %s", err, strings.Join(details, "; "))
+			}
+			return nil, fmt.Errorf("preparing %s for %s (attempt retained at %s): %w", input, target, staging, err)
 		}
 	}
 	// Partial conversion includes unrelated unsupported formats/PHIL3MIS. Office
@@ -221,6 +234,7 @@ func Ensure(paths configuration.Paths, rebuild bool, log io.Writer, s Services) 
 			return nil, fmt.Errorf("prepared assets are ready; saving selected original path: %w", err)
 		}
 	}
+	diagnostics.Info("assets", "DOS SETUP preferences, campaigns and saved missions were skipped. GoShip settings and careers remain in the player data store.")
 	emit("Prepared cache ready", 1, 1)
 	return assets, nil
 }

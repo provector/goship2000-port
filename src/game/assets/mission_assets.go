@@ -85,7 +85,7 @@ func missionResources(m *Manifest) (map[string]*Resource, *Resource) {
 	resources := map[string]*Resource{}
 	var executable *Resource
 	for _, r := range m.Resources {
-		if r.Source.Kind == "archive_entry" && (r.Source.SHA256 == baseCatalogHash || r.Source.SHA256 == catalogHashes["GS2000.DAT"]) {
+		if r.Source.Kind == "archive_entry" && (r.fromCatalog("GS2000.CAT") || r.fromCatalog("GS2000.DAT")) {
 			resources[r.name] = r
 		}
 		if r.Source.Kind == "loose_file" && r.Source.PayloadSHA256 == officeCodeHash {
@@ -491,8 +491,8 @@ func exportMissionMetadata(out *OutputWriter, alloc *pathAllocator, m *Manifest)
 
 	for _, r := range m.Resources {
 		if r.Source.Kind == "loose_file" && r.name == "OBJTYPES.DAT" {
-			if len(r.Payload) != 230*27 || Hash(r.Payload) != "a85143130d48e80b24d8a96f99c6583385f7e85c481df30a772417754224e24a" {
-				return fmt.Errorf("editor OBJTYPES profile differs")
+			if len(r.Payload) != 230*27 {
+				return fmt.Errorf("OBJTYPES.DAT requires 230 records of 27 bytes")
 			}
 			doc.Generation.Tables.EditorObjectTypes = bytes.Clone(r.Payload)
 			doc.Sources = append(doc.Sources, r.Source)
@@ -602,8 +602,8 @@ func exportMissionMetadata(out *OutputWriter, alloc *pathAllocator, m *Manifest)
 	}
 	sort.Slice(doc.Sources, func(i, j int) bool {
 		a, b := doc.Sources[i], doc.Sources[j]
-		if a.Path != b.Path {
-			return a.Path < b.Path
+		if ap, bp := strings.ToUpper(a.Path), strings.ToUpper(b.Path); ap != bp {
+			return ap < bp
 		}
 		return a.Offset < b.Offset
 	})

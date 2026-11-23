@@ -52,6 +52,7 @@ type GPS struct {
 	backup                  Route
 	overviewKeyRemainder    [2]int
 
+	confirmPartialRoutes       bool
 	keepUnfinishedWingmanRoute bool
 	separateDraft              bool
 	draft                      *Route
@@ -128,7 +129,11 @@ func (g *GPS) StartEdit() error {
 	r := &g.Routes[g.Selected]
 	g.backup = *r
 	g.overviewKeyRemainder = [2]int{}
-	if g.separateDraft && g.Selected != 0 {
+	if g.confirmPartialRoutes && g.Selected == 0 {
+		draft := g.backup
+		g.draft = &draft
+		r = g.draft
+	} else if g.separateDraft && g.Selected != 0 {
 		if !g.stageDraft() {
 			return nil
 		}
@@ -172,9 +177,12 @@ func (g *GPS) stageDraft() bool {
 	return true
 }
 func (g *GPS) commitDraft() bool {
-	owner, ok := g.routeOwner(g.Selected)
 	r := g.draft
-	valid := ok && owner == g.draftOwner && g.Routes[g.Selected] == g.backup && r.Index() >= 1 && r.Index() <= 3 && r.Point(int(r.Index())).Present()
+	valid := g.Routes[g.Selected] == g.backup && r.Index() >= 1 && r.Index() <= 3 && r.Point(int(r.Index())).Present()
+	if valid && g.Selected != 0 {
+		owner, ok := g.routeOwner(g.Selected)
+		valid = ok && owner == g.draftOwner
+	}
 	if valid {
 		g.Routes[g.Selected] = *r
 	}
@@ -257,6 +265,10 @@ func (g *GPS) Handle(in Input) (int, error) {
 	}
 	if handled, err := g.handleSupport(in); handled || err != nil {
 		return 0, err
+	}
+	if g.confirmPartialRoutes && g.Editing && in.Selector2 && !in.Escape {
+		g.FinishEdit()
+		return 0, nil
 	}
 	if g.nativeSelectors && in.Selector2 {
 		active := g.Editing || g.Moving > 0
@@ -629,8 +641,19 @@ func (g *GPS) drawMapOverlay(dst []byte, a *cockpit.Assets, overview bool, sweep
 }
 
 // Native selector policy is input-versioned; route construction itself stays the
-// existing source operation. Selector2 discards an unfinished path gesture and
-// exits through the same close owner as keyboard view/exit operations.
+// existing source operation. Input v11 confirms a placed route with either
+// Selector2 or F. Prior recordings retain their original rollback behavior.
+func (g *GPS) SetPartialRouteConfirmation(on bool) {
+	// A historical player edit stored its draft in the live route. When Resume
+	// hands that gesture to the player, keep the reached points and restore the
+	// accepted route until the player confirms. Read-only playback keeps its layout.
+	if on && !g.confirmPartialRoutes && g.Editing && g.Selected == 0 && g.draft == nil {
+		draft := g.Routes[0]
+		g.draft = &draft
+		g.Routes[0] = g.backup
+	}
+	g.confirmPartialRoutes = on
+}
 func (g *GPS) SetNativeSelectors(on bool)    { g.nativeSelectors = on }
 func (g *GPS) SetEntryOnlySelectors(on bool) { g.entryOnlySelectors = on }
 func (g *GPS) CancelPathGesture() {
