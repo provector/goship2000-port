@@ -1,0 +1,48 @@
+package assets
+
+import (
+	"bytes"
+	"compress/zlib"
+	"encoding/base64"
+	"fmt"
+	"io"
+	"strings"
+)
+
+// Exact public CD-counterpart comparison: evidence/stepR221/map. The Steam/CD
+// PHIL1 tile atlas has one corrupted8KiB block. Repair conversion input only;
+// manifest source hashes and raw exports remain the supplied original bytes.
+const Phil1BadAtlasSHA256 = "eb269a530dceef7c30185ea72d54e0f862cc7d53db71124a907f4a632244fec0"
+const Phil1CleanAtlasSHA256 = "10e9ee9a86e0a17b133fa6d4618af1a529d450f63bbfea46f2ebdebef572ac4c"
+const phil1CleanBlockZlib = "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"
+
+// CorrectKnownMapAtlas never modifies payload and never guesses unfamiliar
+// versions. A clean copy passes through byte-for-byte. Only the complete known
+// bad identity authorizes replacing its4096..12287 conversion-input bytes.
+func CorrectKnownMapAtlas(name string, payload []byte) ([]byte, bool, error) {
+	if !strings.EqualFold(name, "PHIL1BMP.GS2") || len(payload) != 27648 || Hash(payload) != Phil1BadAtlasSHA256 {
+		return payload, false, nil
+	}
+	data, err := base64.StdEncoding.DecodeString(phil1CleanBlockZlib)
+	if err != nil {
+		return nil, false, err
+	}
+	r, err := zlib.NewReader(bytes.NewReader(data))
+	if err != nil {
+		return nil, false, err
+	}
+	defer r.Close()
+	block, err := io.ReadAll(io.LimitReader(r, 8193))
+	if err != nil {
+		return nil, false, err
+	}
+	if len(block) != 8192 {
+		return nil, false, fmt.Errorf("known PHIL1 correction has invalid block size")
+	}
+	corrected := append([]byte(nil), payload...)
+	copy(corrected[4096:12288], block)
+	if Hash(corrected) != Phil1CleanAtlasSHA256 {
+		return nil, false, fmt.Errorf("known PHIL1 atlas correction identity mismatch")
+	}
+	return corrected, true, nil
+}

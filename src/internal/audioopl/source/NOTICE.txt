@@ -1,0 +1,14 @@
+DOSBox-X DBOPL preparation/continuous-flight helper
+Original core copyright (C)2002-2021 The DOSBox Team
+Pinned source checkout f95fb588686e81fdcfb4c31149addcc18ff64866
+Core and this standalone converter: GPL-2.0-or-later; see COPYING.
+Modified adapters dated2026-10-23; streaming CLI added2026-10-26. Changes are described in BUILD.md; upstream bytes retained.
+
+The standalone helper links compiler/runtime support from official Zig0.13.0.
+Accompanying runtime sources and their original license notices are retained in
+ audio-helper-runtime-sources.tar.gz. These include LLVM libc++/libc++abi/libunwind
+(Apache2 with LLVM exceptions and retained legacy notices), musl (MIT), MinGW
+(its COPYING and per-file notices), and Zig runtime sources (MIT/per-file notices).
+The archive preserves individual notices rather than replacing them with this
+short summary. Windows UCRT/KERNEL32 are OS-provided APIs; no Microsoft DLL is
+redistributed here. Target Windows10+; execution on Windows remains unverified.

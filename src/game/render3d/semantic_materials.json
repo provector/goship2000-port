@@ -1,0 +1,1784 @@
+[
+  {
+    "geometry": "model/131",
+    "layout_sha256": "d16477a4e43a89296b019cdac67ff361ad04b8da081dd447498deebce97ac76e",
+    "length": 160,
+    "offset": 126116,
+    "slice_sha256": "0945af6a2d9e76d039382cdc632878db838af8217bc0f36d31ec195b28171592",
+    "source": "OBJFILE",
+    "source_sha256": "b5e99bcddfb408bc66363864ab134f2b97e56d6723ac8fb157b71f76cd7364ff"
+  },
+  {
+    "geometry": "world/EURO6/cell/22",
+    "layout_sha256": "939c872b0ed54a5e737d504da6c4c067565043a09c5f1d10bae0ceacc041cc09",
+    "length": 36,
+    "offset": 4888,
+    "slice_sha256": "a747a7de16785c7b7482bdda43feec420ffed9f81bb32d4316022d545537002f",
+    "source": "EURO6",
+    "source_sha256": "3fe6011c816e590a86733d871404cc09fb64ab0371bf81e0ac0b2906f310b4c4"
+  },
+  {
+    "geometry": "world/EURO7/cell/22",
+    "layout_sha256": "82fd8b3a7b9d4a60d074323433aca25266b998e641cd7636c0797a912824e7f0",
+    "length": 36,
+    "offset": 4888,
+    "slice_sha256": "27c0a1d659100dd3580a1978fd71e99dd9c01db36d3be9fa276d582825fed53d",
+    "source": "EURO7",
+    "source_sha256": "c18c49600553cfbff8d7438d913e2ad79de5197ef4cdf363811773c7097b1aac"
+  },
+  {
+    "geometry": "world/EURO7/cell/23",
+    "layout_sha256": "1418fae3941da2eeb5402fafb0dd828895d839d9d92c80abf0b0cbdff423d4a7",
+    "length": 36,
+    "offset": 4924,
+    "slice_sha256": "6ce7556cc5f11060d2467b6432be0ec2c3c0893f64fd31fe7921d8b1cd8e380e",
+    "source": "EURO7",
+    "source_sha256": "c18c49600553cfbff8d7438d913e2ad79de5197ef4cdf363811773c7097b1aac"
+  },
+  {
+    "geometry": "world/EURO7/cell/24",
+    "layout_sha256": "2920aad045c4ffab9f16e020efdf29e0ec96dcfe1cc5323f078bbd6561563767",
+    "length": 36,
+    "offset": 4960,
+    "slice_sha256": "0d6d81f98287d8963c5652301245a4d5ed15ce97ac229b7ccf24a36e0e7722a2",
+    "source": "EURO7",
+    "source_sha256": "c18c49600553cfbff8d7438d913e2ad79de5197ef4cdf363811773c7097b1aac"
+  },
+  {
+    "geometry": "world/EURO8/cell/23",
+    "layout_sha256": "ec3bb670b01500434253894b7218bf1ddccbd442ab56198a9361d713f47717f6",
+    "length": 36,
+    "offset": 4924,
+    "slice_sha256": "10a5ae2f8d738f8cfcadc6d621ffec6f2b56d9aece1f25a71af1bad5e6191181",
+    "source": "EURO8",
+    "source_sha256": "3f8ccafb99f37fc60f7bd347338b7c41dfc7f835d884efc9f46a1032e6e0626a"
+  },
+  {
+    "geometry": "world/PHIL1/cell/00",
+    "layout_sha256": "e1b093132d9d97717c11dac50f07e9cb4e38fd4e427ce6178026e44ec1056011",
+    "length": 36,
+    "offset": 4096,
+    "slice_sha256": "375c21c3744e198c3f78fd859e9a65fddfde0018a7b2b349bd17f5bde6f9c66d",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/01",
+    "layout_sha256": "c407bf0964c76e03f578453f8bb6bf045c06dbc5be7bb2da50abdcb91b2deb12",
+    "length": 36,
+    "offset": 4132,
+    "slice_sha256": "583ff196a0d8756abb9359ccfc567e99225b34d827e9fa71bf4843ea01709dfa",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/02",
+    "layout_sha256": "048d218127664a69d27249b554f0f4e48f9f7b15c4415bee4c5826c7782ca967",
+    "length": 36,
+    "offset": 4168,
+    "slice_sha256": "f7c374bc178cac6b900007c3fc07809e16de15bd9e9b935098dad5aeed1d1957",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/03",
+    "layout_sha256": "fca62b88c3d33725d691b8655c8f99341cdc10c109d4f7577567cbb750aaa646",
+    "length": 36,
+    "offset": 4204,
+    "slice_sha256": "c0462c7a3ae63c197009833fc612650736b53dec048758ca61e5c379757b6bca",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/04",
+    "layout_sha256": "fe78f4da8d7dd4a936b475b1bb2179454b71f881daf8f93463260ff423a46363",
+    "length": 36,
+    "offset": 4240,
+    "slice_sha256": "8f2399782c971e37fd80490e4c2f2b53ae661176e6488aaab4eec6b1fbe18791",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/05",
+    "layout_sha256": "8610a4e560014c1c9e002ccb7eda2ab8afcdab8702b389a2764619649ed221dd",
+    "length": 36,
+    "offset": 4276,
+    "slice_sha256": "a26ce77d37698fe572742cde722b6f7a534d481edfe8b518b4cdbda1a2ccc902",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/06",
+    "layout_sha256": "2e68ddee480b52c8b5d2efff068a40bd27469e926bfe473d752bbe4b76c1c04e",
+    "length": 36,
+    "offset": 4312,
+    "slice_sha256": "1568d4d89bcfa2c6e514fcd64c82d269f1ac064b7c9b71075dcfb4589c2b0117",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/07",
+    "layout_sha256": "8d3c907a3f870af05cf818d80f1dd67b9bb37ab51b5c2d8c4d79b96f9af35cb8",
+    "length": 36,
+    "offset": 4348,
+    "slice_sha256": "027fd736d703813f03405e179111e8fdd5a9d01cd7487e64ae8bd51081d5203d",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/08",
+    "layout_sha256": "1ac908f5fb1f1d1f0196c487d7f6b997adff910b10ec221b3690633e73437f28",
+    "length": 36,
+    "offset": 4384,
+    "slice_sha256": "1b60b959f2bc1554946d3d21f222d8d8282686bb9b507661b658c0f053382989",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/09",
+    "layout_sha256": "5da4e18f545883611aac9425ea1c926be50f40dd0bc0943291e74b52fe11627d",
+    "length": 36,
+    "offset": 4420,
+    "slice_sha256": "33ec706be9db43a350aef5bca8541e69e26289c1fba760ea176b26daad44b012",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/10",
+    "layout_sha256": "8d3c907a3f870af05cf818d80f1dd67b9bb37ab51b5c2d8c4d79b96f9af35cb8",
+    "length": 36,
+    "offset": 4456,
+    "slice_sha256": "fcd66dd077be173137f0aecadbde80abb8e0efb98116f4d97173c1c6a7d682ad",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/11",
+    "layout_sha256": "d2b64e4e207bf84cdeeb3b3c7d9c92861cd2cf37250b8d573536285097ce6f83",
+    "length": 36,
+    "offset": 4492,
+    "slice_sha256": "64c868bb56d4cb42dc5b38d22e08ae09f70a0ef96e4faf2234c47151cecbde3a",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/12",
+    "layout_sha256": "2b1ef0e7da4d5124d364546db56a95c8c2f145145d45657be50bff613639e45e",
+    "length": 36,
+    "offset": 4528,
+    "slice_sha256": "cbfa99be3f887f772adcdc8a12afe44879f841c5c2cb2cc58b52017d2aea5487",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/13",
+    "layout_sha256": "a93f674088317a73a49f8c77694f13cdf4b849a3521e6532836f78a50316fcc0",
+    "length": 36,
+    "offset": 4564,
+    "slice_sha256": "df9865e0a2c6cf3050081e122ca024f51acf3d2696961d18595b5efb7c433628",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/14",
+    "layout_sha256": "7bd7668f907efa57a2e2451cfa736b2215e47daec42484b56b9d3c34be68f164",
+    "length": 36,
+    "offset": 4600,
+    "slice_sha256": "032bfec457e629f229e0ee30af04972b85845344be1f698b6452526d809b37fe",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/15",
+    "layout_sha256": "ec779136c3f517b83c90a6468fa26ddad7f9e8a308c6b336ab8a0a7d2d0cfacd",
+    "length": 36,
+    "offset": 4636,
+    "slice_sha256": "7612cbf2b4e39d0b7deb4e2fa4109547348834080ef87968a172fd5a6bcedbb9",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/16",
+    "layout_sha256": "ef7ed31baae76bc59c17f9d430f7ee92a3870af6122785ae43c504f9466dc971",
+    "length": 36,
+    "offset": 4672,
+    "slice_sha256": "0b92f31c5ebea80de65edccee34cdac3302cd50222a5be87b58565b3c209efe1",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/17",
+    "layout_sha256": "53ae1527e2339522273a22ed714c265163ef6ff145e6885bd0058bc59a13b030",
+    "length": 36,
+    "offset": 4708,
+    "slice_sha256": "d8bb8da1414441e9508e7d7b2a8b427af797a0687cc60a54cab83c0565a80770",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/18",
+    "layout_sha256": "a5a14e111e8168b55376f8d2cd0ff9e25e5731828a4de9017cc0d661f8c133e4",
+    "length": 36,
+    "offset": 4744,
+    "slice_sha256": "7542820415b9d6a6e7f1d9450c15f7c0e76ee5f8c42b678e32109e8eaa3bbaad",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/19",
+    "layout_sha256": "d6db4e9fef54c412d3850cb0aa291fea7ba80ed3ee43b2ac2ee1e2c2977de3f5",
+    "length": 36,
+    "offset": 4780,
+    "slice_sha256": "ce1e054a3210c27f64ca3a5b53b4c2d9066dd95943d906f71e356a79d6439e66",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/20",
+    "layout_sha256": "570e1fa6acf1494599db056b5befcc499c84973bb74512a2806b2e44983a65cc",
+    "length": 36,
+    "offset": 4816,
+    "slice_sha256": "b928a914640ae1cd8d5995efe2d8996844d826b31fc51514f2e73ae9a7c33a63",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/21",
+    "layout_sha256": "d54b92f6aa5c1ade400b9e9c3f39af625165c48b98a9dbda48a4307521c2d33b",
+    "length": 36,
+    "offset": 4852,
+    "slice_sha256": "9d0d71ee203dcd0c77cc09ca60fb83e86625a92b574cd1aa05518357221ea3ae",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/22",
+    "layout_sha256": "ab036e7cc988bf32dee4620d903417c3b64f0a9e24cddc8773d726cb38fa3973",
+    "length": 36,
+    "offset": 4888,
+    "slice_sha256": "b42d1ffd368cbc4b3dc3e6ba0faf0a0e83d31f6d1f253bb3a52c285632242c6b",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/23",
+    "layout_sha256": "b468ebde38738300eaa81755ce9964302e6e5de4e158de9d0ac4803c8e39d270",
+    "length": 36,
+    "offset": 4924,
+    "slice_sha256": "bd758c36a0bccede4d212e85d55b9023556ad9b9413e303e5e2f312328cc7e17",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/24",
+    "layout_sha256": "db54e505b24736264e85a52a6c34d1dc52b2731e46d41ec1f5350a39d0229d35",
+    "length": 36,
+    "offset": 4960,
+    "slice_sha256": "6039881be307127060283ad5dc49fb04269a2e974b71c07feb0dbf95bd57e044",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/25",
+    "layout_sha256": "d0b228074a91de345edb0aae624c9b1ecbc8ae026a93f839afcff9e9a5677962",
+    "length": 36,
+    "offset": 4996,
+    "slice_sha256": "2d1e4ecbf4f737954b6c6dc558c1638eb54cb03a80aad946f54f711a8bc8e3bf",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/26",
+    "layout_sha256": "4ac630d35b00683a3bd1694906ea1afcc7255a9a41313ed9a535db25597b32f9",
+    "length": 36,
+    "offset": 5032,
+    "slice_sha256": "1dd9feda8ca8e07d440f4f5ae64f1a3a4dfb83a938e24fc234835cb467420724",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/27",
+    "layout_sha256": "22ea4096c0f1969563bb3797490841d266adf777a5e15c48a55835e447440cb6",
+    "length": 36,
+    "offset": 5068,
+    "slice_sha256": "3ffcf30a621d6fe60fc3af9704be4098c090ac82ddcc4ba0c92fe2c0c40c19dd",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/28",
+    "layout_sha256": "c1feb2e48ebedd16e8d771ba3b73b040cc0dc5e605288aca1e3877ded5f004ea",
+    "length": 36,
+    "offset": 5104,
+    "slice_sha256": "5513a218e1ab20a5a9e723b415e9dfb672bf97aac73a2307ade82ee2094e3e2f",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/29",
+    "layout_sha256": "d9af6ee533e956ab3683c66e86761bfd6a5aad33011c8e1b084aaeaf1e3a4bcb",
+    "length": 36,
+    "offset": 5140,
+    "slice_sha256": "876a6d121545343430fef4747748d0e94ce42b0c4dbabdccae17ce8017cedd00",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/30",
+    "layout_sha256": "782a89941749dcd2a75836437b27ae4dcbce6a30cfd1270353307d4195b5e3a0",
+    "length": 36,
+    "offset": 5176,
+    "slice_sha256": "475cfa533d092c840999e965ff3f031fe8829cc94539ab0743358575bb43814a",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/31",
+    "layout_sha256": "7a40a816c30b268acd939fe1fafc76ebfc87caec568e7f557ba5e5a7013fe17f",
+    "length": 36,
+    "offset": 5212,
+    "slice_sha256": "a753270d95869892b0d5a540cba7ceeec170196c7eb4cfcfe3bbafc4b94aff91",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/32",
+    "layout_sha256": "3e3f1bc785fe42449e5701cf36a130347f2f29fe6c2a3080a75aa0617668cc24",
+    "length": 36,
+    "offset": 5248,
+    "slice_sha256": "97df42cc0272582d15fc8f8869829a135a777fb77ee0b88cd7dfa899bf822567",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/33",
+    "layout_sha256": "8aa8208164a811782b81727faa2fb995ca12cd3c70c98b608bf3dc3769a14685",
+    "length": 36,
+    "offset": 5284,
+    "slice_sha256": "2dedcc96dd2765e59014b0dd9efa0f552d3e09ff50f58024fa829bb7bc9fbb94",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/34",
+    "layout_sha256": "641c26c4bcf5764c3592bbdf8605281c45ef99b133ac21be4e4f6223bb56a823",
+    "length": 36,
+    "offset": 5320,
+    "slice_sha256": "f19ee7f92c79b2b13e1c20a77c5ae332e41517539144d143e0c2d2eab0d3694b",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/35",
+    "layout_sha256": "4657433ff1d0b097a86aefc8807f675ab41624c73af1154de3da80ba41f474cc",
+    "length": 36,
+    "offset": 5356,
+    "slice_sha256": "2f1b845c94b7597f2c3155c6772be5f4fea31055b7d1c78fd300bd3de27ead8c",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/36",
+    "layout_sha256": "eb17332bca0e8fe0c783d1323970343452b3203beafb8cd47f3a05876ea52324",
+    "length": 36,
+    "offset": 5392,
+    "slice_sha256": "d0733d03da57edd6a46e14521ab4a139bd91ffbacf983799d639fad87977059f",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/37",
+    "layout_sha256": "8492ae0de68fc776263b9c712be6c96a70e689c5d03e9b2f1dde30e26596b795",
+    "length": 36,
+    "offset": 5428,
+    "slice_sha256": "3595088a77e3c02d7a933e3523b188e770be966a413c6f95ca267870e60fe39f",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/38",
+    "layout_sha256": "9e8b11f57c99fd38140283a91712965e4d30be18731e43045f6570a751b133e7",
+    "length": 36,
+    "offset": 5464,
+    "slice_sha256": "dbf1315e98ade4814c0b17c76d2dc90d9513af55b8c7823fc2232ca85f9ff56c",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/39",
+    "layout_sha256": "847a463d6e8272f556a900a671d83386fdee52b5e7cd850d1d2ad7bf7c8604ee",
+    "length": 36,
+    "offset": 5500,
+    "slice_sha256": "3140a9bdfaaf9b2c619d841e32c98bda7648eb225b5fd1e2701f3a5c0ccd8c8d",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/40",
+    "layout_sha256": "783548feb014ecb6baaee0fd54fa949a8c80c0690600405883ba8a25abe2a8d3",
+    "length": 36,
+    "offset": 5536,
+    "slice_sha256": "195a973da140423e8ad57be3e8c36ee72cdf9a8aa8215832dc469b908f183d9d",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/41",
+    "layout_sha256": "ab70df9ed3fb267d824f1a670a8ed9f3f1825c225be948852c307ec049159936",
+    "length": 36,
+    "offset": 5572,
+    "slice_sha256": "a77d4a6d0c69513c0e66f3039840d3ecc337fcf1de70cce7877e98576ac792d1",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/42",
+    "layout_sha256": "e893197d307938a58f87b0229bb70c48a5270c836e9a011ca7480daacbc97afc",
+    "length": 36,
+    "offset": 5608,
+    "slice_sha256": "1eda843a5bff98cd79dd3fadaee49a1b75e3814579aa8cc0aadb43a59606eb17",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/43",
+    "layout_sha256": "e67e83abfc01da0877f37d15799f881e00c6a978eebd5eaea964abefa1397ae4",
+    "length": 36,
+    "offset": 5644,
+    "slice_sha256": "44f88198637dfb281d944aa968cd1eda4c95abcfa3b53521e565bd75a64fe9b2",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/44",
+    "layout_sha256": "d19f9c2ed7f291c727935186ec1c34b183850c4e8fb901425b1e776511f80414",
+    "length": 36,
+    "offset": 5680,
+    "slice_sha256": "6d1bea5b87cb0c4b778904b56b2d8f6d0605a7d59d4f4fa0718b4779b0d3e9f3",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/45",
+    "layout_sha256": "e67301eef154a63cfb42208cf83252982d508d3ede6f69c8f9b0abd6b4e18f5a",
+    "length": 36,
+    "offset": 5716,
+    "slice_sha256": "9c25ce259efbedcad1394c7e013d7257fb5658a90e24b67e326ace6f31d85a66",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/46",
+    "layout_sha256": "2982acb7ed9d2195c58c618787390b9dbe7df17759fc147f5d953540fb06fd73",
+    "length": 36,
+    "offset": 5752,
+    "slice_sha256": "fd8ac913f14eb7e7d0262add6b54998e758f844d034ab02ab6fc3a34af151ffe",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/47",
+    "layout_sha256": "8b0ef35c24a7cfbcbc5280c9d7a93626a70337c0ec725777c85f11adce4f62ae",
+    "length": 36,
+    "offset": 5788,
+    "slice_sha256": "981d215cd0b4b6c2d5beae4378c4c2bfc015cc0cd8b5800ac55908f8d760bfbf",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/48",
+    "layout_sha256": "986dd9c64d56c86375ea2959af2ed666af4f77c821ce9981d55b7dc6a0cd29e0",
+    "length": 36,
+    "offset": 5824,
+    "slice_sha256": "f5ff66f74f2419aec1fd67dc08e66b9e1d56dc7f5cc5d12bb3d722f2adf678fb",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/49",
+    "layout_sha256": "1e315218b28ab8a034f29dbc92d3797770f1b0e3c67e6a7f150b71adcf6c6fce",
+    "length": 36,
+    "offset": 5860,
+    "slice_sha256": "d86b22c4ff407b2c34b643bfdafb0b53f314ffaafb7e043ee5fc118dbcabf9ad",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/50",
+    "layout_sha256": "7b303399d70b45ce96b2ce60d14198c58ccb9e27d2927f9fda5f6e7d955b3539",
+    "length": 36,
+    "offset": 5896,
+    "slice_sha256": "68d8ee600e7fb990f80dfe65c4927907d207d302de7065ccc8ee00facdba42a6",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/51",
+    "layout_sha256": "15d86fa7c093c528e870740ea1b7795467df063b8b75944a511c545c386cb43e",
+    "length": 36,
+    "offset": 5932,
+    "slice_sha256": "c5ebee92466977c110af79d182677cc882bc3673d08d92125a3010c490d6ff14",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/52",
+    "layout_sha256": "404973309a4940bf673388d6a4a0fb029f1ce77a4cedf93633a2ef4c1660941a",
+    "length": 36,
+    "offset": 5968,
+    "slice_sha256": "448c1f10058cd341398797c4b485a8d07feb484f9d288e62ec5087628cc38e17",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/53",
+    "layout_sha256": "bbc795db473e68b0a42b26ff734f377e0b7cc02656c401e30ce1dd0bc828be41",
+    "length": 36,
+    "offset": 6004,
+    "slice_sha256": "0d85733b840bc8bea91fecfeecb75fed087edbca6e4ea64123cc9c77b64987fc",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/54",
+    "layout_sha256": "fbf81bb0319737bf30a688fc8be26106a6101c6740d2911f0aee64a0174b8eb6",
+    "length": 36,
+    "offset": 6040,
+    "slice_sha256": "153b5e3ad44a77b0f33286d1a34356d5e60968f55c676b36e2bc60019bdd5962",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/55",
+    "layout_sha256": "a548c6de798dd7917f5631794d410a067d444eb473ae01be32717747547ed899",
+    "length": 36,
+    "offset": 6076,
+    "slice_sha256": "35baba39b48e4c0cb8bf71217d4ec97854f726275a1bb1cb0917b8394c053319",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/56",
+    "layout_sha256": "4241c62f10ddf4e689ca1c8113f1e4fe1a348c42f711b00970be773e799b9ae5",
+    "length": 36,
+    "offset": 6112,
+    "slice_sha256": "ffe1b8f0220b83d6d25ac7fcd49181d57ab82ee3adc17e6e6308c264f5bdbc54",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/57",
+    "layout_sha256": "c705e4e2385f726ac80e6cf35d19b67ee620ec5b28b8ff8082b5b7c75c615290",
+    "length": 36,
+    "offset": 6148,
+    "slice_sha256": "86d047f5711b8bc1ce1bba20c84daf255338d1bb67f05bdb3823011c308c2fbe",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/58",
+    "layout_sha256": "06434b2ab3a91b2d854f69b90344a827d065c06c4fb0898e13fd9081a91f7312",
+    "length": 36,
+    "offset": 6184,
+    "slice_sha256": "e5dfb11e188f7907a199ec01bd2ca233a60f75339c740b260853d766c63f7e7b",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/59",
+    "layout_sha256": "bbc795db473e68b0a42b26ff734f377e0b7cc02656c401e30ce1dd0bc828be41",
+    "length": 36,
+    "offset": 6220,
+    "slice_sha256": "7ab6e6761e6d3d6a03ef6c8df48e6e730216c79d8fecd1f31999f656e07e4e11",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/60",
+    "layout_sha256": "d2c44487894b39f065890c911584b4f99f7ac8cddf55b4252b24ec22bc3b9682",
+    "length": 36,
+    "offset": 6256,
+    "slice_sha256": "dde18f1eadb3460db1b88e4f8a7457c927505d9dfd16704fbe2cba53fe34b05f",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/61",
+    "layout_sha256": "58cb95b735d57c28c0d7bc8d8736ed619bdbd3f1d92e77fe79d595271a714c5c",
+    "length": 36,
+    "offset": 6292,
+    "slice_sha256": "b9b1d6ec61cc30ad6c168baa77477d8fa23e0ded807f177ac9561e36d79b5cb7",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/62",
+    "layout_sha256": "364f2d87b91758c9007dd47c6ed43955d462de5b30338804b06860ca27a41ee7",
+    "length": 36,
+    "offset": 6328,
+    "slice_sha256": "000b50e75d0fae602d82d39e8e87359de5b44013b06f135f344c6945e6370f74",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL1/cell/63",
+    "layout_sha256": "830e18545d007a4356197d743515dbae8d82d3a387bc7a9af9a717c6f8eecce3",
+    "length": 36,
+    "offset": 6364,
+    "slice_sha256": "0bd28867cb915cf0d97e25a5d045a445c6d092ea2b26d216e66afcdfa6badd8a",
+    "source": "PHIL1",
+    "source_sha256": "e020d42af653ad29872a22aabc6fd40015a5107b03e5267a5561b31b6122a199"
+  },
+  {
+    "geometry": "world/PHIL2/cell/00",
+    "layout_sha256": "52778e904ac2ab8cbf1e8c06bc7e79c5c1a31cadfa46d42519e8d327d4409bf1",
+    "length": 36,
+    "offset": 4096,
+    "slice_sha256": "b63d3ffd494dc146ac77443091a4a92b40d24d5cfa83b30c3a8f1af5b21337a9",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/01",
+    "layout_sha256": "e1b093132d9d97717c11dac50f07e9cb4e38fd4e427ce6178026e44ec1056011",
+    "length": 36,
+    "offset": 4132,
+    "slice_sha256": "21fbc3213a02c7d8644c93f7bc1b92a99ab2ed1997e364eaaa906403ba46c69b",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/02",
+    "layout_sha256": "2f4567b211c91c0b3ad3dab5e81ea2aa26d885cf11f7aba88516a88d255407b3",
+    "length": 36,
+    "offset": 4168,
+    "slice_sha256": "14b76bc74f320f182f10879422d01af08771a4f538131f498fdae355b9e4f34b",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/03",
+    "layout_sha256": "fe78f4da8d7dd4a936b475b1bb2179454b71f881daf8f93463260ff423a46363",
+    "length": 36,
+    "offset": 4204,
+    "slice_sha256": "b83c20f8db015e04e3a0d7a979b91e54d22ae4090c0f0b4367cab86302f56123",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/04",
+    "layout_sha256": "8610a4e560014c1c9e002ccb7eda2ab8afcdab8702b389a2764619649ed221dd",
+    "length": 36,
+    "offset": 4240,
+    "slice_sha256": "146e9d3e2b581da533f37c2cab371185ca17e997013c68f5b7c0c6a5832faf3f",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/05",
+    "layout_sha256": "26e29829344e629e9671bbc464b6fd604a6c806dc39f3ce592d0061812e5ab5b",
+    "length": 36,
+    "offset": 4276,
+    "slice_sha256": "c98a0cf02a0dee7ffb8d7b19c9aa4cfdcac819b701aced0b38c663afeb390300",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/06",
+    "layout_sha256": "8d3c907a3f870af05cf818d80f1dd67b9bb37ab51b5c2d8c4d79b96f9af35cb8",
+    "length": 36,
+    "offset": 4312,
+    "slice_sha256": "c75edcbe2cdb20ede93bcc26c95afcb4a3744ba36f984ab712defba1bb720584",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/07",
+    "layout_sha256": "1ac908f5fb1f1d1f0196c487d7f6b997adff910b10ec221b3690633e73437f28",
+    "length": 36,
+    "offset": 4348,
+    "slice_sha256": "047725b9dda9f95fb5c1f40a0295fa7361f20dedf0cbe2fa87fe0b06a3ebf6a1",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/08",
+    "layout_sha256": "5da4e18f545883611aac9425ea1c926be50f40dd0bc0943291e74b52fe11627d",
+    "length": 36,
+    "offset": 4384,
+    "slice_sha256": "b365741993444675f25e3afaa30971fcff61a061401320e19aafc4759e2d6d3f",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/09",
+    "layout_sha256": "8d3c907a3f870af05cf818d80f1dd67b9bb37ab51b5c2d8c4d79b96f9af35cb8",
+    "length": 36,
+    "offset": 4420,
+    "slice_sha256": "c7b5bec9f566b23663ce735ea14746ef8fd6987861c6bf3afb9fe11714bc8cf8",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/10",
+    "layout_sha256": "d2b64e4e207bf84cdeeb3b3c7d9c92861cd2cf37250b8d573536285097ce6f83",
+    "length": 36,
+    "offset": 4456,
+    "slice_sha256": "e5896253493c004617e64a0a77228fb62686fd3a2df1908a0fb5f30d8d08027c",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/11",
+    "layout_sha256": "fe78f4da8d7dd4a936b475b1bb2179454b71f881daf8f93463260ff423a46363",
+    "length": 36,
+    "offset": 4492,
+    "slice_sha256": "a8095d474b56e6996dcaff01a2a7c0c7cd130032c71436f3ad2cba6202e247ed",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/12",
+    "layout_sha256": "486226012b9b9a51cbc9d2782728af9c0eead90ca68e0b1204d5933860bffbc7",
+    "length": 36,
+    "offset": 4528,
+    "slice_sha256": "fc5d05cb1a4db0d6c86c731a0ec46ff414dd517a812e72bec51fef5eca92ee63",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/13",
+    "layout_sha256": "07bc522111aeefdccf93f10a9793fa95642757a1dec18fb587d6136afbf45c9d",
+    "length": 36,
+    "offset": 4564,
+    "slice_sha256": "c175a101618d799667b6db7441c4f9a61dff803cf49e18710846006528125046",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/14",
+    "layout_sha256": "2b1ef0e7da4d5124d364546db56a95c8c2f145145d45657be50bff613639e45e",
+    "length": 36,
+    "offset": 4600,
+    "slice_sha256": "d34b3decd11fba2e68f96fcc9c78d96558c843a91925db2ec3b0bec4a95b8aa9",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/15",
+    "layout_sha256": "2b1ef0e7da4d5124d364546db56a95c8c2f145145d45657be50bff613639e45e",
+    "length": 36,
+    "offset": 4636,
+    "slice_sha256": "847233720a0c6081516667d6d5e2d4b187c0fe73817ecbc7c8cab4a06987cc20",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/16",
+    "layout_sha256": "8e11d2c14f1efb585549ce5994b7cbda73874bbf4e57300e546cb769db2d8ef4",
+    "length": 36,
+    "offset": 4672,
+    "slice_sha256": "dc38438f55b8442ed485c670bbda069d5fdf7544c47912771c9832e9cee60ed3",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/17",
+    "layout_sha256": "88ac57a636b767ba37ff6dbf224052c843b2bb79ecf06ca19a8c215e6b793360",
+    "length": 36,
+    "offset": 4708,
+    "slice_sha256": "73a9af02ad00a4dac5bfc967d6111e23a37d81e91b9e6d0aa54aa7950b24bf1f",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/18",
+    "layout_sha256": "1ac908f5fb1f1d1f0196c487d7f6b997adff910b10ec221b3690633e73437f28",
+    "length": 36,
+    "offset": 4744,
+    "slice_sha256": "8e4d4c47c6d92759b7d956ade1cbb242f9bc3f65833ad6db9df6649e877756ff",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/19",
+    "layout_sha256": "c9cc2febce5003b5b2eb2b5619b4938e8f8d11721f064da8b2e9203664c4a12a",
+    "length": 36,
+    "offset": 4780,
+    "slice_sha256": "38a6570edf409b4eb16c0a6b52713749e7d01daafce16bd2e3a90217570f6958",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/20",
+    "layout_sha256": "2f4c953423d7f0796887442ef1585e8ec4e7fac9766e05c806121a92701d55b7",
+    "length": 36,
+    "offset": 4816,
+    "slice_sha256": "92fd018c8e2e22f18a710de02ee48f981e52bbd57ed7c69614031889957d420c",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/21",
+    "layout_sha256": "bbc795db473e68b0a42b26ff734f377e0b7cc02656c401e30ce1dd0bc828be41",
+    "length": 36,
+    "offset": 4852,
+    "slice_sha256": "24efcc1d6285d478cf56fba386d93c09b874bd63086240405943efd4e354f070",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/22",
+    "layout_sha256": "fbf81bb0319737bf30a688fc8be26106a6101c6740d2911f0aee64a0174b8eb6",
+    "length": 36,
+    "offset": 4888,
+    "slice_sha256": "c103f8625ceaf1e8a576a3ffd65fe18911ee2d8fcb5c94473ed471e3bd832856",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/23",
+    "layout_sha256": "6372355f79ba5d4578f71d9fb8f8461966f1ba73ff7c34c6a50f4fd034ea93a3",
+    "length": 36,
+    "offset": 4924,
+    "slice_sha256": "88fae1bce049afa38e1c3ca690030af1d7e65792ad6985a5270717b624ce7f88",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/24",
+    "layout_sha256": "097d43891caf9c2d625d62d6fb70df749a72ba3f465e179a932b53f7d19521d1",
+    "length": 36,
+    "offset": 4960,
+    "slice_sha256": "1a53d3e3b5ced07fe005315097245b666cae4451c8777bde3423764f855f287c",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/25",
+    "layout_sha256": "783548feb014ecb6baaee0fd54fa949a8c80c0690600405883ba8a25abe2a8d3",
+    "length": 36,
+    "offset": 4996,
+    "slice_sha256": "b7b69c5b67272793c7a70489b95f811139be7ca602cec373a4e6ffbaa916a28d",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/26",
+    "layout_sha256": "ab70df9ed3fb267d824f1a670a8ed9f3f1825c225be948852c307ec049159936",
+    "length": 36,
+    "offset": 5032,
+    "slice_sha256": "88a6d5f4c8e288200a2ee023a67b7bd9a9b1d8c37a43465d96c03ec11fc70d60",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/27",
+    "layout_sha256": "e893197d307938a58f87b0229bb70c48a5270c836e9a011ca7480daacbc97afc",
+    "length": 36,
+    "offset": 5068,
+    "slice_sha256": "feae1ddae91a192c55f98ad99612c49a5c016d1c8045ffd0d03ebddce19f0beb",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/28",
+    "layout_sha256": "e67e83abfc01da0877f37d15799f881e00c6a978eebd5eaea964abefa1397ae4",
+    "length": 36,
+    "offset": 5104,
+    "slice_sha256": "2e18b8da487220b4fe2c0d2252882c98e3bad14baca8f898b41ebb11cbc9d285",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/29",
+    "layout_sha256": "d19f9c2ed7f291c727935186ec1c34b183850c4e8fb901425b1e776511f80414",
+    "length": 36,
+    "offset": 5140,
+    "slice_sha256": "298b015f0f37644fe70186d4f6ebd9338fbfdae0788eeb3a8b56fe44037aaa1c",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/30",
+    "layout_sha256": "8b0ef35c24a7cfbcbc5280c9d7a93626a70337c0ec725777c85f11adce4f62ae",
+    "length": 36,
+    "offset": 5176,
+    "slice_sha256": "6d25c1840923402020be89a7ee66d6f110fbe08509c0d1a9804d9bf5787824a9",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/31",
+    "layout_sha256": "1e315218b28ab8a034f29dbc92d3797770f1b0e3c67e6a7f150b71adcf6c6fce",
+    "length": 36,
+    "offset": 5212,
+    "slice_sha256": "3bb91ea56436f39ba29e8db84fb30d230588c206c38d79e6e7a16dce1d7c58d4",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/32",
+    "layout_sha256": "2982acb7ed9d2195c58c618787390b9dbe7df17759fc147f5d953540fb06fd73",
+    "length": 36,
+    "offset": 5248,
+    "slice_sha256": "0226a44bed30d5ad40f12c64cce640bb4de6ff8db6aec560795d17bf523d725c",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/33",
+    "layout_sha256": "15d86fa7c093c528e870740ea1b7795467df063b8b75944a511c545c386cb43e",
+    "length": 36,
+    "offset": 5284,
+    "slice_sha256": "aab4f79aa1ad20f9974acb61da082f393d6429561f3bc79b7ee5336c156510d7",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/34",
+    "layout_sha256": "404973309a4940bf673388d6a4a0fb029f1ce77a4cedf93633a2ef4c1660941a",
+    "length": 36,
+    "offset": 5320,
+    "slice_sha256": "32968818597a269ceeb7441b11ebff3f9311bbe208ef3c3d796721578ab47fb4",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/35",
+    "layout_sha256": "22ea4096c0f1969563bb3797490841d266adf777a5e15c48a55835e447440cb6",
+    "length": 36,
+    "offset": 5356,
+    "slice_sha256": "9d2049e28d61505752a6412241df591a582c6a7b3fe06b739299ce9865fc58f8",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/36",
+    "layout_sha256": "c1feb2e48ebedd16e8d771ba3b73b040cc0dc5e605288aca1e3877ded5f004ea",
+    "length": 36,
+    "offset": 5392,
+    "slice_sha256": "d667e3b9ad4bb23aefc4f432766322088847380a38b14581dc5e5f660c72503b",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/37",
+    "layout_sha256": "d9af6ee533e956ab3683c66e86761bfd6a5aad33011c8e1b084aaeaf1e3a4bcb",
+    "length": 36,
+    "offset": 5428,
+    "slice_sha256": "dbf5b9b5ca371cc61427d367b9af167c56181a70f796d21ffc9990024da67207",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/38",
+    "layout_sha256": "d0b228074a91de345edb0aae624c9b1ecbc8ae026a93f839afcff9e9a5677962",
+    "length": 36,
+    "offset": 5464,
+    "slice_sha256": "2b27e9c41c3df8981f8d60bb722dd070264638ab7413d4daf38eb69d8f481b00",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/39",
+    "layout_sha256": "7a40a816c30b268acd939fe1fafc76ebfc87caec568e7f557ba5e5a7013fe17f",
+    "length": 36,
+    "offset": 5500,
+    "slice_sha256": "3f919629dbc3a13b6a9ae7eb2a12803948456c34b4396c88c929772839a1653f",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/40",
+    "layout_sha256": "3e3f1bc785fe42449e5701cf36a130347f2f29fe6c2a3080a75aa0617668cc24",
+    "length": 36,
+    "offset": 5536,
+    "slice_sha256": "a7e227f1ed091d8a3721a767bcb176260c87dbc6ad16d3a1493375d1b97166db",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/41",
+    "layout_sha256": "8aa8208164a811782b81727faa2fb995ca12cd3c70c98b608bf3dc3769a14685",
+    "length": 36,
+    "offset": 5572,
+    "slice_sha256": "22d9697cbb9615edb251c2dc6788ef63af4a54026cccc3739d676eeff3c85f46",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/42",
+    "layout_sha256": "641c26c4bcf5764c3592bbdf8605281c45ef99b133ac21be4e4f6223bb56a823",
+    "length": 36,
+    "offset": 5608,
+    "slice_sha256": "cba0bd30c4ae9b1b376758e5256b49b9e963e5c8e61d0ce0f04cc0477e2d19be",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/43",
+    "layout_sha256": "eb17332bca0e8fe0c783d1323970343452b3203beafb8cd47f3a05876ea52324",
+    "length": 36,
+    "offset": 5644,
+    "slice_sha256": "432b61cc30ac9d7ce04008f200ce4b9f10e6eed1d9ef0555fef4c2f0e89dedf0",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/44",
+    "layout_sha256": "8492ae0de68fc776263b9c712be6c96a70e689c5d03e9b2f1dde30e26596b795",
+    "length": 36,
+    "offset": 5680,
+    "slice_sha256": "f331080ef7734388699c28fd733eb3749b8400b38f92bb97717997fd10872767",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/45",
+    "layout_sha256": "4657433ff1d0b097a86aefc8807f675ab41624c73af1154de3da80ba41f474cc",
+    "length": 36,
+    "offset": 5716,
+    "slice_sha256": "2c10e8d658eb86cb35d0bf073625f39d0f077d3c4a0858a4c0a722053b036b33",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/46",
+    "layout_sha256": "a93f674088317a73a49f8c77694f13cdf4b849a3521e6532836f78a50316fcc0",
+    "length": 36,
+    "offset": 5752,
+    "slice_sha256": "f72620c9c31ed343e0812da8cc6ce08036fa31207601586495ff6a41f84a1946",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/47",
+    "layout_sha256": "7bd7668f907efa57a2e2451cfa736b2215e47daec42484b56b9d3c34be68f164",
+    "length": 36,
+    "offset": 5788,
+    "slice_sha256": "61d5120022cf9781476ec6536024d27386d6039d70b32ff478100191c6173b49",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/48",
+    "layout_sha256": "ec779136c3f517b83c90a6468fa26ddad7f9e8a308c6b336ab8a0a7d2d0cfacd",
+    "length": 36,
+    "offset": 5824,
+    "slice_sha256": "eef922195f294837e41f7bf3e218414f5477719140cac7ce26e71cae6c4f7f95",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/49",
+    "layout_sha256": "ef7ed31baae76bc59c17f9d430f7ee92a3870af6122785ae43c504f9466dc971",
+    "length": 36,
+    "offset": 5860,
+    "slice_sha256": "b1d0582af374178061c5d32c90adc5f2149136fb2990c3334e6b16be4b6f6e5d",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/50",
+    "layout_sha256": "53ae1527e2339522273a22ed714c265163ef6ff145e6885bd0058bc59a13b030",
+    "length": 36,
+    "offset": 5896,
+    "slice_sha256": "7c0ea022ce282882b32458e5feb85aa5b72f5998e2f4fe9ec5d2336eb1233366",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/51",
+    "layout_sha256": "a5a14e111e8168b55376f8d2cd0ff9e25e5731828a4de9017cc0d661f8c133e4",
+    "length": 36,
+    "offset": 5932,
+    "slice_sha256": "489d6a9dd8facbfd9f96414b2e1094dc202a1f844caeae6d95eb23c65ea10cd9",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/52",
+    "layout_sha256": "d6db4e9fef54c412d3850cb0aa291fea7ba80ed3ee43b2ac2ee1e2c2977de3f5",
+    "length": 36,
+    "offset": 5968,
+    "slice_sha256": "c4d27e9f5bd6f59f98b28f3396860aebd0f17f13bdb6bc09fe3e6df28bbfdfb5",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/53",
+    "layout_sha256": "570e1fa6acf1494599db056b5befcc499c84973bb74512a2806b2e44983a65cc",
+    "length": 36,
+    "offset": 6004,
+    "slice_sha256": "79f2117f506c6ed5e964aa4987138e2646c2f48951582cd829d5125cca7eacda",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/54",
+    "layout_sha256": "d54b92f6aa5c1ade400b9e9c3f39af625165c48b98a9dbda48a4307521c2d33b",
+    "length": 36,
+    "offset": 6040,
+    "slice_sha256": "a41c62be0d61a304c561255948f3e8c32d6947d7a627863d6b2ab49e1c5edb24",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/55",
+    "layout_sha256": "ab036e7cc988bf32dee4620d903417c3b64f0a9e24cddc8773d726cb38fa3973",
+    "length": 36,
+    "offset": 6076,
+    "slice_sha256": "89f5b5b12722879cc585b7303499807f0e136eff13dcffe50260b90697f1de3a",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/56",
+    "layout_sha256": "06434b2ab3a91b2d854f69b90344a827d065c06c4fb0898e13fd9081a91f7312",
+    "length": 36,
+    "offset": 6112,
+    "slice_sha256": "a0f6adb09cd558da57814b9bb5500f584e1d7910560892c0ce3b96b10ce21a04",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/57",
+    "layout_sha256": "c705e4e2385f726ac80e6cf35d19b67ee620ec5b28b8ff8082b5b7c75c615290",
+    "length": 36,
+    "offset": 6148,
+    "slice_sha256": "38e5df9b2991bcf1e1d87daa9aa4d74e7321141584405fde08be65fee7c50689",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/58",
+    "layout_sha256": "4241c62f10ddf4e689ca1c8113f1e4fe1a348c42f711b00970be773e799b9ae5",
+    "length": 36,
+    "offset": 6184,
+    "slice_sha256": "a42dc8edc8ec7f460328a32209b01373ec18e07049684ac7c1a7decbd46c023c",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/59",
+    "layout_sha256": "db54e505b24736264e85a52a6c34d1dc52b2731e46d41ec1f5350a39d0229d35",
+    "length": 36,
+    "offset": 6220,
+    "slice_sha256": "f10de20814e1b0815e8e77d91c8ad5aa8f6242181b61b7dacd574f352ed3ae0b",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/60",
+    "layout_sha256": "bbc795db473e68b0a42b26ff734f377e0b7cc02656c401e30ce1dd0bc828be41",
+    "length": 36,
+    "offset": 6256,
+    "slice_sha256": "190e11e449de5bbc9ed762610d3ed92bb7611f3711e2bf3b0283d41e687a4184",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/61",
+    "layout_sha256": "fbf81bb0319737bf30a688fc8be26106a6101c6740d2911f0aee64a0174b8eb6",
+    "length": 36,
+    "offset": 6292,
+    "slice_sha256": "b640962dc37aa372a2dddda79e42e218e58cd71263a31eefc26572310aed58a9",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/62",
+    "layout_sha256": "364f2d87b91758c9007dd47c6ed43955d462de5b30338804b06860ca27a41ee7",
+    "length": 36,
+    "offset": 6328,
+    "slice_sha256": "ef3798536ec80036299b233533648e0846b4f3ff3d41d1fa6cd8cf02c20ac131",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL2/cell/63",
+    "layout_sha256": "58cb95b735d57c28c0d7bc8d8736ed619bdbd3f1d92e77fe79d595271a714c5c",
+    "length": 36,
+    "offset": 6364,
+    "slice_sha256": "44dc8d943b58f0e10dab108917d5cba1490387e0b0254fb0378fb49662f64dba",
+    "source": "PHIL2",
+    "source_sha256": "2d0f901f5f560b144e3d6e5571f57182a34275daa8fb114212256d61c3b6cba1"
+  },
+  {
+    "geometry": "world/PHIL3/cell/00",
+    "layout_sha256": "4f0c147d92f9cbf4247390c57e56d1df99990a3b06b877f382a9d2f5fe6fda5d",
+    "length": 36,
+    "offset": 4096,
+    "slice_sha256": "d9a98da6dec412c32363622ea8ac3736132a28e6829d1baa54a4f8c018700ab0",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/01",
+    "layout_sha256": "e1b093132d9d97717c11dac50f07e9cb4e38fd4e427ce6178026e44ec1056011",
+    "length": 36,
+    "offset": 4132,
+    "slice_sha256": "05b67503a163df94229d27dda01b42f769bad353ba7cd1ce9dde55e0845abc61",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/02",
+    "layout_sha256": "c7617a1da6ef0de9dc6ef87f1004c5358558156bfedd8bfdc932a85314517d59",
+    "length": 36,
+    "offset": 4168,
+    "slice_sha256": "6a7c5aac4a4afcc77203da4141eaeaba5c9aee076562ef0009d2546e728b92eb",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/03",
+    "layout_sha256": "0d0afa47220c7cb5d16a3949fe82393eb746920017c284444c97376232aa92ef",
+    "length": 36,
+    "offset": 4204,
+    "slice_sha256": "816ae432635a0a74133d7774035a4a3ea4378fa6da7b42ce262f70e8f2388d47",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/04",
+    "layout_sha256": "c987cde0f0f98a439dc67d6c30905f14556cdfd7c7a193be20114fd4ecf4a8d6",
+    "length": 36,
+    "offset": 4240,
+    "slice_sha256": "f1531efbb7c15c1ad82318001224f3339708c967a87c75d3661a55bc78fd39a5",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/05",
+    "layout_sha256": "6479119deafe7e7e55e4eb581568a98759811dc1aa5a64dec9d9d54aa58caa94",
+    "length": 36,
+    "offset": 4276,
+    "slice_sha256": "c2e36586b8a86ee422b57123669ab799c168ad9d78b638278ebed8a288c53225",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/06",
+    "layout_sha256": "4f499b895885d3c55935387929d02e5098e1efc28a2e375c80e017ab397d82ff",
+    "length": 36,
+    "offset": 4312,
+    "slice_sha256": "114c09c634b48c4cbfa1a7220c30fcc7e0a97f92d8609a0567c022f849bd5056",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/07",
+    "layout_sha256": "cb1f51e77e6dcc6316280a6141705789fab3ff17c782274fc209d02503f70039",
+    "length": 36,
+    "offset": 4348,
+    "slice_sha256": "92ab3eb782ee3b6b4956d64615c5a3debbfaef64161dd9052b7495cee3d3df0b",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/08",
+    "layout_sha256": "a6c54e0cc7621002d59ac9c59d14cde8bdbb3c03a2c26a7b6667ffa84ab18347",
+    "length": 36,
+    "offset": 4384,
+    "slice_sha256": "db7df5e4b855fbb0b53890170d2a7132be9f96fb494f2ea6ca05d2e4da4de35f",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/09",
+    "layout_sha256": "6b9857e442f3a836cc424a93a5b3795422464dd587fbd70c8cc3080f5ed408f6",
+    "length": 36,
+    "offset": 4420,
+    "slice_sha256": "44b24120a66643660632ad948e25a4d3e3a1456f65f7043ec394d3bff07f7530",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/10",
+    "layout_sha256": "17302f9fb5b6a18b2f2e222494c01feb4ca8e72a79911fc40170ffad8ce075f0",
+    "length": 36,
+    "offset": 4456,
+    "slice_sha256": "0b6a3df18851a6796283c6ce47212bc9a6faae8e54395d99cf9a137f05826e30",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/11",
+    "layout_sha256": "94977815500d539a9afbd69c01f28cf783133bd849ed98b49b2e30e50731072d",
+    "length": 36,
+    "offset": 4492,
+    "slice_sha256": "be5e1967ba11228b7f4f18e1cd3c3d0bc5c03d0c90d20cbfea9ff10535a58779",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/12",
+    "layout_sha256": "415dbe1422dc9020cfd1c37edd913657c91caa12292a9698d524270d17155731",
+    "length": 36,
+    "offset": 4528,
+    "slice_sha256": "043f0a031200657411ea7f3eb0aea2c641d3ec4987547828036a8dfccc6e043b",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/13",
+    "layout_sha256": "1048092b88c7ccb399bfda0e1054f978076c421076dc6cfd352fc923bd15a943",
+    "length": 36,
+    "offset": 4564,
+    "slice_sha256": "13dca5abe47da4f9d5852c827433b3f17351e6689f4146ed25384db8b76249ca",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/14",
+    "layout_sha256": "22ea4096c0f1969563bb3797490841d266adf777a5e15c48a55835e447440cb6",
+    "length": 36,
+    "offset": 4600,
+    "slice_sha256": "2b8288a45f8c5d0806e92723905c28f3a13321fce4d573a36208e7e775316ff2",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/15",
+    "layout_sha256": "c1feb2e48ebedd16e8d771ba3b73b040cc0dc5e605288aca1e3877ded5f004ea",
+    "length": 36,
+    "offset": 4636,
+    "slice_sha256": "f0b32b593bf1f42ec799cf204467ae55a7c0cf1c15920c94550b2c7544b3c6a9",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/16",
+    "layout_sha256": "d9af6ee533e956ab3683c66e86761bfd6a5aad33011c8e1b084aaeaf1e3a4bcb",
+    "length": 36,
+    "offset": 4672,
+    "slice_sha256": "b97a6c65fd92b8419c85a5811a2921be60c23348979db950ff4046f3c6612a79",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/17",
+    "layout_sha256": "782a89941749dcd2a75836437b27ae4dcbce6a30cfd1270353307d4195b5e3a0",
+    "length": 36,
+    "offset": 4708,
+    "slice_sha256": "6303312b0c180f8998b9f0e98442f20ba3a5f929df8440279edf8e1ee6eaa469",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/18",
+    "layout_sha256": "7a40a816c30b268acd939fe1fafc76ebfc87caec568e7f557ba5e5a7013fe17f",
+    "length": 36,
+    "offset": 4744,
+    "slice_sha256": "09e29439c81ece9fe126fd08b2482177691eb1adbfb6f4a2330d974544fdac20",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/19",
+    "layout_sha256": "3e3f1bc785fe42449e5701cf36a130347f2f29fe6c2a3080a75aa0617668cc24",
+    "length": 36,
+    "offset": 4780,
+    "slice_sha256": "f192538a410581f15274e3da8f05a18aec7af0622fcd254a782901bf21837b24",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/20",
+    "layout_sha256": "8aa8208164a811782b81727faa2fb995ca12cd3c70c98b608bf3dc3769a14685",
+    "length": 36,
+    "offset": 4816,
+    "slice_sha256": "29968f4b4eb24193e3a21f8d44932add4d03211d1ac199d11426ba5f087639bf",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/21",
+    "layout_sha256": "641c26c4bcf5764c3592bbdf8605281c45ef99b133ac21be4e4f6223bb56a823",
+    "length": 36,
+    "offset": 4852,
+    "slice_sha256": "f0f0683d745d023f0696b345ce0d83e6bc7da2cd3b0066c81722c7cbef034d1f",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/22",
+    "layout_sha256": "4657433ff1d0b097a86aefc8807f675ab41624c73af1154de3da80ba41f474cc",
+    "length": 36,
+    "offset": 4888,
+    "slice_sha256": "5482eddae56fb7e64e3619e6df09697f7fc1a5ce07b1dc734ee349140552c9dd",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/23",
+    "layout_sha256": "eb17332bca0e8fe0c783d1323970343452b3203beafb8cd47f3a05876ea52324",
+    "length": 36,
+    "offset": 4924,
+    "slice_sha256": "0612df8da21e05ffa69676267f04e2fb1ebea92ccaf681b18b469e3e29bb3044",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/24",
+    "layout_sha256": "8492ae0de68fc776263b9c712be6c96a70e689c5d03e9b2f1dde30e26596b795",
+    "length": 36,
+    "offset": 4960,
+    "slice_sha256": "6ea041a897cad68b5f0fa27e07191f0d984a3df3b6c249c3bb9232cb8f3c23bc",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/25",
+    "layout_sha256": "ab036e7cc988bf32dee4620d903417c3b64f0a9e24cddc8773d726cb38fa3973",
+    "length": 36,
+    "offset": 4996,
+    "slice_sha256": "2ff6b3f08e36cb7d9e599b7331f2ca991df9126ae6921254e29a7b83b0010851",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/26",
+    "layout_sha256": "d54b92f6aa5c1ade400b9e9c3f39af625165c48b98a9dbda48a4307521c2d33b",
+    "length": 36,
+    "offset": 5032,
+    "slice_sha256": "4c529cb5f24cb8f49d150fb035d1b344ecd76aab190871da64d5ca01516ca6fc",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/27",
+    "layout_sha256": "570e1fa6acf1494599db056b5befcc499c84973bb74512a2806b2e44983a65cc",
+    "length": 36,
+    "offset": 5068,
+    "slice_sha256": "976dd431bacbaeee475a5059504482c2a837a7215191da5aff29a6049a089255",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/28",
+    "layout_sha256": "d6db4e9fef54c412d3850cb0aa291fea7ba80ed3ee43b2ac2ee1e2c2977de3f5",
+    "length": 36,
+    "offset": 5104,
+    "slice_sha256": "32490f4675e3789011176dc68a37edc71206223abe17898d25516b99cad8e659",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/29",
+    "layout_sha256": "a5a14e111e8168b55376f8d2cd0ff9e25e5731828a4de9017cc0d661f8c133e4",
+    "length": 36,
+    "offset": 5140,
+    "slice_sha256": "8f73e34d4a60ff6d151cf4c2cb2d6952e08294952d6d5d074b2a8d6324aa20a9",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/30",
+    "layout_sha256": "53ae1527e2339522273a22ed714c265163ef6ff145e6885bd0058bc59a13b030",
+    "length": 36,
+    "offset": 5176,
+    "slice_sha256": "114575691d7bf2fdfe8f5e049401c3be6fcd4e9ded65f084b6b048509808fb07",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/31",
+    "layout_sha256": "ef7ed31baae76bc59c17f9d430f7ee92a3870af6122785ae43c504f9466dc971",
+    "length": 36,
+    "offset": 5212,
+    "slice_sha256": "c30464b75eeb1804bd36ccd634ff1a7e97d010b33513f1b300326b85812772bc",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/32",
+    "layout_sha256": "ec779136c3f517b83c90a6468fa26ddad7f9e8a308c6b336ab8a0a7d2d0cfacd",
+    "length": 36,
+    "offset": 5248,
+    "slice_sha256": "935154c7a413d972a22c8afe1490fa30d04cdad1abb86894fb6f1c9bb2a15be2",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/33",
+    "layout_sha256": "7bd7668f907efa57a2e2451cfa736b2215e47daec42484b56b9d3c34be68f164",
+    "length": 36,
+    "offset": 5284,
+    "slice_sha256": "9fa19ee01b2ebf19a2ec525ef2f6b0702ede95cec0651d7b64f304e50ecba7b0",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/34",
+    "layout_sha256": "a93f674088317a73a49f8c77694f13cdf4b849a3521e6532836f78a50316fcc0",
+    "length": 36,
+    "offset": 5320,
+    "slice_sha256": "64fcadf050fa3811e770de84bdba4bedfa1522426dc7b5a3440b5916917a174d",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/35",
+    "layout_sha256": "b468ebde38738300eaa81755ce9964302e6e5de4e158de9d0ac4803c8e39d270",
+    "length": 36,
+    "offset": 5356,
+    "slice_sha256": "dc7e7c25592c66b492388dad90a2cfee79df374fe9fca5819fcf23a8f16c7704",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/36",
+    "layout_sha256": "db54e505b24736264e85a52a6c34d1dc52b2731e46d41ec1f5350a39d0229d35",
+    "length": 36,
+    "offset": 5392,
+    "slice_sha256": "777db053f4d662fe6488ffdc3fbd07d8c6e18a455039e26eead26795894c9ff2",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/37",
+    "layout_sha256": "d0b228074a91de345edb0aae624c9b1ecbc8ae026a93f839afcff9e9a5677962",
+    "length": 36,
+    "offset": 5428,
+    "slice_sha256": "ba566a7df0f02b20a167f3695b40eb8e0d16c3366d04b83b539f9ad191303b72",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/38",
+    "layout_sha256": "4ac630d35b00683a3bd1694906ea1afcc7255a9a41313ed9a535db25597b32f9",
+    "length": 36,
+    "offset": 5464,
+    "slice_sha256": "362a68283886115e0dbd1496dd4f80f3545ae8b7590831335b2e2a71c49bc67f",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/39",
+    "layout_sha256": "f41b6fb7243f2f59d57b9c13f55e84aef003ba720113bacfb706c11c624018d7",
+    "length": 36,
+    "offset": 5500,
+    "slice_sha256": "be38c5514f53d4804e8f8736438144153ea402a93ae0ddf9a07693bd51a41f37",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/40",
+    "layout_sha256": "9e8b11f57c99fd38140283a91712965e4d30be18731e43045f6570a751b133e7",
+    "length": 36,
+    "offset": 5536,
+    "slice_sha256": "978bcb4d73425a041c7fa390fd112500565039eb648eacf3f21c8bb3b31ff58d",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/41",
+    "layout_sha256": "847a463d6e8272f556a900a671d83386fdee52b5e7cd850d1d2ad7bf7c8604ee",
+    "length": 36,
+    "offset": 5572,
+    "slice_sha256": "1f2e145c5681fa8203f4317ace726c7c7038aaf04b9e7e2fa25e91785c93e29f",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/42",
+    "layout_sha256": "783548feb014ecb6baaee0fd54fa949a8c80c0690600405883ba8a25abe2a8d3",
+    "length": 36,
+    "offset": 5608,
+    "slice_sha256": "8e5d5c48ac3085175d39b4b11006b86829f617921aca8902a23a44de4cf994bd",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/43",
+    "layout_sha256": "ab70df9ed3fb267d824f1a670a8ed9f3f1825c225be948852c307ec049159936",
+    "length": 36,
+    "offset": 5644,
+    "slice_sha256": "53115a785b4b6ca9ed0b58b47c854c9ceadf53d1a255df297d7e1ca91fbab0d0",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/44",
+    "layout_sha256": "e893197d307938a58f87b0229bb70c48a5270c836e9a011ca7480daacbc97afc",
+    "length": 36,
+    "offset": 5680,
+    "slice_sha256": "d8e6cd94728664eeff887b24340644d8f23066f451cd062a8174f59df6adb01f",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/45",
+    "layout_sha256": "e67e83abfc01da0877f37d15799f881e00c6a978eebd5eaea964abefa1397ae4",
+    "length": 36,
+    "offset": 5716,
+    "slice_sha256": "8fb7db3e0261c5afed2b75cee2fd937fd49716da1399e0274200dad63c9222d8",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/46",
+    "layout_sha256": "d19f9c2ed7f291c727935186ec1c34b183850c4e8fb901425b1e776511f80414",
+    "length": 36,
+    "offset": 5752,
+    "slice_sha256": "10deb45c565c4d40a3342198134869c600ae806134715fcf3ad1f674e0f18c76",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/47",
+    "layout_sha256": "e67301eef154a63cfb42208cf83252982d508d3ede6f69c8f9b0abd6b4e18f5a",
+    "length": 36,
+    "offset": 5788,
+    "slice_sha256": "5ee324cf57f1434fd9db8f7f80a6e1edffc20214d61350d4b62b69726c74accc",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/48",
+    "layout_sha256": "de0e66b5900f116f8611faaa376774eb1c6212aa02027925c66ab8c664d97e0f",
+    "length": 36,
+    "offset": 5824,
+    "slice_sha256": "6bac1382bfda51b0db4040392262740e4615d62cfaaf9c93159e92666b471b5b",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/49",
+    "layout_sha256": "8b0ef35c24a7cfbcbc5280c9d7a93626a70337c0ec725777c85f11adce4f62ae",
+    "length": 36,
+    "offset": 5860,
+    "slice_sha256": "70fcfb0c732cb671cf24b5339450f0daed368322666c7e59abd5af638dd9a9fe",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/50",
+    "layout_sha256": "986dd9c64d56c86375ea2959af2ed666af4f77c821ce9981d55b7dc6a0cd29e0",
+    "length": 36,
+    "offset": 5896,
+    "slice_sha256": "0494ef8edf3f9dc540eb6c1520062c0f3360e5dd1ca72bab337c403a207efb9d",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/51",
+    "layout_sha256": "e4eeb3aa75a73c4ba9c85e55ce338702a3fd7ab3d41f645b96534d6402e0fefa",
+    "length": 36,
+    "offset": 5932,
+    "slice_sha256": "de3549becce71b406b14df58218d6510ac74d3c001a1a83a68f637feab896ce2",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/52",
+    "layout_sha256": "7b303399d70b45ce96b2ce60d14198c58ccb9e27d2927f9fda5f6e7d955b3539",
+    "length": 36,
+    "offset": 5968,
+    "slice_sha256": "a465b83d3c1d38be7bc41d23055de5a101fbb18f569bfbe1b4c0a709b81dc60d",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/53",
+    "layout_sha256": "097d43891caf9c2d625d62d6fb70df749a72ba3f465e179a932b53f7d19521d1",
+    "length": 36,
+    "offset": 6004,
+    "slice_sha256": "9264eb5d2bc45f5457a6eaa106982caeef26932890e8f2489690a0a4dc4373b4",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/54",
+    "layout_sha256": "3d26eae6e187bc87b0eaa1f6096074a27660e99eeb08517a07c0a33da2f394d3",
+    "length": 36,
+    "offset": 6040,
+    "slice_sha256": "6df49543838794e89be4a43829e2ddf64b9daac5b938b04b14e24882d269fa26",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/55",
+    "layout_sha256": "1e315218b28ab8a034f29dbc92d3797770f1b0e3c67e6a7f150b71adcf6c6fce",
+    "length": 36,
+    "offset": 6076,
+    "slice_sha256": "051f5ce87976f0da7a80aec2bee01bceba98da0765c3129f5794983f80f45b90",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/56",
+    "layout_sha256": "2982acb7ed9d2195c58c618787390b9dbe7df17759fc147f5d953540fb06fd73",
+    "length": 36,
+    "offset": 6112,
+    "slice_sha256": "4ec5fbf3b9f8a5d77d234661f4475858f7624de5fc8618c89f925a5fbd29f423",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/57",
+    "layout_sha256": "15d86fa7c093c528e870740ea1b7795467df063b8b75944a511c545c386cb43e",
+    "length": 36,
+    "offset": 6148,
+    "slice_sha256": "f0755570f97620eee90f06f496805fc3cb8cb2c91b89dcc87b993cbfd7f2da0d",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/58",
+    "layout_sha256": "404973309a4940bf673388d6a4a0fb029f1ce77a4cedf93633a2ef4c1660941a",
+    "length": 36,
+    "offset": 6184,
+    "slice_sha256": "29707aea4d0f270d9d030ad3808fd6bcad3033cbf0670e13d555e856bb20eff9",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/59",
+    "layout_sha256": "12d6035f475de7556087a294e85263611332178695bd84440de2f2283c9f176c",
+    "length": 36,
+    "offset": 6220,
+    "slice_sha256": "3679d8d13e843666257bf20dc6209e955844ebca8dbf49aab6aea0ea885982c3",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/60",
+    "layout_sha256": "c705e4e2385f726ac80e6cf35d19b67ee620ec5b28b8ff8082b5b7c75c615290",
+    "length": 36,
+    "offset": 6256,
+    "slice_sha256": "fe1fb6664924aa8c47f8a37560882ed5154cc042388b821df0b5577f2b4739cc",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/61",
+    "layout_sha256": "06434b2ab3a91b2d854f69b90344a827d065c06c4fb0898e13fd9081a91f7312",
+    "length": 36,
+    "offset": 6292,
+    "slice_sha256": "cd1b6be11eb240c874b05d38e3bd343815ae84c7c42804fd747aaa91c6fcdadc",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/62",
+    "layout_sha256": "4241c62f10ddf4e689ca1c8113f1e4fe1a348c42f711b00970be773e799b9ae5",
+    "length": 36,
+    "offset": 6328,
+    "slice_sha256": "4f8e38da8a383f836ef88c45f26bdbe2462d42c83b791d0be35c422a96175276",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  },
+  {
+    "geometry": "world/PHIL3/cell/63",
+    "layout_sha256": "fca62b88c3d33725d691b8655c8f99341cdc10c109d4f7577567cbb750aaa646",
+    "length": 36,
+    "offset": 6364,
+    "slice_sha256": "fd6c13d6117e0b9f1d8a783d4b7af24a4a612c359115ff126098c2fe6629c691",
+    "source": "PHIL3",
+    "source_sha256": "80e7b1f57d3f200c7b51753f242222fdb79676af3b504e6929e2d61ad7c3367e"
+  }
+]

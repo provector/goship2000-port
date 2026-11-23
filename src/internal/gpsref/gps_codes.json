@@ -1,0 +1,492 @@
+{
+  "schema_version": 1,
+  "atlas": "REAL_PCH.PIC",
+  "logos": [
+    {
+      "id": "crossed-sabres",
+      "name": "Crossed sabres",
+      "sprite": 0,
+      "entries": [
+        {
+          "challenge": "26911",
+          "authenticator": "14104"
+        },
+        {
+          "challenge": "60267",
+          "authenticator": "03279"
+        },
+        {
+          "challenge": "15054",
+          "authenticator": "06621"
+        },
+        {
+          "challenge": "78957",
+          "authenticator": "95892"
+        },
+        {
+          "challenge": "72463",
+          "authenticator": "39850"
+        }
+      ]
+    },
+    {
+      "id": "winged-serpent",
+      "name": "Winged serpent",
+      "sprite": 1,
+      "entries": [
+        {
+          "challenge": "72463",
+          "authenticator": "43312"
+        },
+        {
+          "challenge": "69240",
+          "authenticator": "46149"
+        },
+        {
+          "challenge": "97662",
+          "authenticator": "91716"
+        },
+        {
+          "challenge": "26911",
+          "authenticator": "44637"
+        },
+        {
+          "challenge": "85924",
+          "authenticator": "38613"
+        }
+      ]
+    },
+    {
+      "id": "spade",
+      "name": "Spade",
+      "sprite": 2,
+      "entries": [
+        {
+          "challenge": "49758",
+          "authenticator": "35098"
+        },
+        {
+          "challenge": "84870",
+          "authenticator": "03058"
+        },
+        {
+          "challenge": "56824",
+          "authenticator": "44551"
+        },
+        {
+          "challenge": "67372",
+          "authenticator": "09355"
+        },
+        {
+          "challenge": "59925",
+          "authenticator": "35356"
+        }
+      ]
+    },
+    {
+      "id": "helmet",
+      "name": "Helmet",
+      "sprite": 3,
+      "entries": [
+        {
+          "challenge": "94144",
+          "authenticator": "78663"
+        },
+        {
+          "challenge": "59925",
+          "authenticator": "28846"
+        },
+        {
+          "challenge": "26911",
+          "authenticator": "67929"
+        },
+        {
+          "challenge": "57925",
+          "authenticator": "31831"
+        },
+        {
+          "challenge": "56824",
+          "authenticator": "96229"
+        }
+      ]
+    },
+    {
+      "id": "scorpion",
+      "name": "Scorpion",
+      "sprite": 4,
+      "entries": [
+        {
+          "challenge": "67372",
+          "authenticator": "53143"
+        },
+        {
+          "challenge": "97662",
+          "authenticator": "14806"
+        },
+        {
+          "challenge": "94144",
+          "authenticator": "17640"
+        },
+        {
+          "challenge": "34620",
+          "authenticator": "10929"
+        },
+        {
+          "challenge": "49758",
+          "authenticator": "93721"
+        }
+      ]
+    },
+    {
+      "id": "cobra",
+      "name": "Cobra",
+      "sprite": 5,
+      "entries": [
+        {
+          "challenge": "60267",
+          "authenticator": "06150"
+        },
+        {
+          "challenge": "78957",
+          "authenticator": "72031"
+        },
+        {
+          "challenge": "85924",
+          "authenticator": "91974"
+        },
+        {
+          "challenge": "56824",
+          "authenticator": "32998"
+        },
+        {
+          "challenge": "69240",
+          "authenticator": "30445"
+        }
+      ]
+    },
+    {
+      "id": "winged-star",
+      "name": "Winged star",
+      "sprite": 6,
+      "entries": [
+        {
+          "challenge": "85924",
+          "authenticator": "08334"
+        },
+        {
+          "challenge": "66391",
+          "authenticator": "49149"
+        },
+        {
+          "challenge": "84870",
+          "authenticator": "80422"
+        },
+        {
+          "challenge": "72463",
+          "authenticator": "70783"
+        },
+        {
+          "challenge": "34620",
+          "authenticator": "39186"
+        }
+      ]
+    },
+    {
+      "id": "lightning",
+      "name": "Lightning",
+      "sprite": 7,
+      "entries": [
+        {
+          "challenge": "69240",
+          "authenticator": "09160"
+        },
+        {
+          "challenge": "26911",
+          "authenticator": "67975"
+        },
+        {
+          "challenge": "34620",
+          "authenticator": "66516"
+        },
+        {
+          "challenge": "60267",
+          "authenticator": "57108"
+        },
+        {
+          "challenge": "66391",
+          "authenticator": "20136"
+        }
+      ]
+    },
+    {
+      "id": "horse-head",
+      "name": "Horse head",
+      "sprite": 8,
+      "entries": [
+        {
+          "challenge": "57925",
+          "authenticator": "56524"
+        },
+        {
+          "challenge": "49758",
+          "authenticator": "34578"
+        },
+        {
+          "challenge": "78957",
+          "authenticator": "23866"
+        },
+        {
+          "challenge": "84870",
+          "authenticator": "02538"
+        },
+        {
+          "challenge": "94144",
+          "authenticator": "29352"
+        }
+      ]
+    },
+    {
+      "id": "helicopters",
+      "name": "Helicopters",
+      "sprite": 9,
+      "entries": [
+        {
+          "challenge": "84870",
+          "authenticator": "47758"
+        },
+        {
+          "challenge": "67372",
+          "authenticator": "43311"
+        },
+        {
+          "challenge": "81987",
+          "authenticator": "76273"
+        },
+        {
+          "challenge": "97662",
+          "authenticator": "91186"
+        },
+        {
+          "challenge": "57925",
+          "authenticator": "37345"
+        }
+      ]
+    },
+    {
+      "id": "double-a",
+      "name": "Airborne AA",
+      "sprite": 10,
+      "entries": [
+        {
+          "challenge": "15054",
+          "authenticator": "86691"
+        },
+        {
+          "challenge": "85924",
+          "authenticator": "73924"
+        },
+        {
+          "challenge": "49758",
+          "authenticator": "60276"
+        },
+        {
+          "challenge": "66391",
+          "authenticator": "61939"
+        },
+        {
+          "challenge": "97662",
+          "authenticator": "69768"
+        }
+      ]
+    },
+    {
+      "id": "panther",
+      "name": "Panther",
+      "sprite": 11,
+      "entries": [
+        {
+          "challenge": "59925",
+          "authenticator": "51058"
+        },
+        {
+          "challenge": "57925",
+          "authenticator": "30823"
+        },
+        {
+          "challenge": "60267",
+          "authenticator": "38076"
+        },
+        {
+          "challenge": "49758",
+          "authenticator": "67909"
+        },
+        {
+          "challenge": "81987",
+          "authenticator": "07341"
+        }
+      ]
+    },
+    {
+      "id": "headdress",
+      "name": "Headdress",
+      "sprite": 12,
+      "entries": [
+        {
+          "challenge": "34620",
+          "authenticator": "62968"
+        },
+        {
+          "challenge": "15054",
+          "authenticator": "13293"
+        },
+        {
+          "challenge": "57925",
+          "authenticator": "76024"
+        },
+        {
+          "challenge": "85924",
+          "authenticator": "14616"
+        },
+        {
+          "challenge": "67372",
+          "authenticator": "26707"
+        }
+      ]
+    },
+    {
+      "id": "winged-skull",
+      "name": "Winged skull",
+      "sprite": 13,
+      "entries": [
+        {
+          "challenge": "97662",
+          "authenticator": "09708"
+        },
+        {
+          "challenge": "34620",
+          "authenticator": "69490"
+        },
+        {
+          "challenge": "59925",
+          "authenticator": "54241"
+        },
+        {
+          "challenge": "15054",
+          "authenticator": "05662"
+        },
+        {
+          "challenge": "84870",
+          "authenticator": "84952"
+        }
+      ]
+    },
+    {
+      "id": "winged-sword",
+      "name": "Winged sword",
+      "sprite": 14,
+      "entries": [
+        {
+          "challenge": "63288",
+          "authenticator": "09762"
+        },
+        {
+          "challenge": "78957",
+          "authenticator": "55801"
+        },
+        {
+          "challenge": "56824",
+          "authenticator": "37791"
+        },
+        {
+          "challenge": "66391",
+          "authenticator": "16234"
+        },
+        {
+          "challenge": "81987",
+          "authenticator": "54867"
+        }
+      ]
+    },
+    {
+      "id": "airborne-eagle",
+      "name": "Airborne eagle",
+      "sprite": 15,
+      "entries": [
+        {
+          "challenge": "78957",
+          "authenticator": "12211"
+        },
+        {
+          "challenge": "66391",
+          "authenticator": "51322"
+        },
+        {
+          "challenge": "26911",
+          "authenticator": "68983"
+        },
+        {
+          "challenge": "48958",
+          "authenticator": "85567"
+        },
+        {
+          "challenge": "67372",
+          "authenticator": "64023"
+        }
+      ]
+    },
+    {
+      "id": "striking-bird",
+      "name": "Striking bird",
+      "sprite": 16,
+      "entries": [
+        {
+          "challenge": "56824",
+          "authenticator": "01287"
+        },
+        {
+          "challenge": "26911",
+          "authenticator": "18484"
+        },
+        {
+          "challenge": "94144",
+          "authenticator": "50173"
+        },
+        {
+          "challenge": "85924",
+          "authenticator": "43942"
+        },
+        {
+          "challenge": "84870",
+          "authenticator": "43260"
+        }
+      ]
+    },
+    {
+      "id": "diving-bird",
+      "name": "Diving bird",
+      "sprite": 17,
+      "entries": [
+        {
+          "challenge": "66391",
+          "authenticator": "06246"
+        },
+        {
+          "challenge": "49758",
+          "authenticator": "17019"
+        },
+        {
+          "challenge": "85924",
+          "authenticator": "97132"
+        },
+        {
+          "challenge": "15054",
+          "authenticator": "32692"
+        },
+        {
+          "challenge": "63288",
+          "authenticator": "35923"
+        }
+      ]
+    }
+  ]
+}

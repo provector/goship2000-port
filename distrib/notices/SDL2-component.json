@@ -1,0 +1,47 @@
+{
+  "component": "SDL2 raw joystick runtime",
+  "version": "2.32.10",
+  "loading": "purego; JOYSTICK/EVENTS only; no video/graphics context",
+  "sources": [
+    {
+      "url": "https://www.libsdl.org/release/SDL2-devel-2.32.10-mingw.tar.gz",
+      "archive_sha256": "83a5d74012311edc3c0d40ea6faecbe57ad692aa033fa5dc273cc937e3938ff2"
+    },
+    {
+      "url": "https://ports.ubuntu.com/ubuntu-ports/pool/main/libs/libsdl2/libsdl2-classic_2.32.10+dfsg-6_arm64.deb",
+      "archive_sha256": "afb06f8ed8a6ef987158ce1ad2efec6540620464abf067889b9a6b9c0861e4f2"
+    },
+    {
+      "source": "Installed Ubuntu libsdl2-classic:amd64 2.32.10+dfsg-6, unmodified copy",
+      "path": "/usr/lib/x86_64-linux-gnu/sdl2-classic/libSDL2-2.0.so.0.3200.10"
+    }
+  ],
+  "files": [
+    {
+      "path": "linux-amd64/libSDL2-2.0.so.0",
+      "bytes": 1963624,
+      "sha256": "3f61932a8856a6ac99b59acee2aaf23a2d72bf75ffb4fe3c53d1ff228210a15a"
+    },
+    {
+      "path": "linux-arm64/libSDL2-2.0.so.0",
+      "bytes": 1930008,
+      "sha256": "6655ef9e1ed5bc2cf8886e490adcac3f926cf6de8d391929dab517811f799841"
+    },
+    {
+      "path": "notices/SDL2-LICENSE.txt",
+      "bytes": 884,
+      "sha256": "97f35b302b361680ec1e891e95d2d52097bb95abff361434916d99dc1305f127"
+    },
+    {
+      "path": "notices/Ubuntu-SDL2-copyright.txt",
+      "bytes": 26481,
+      "sha256": "a7cfc1e6aa0cfba5121b3faead3e2d351028ec153bba6059065f670ad5944ad6"
+    },
+    {
+      "path": "windows-amd64/SDL2.dll",
+      "bytes": 1785344,
+      "sha256": "53e8fa7e9ed43c30bd650c39396f0d9d2067d2fff0b926c9433b75202592e4aa"
+    }
+  ],
+  "linux_dependencies": "System ELF dependencies remain required; see ldd/readelf records in evidence/stepQ2. No packages installed or upgraded."
+}

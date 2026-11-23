@@ -1,0 +1,63 @@
+{
+  "name": "DOSBox-X DBOPL preparation and flight helper",
+  "source_revision": "f95fb588686e81fdcfb4c31149addcc18ff64866",
+  "source_sha256": {
+    "COPYING": "93c59ba0fd92fef7746f0e0809cb49a0c27ab21376da0ac6a583688401afd441",
+    "dbopl.cpp": "56bdc8e5e9f8bd36ad3b7caf301a31192377ec7ecfdb3097da40d2e32be615a0",
+    "dbopl.h": "fae447d43bd3223bd664a62537536c76b0e2352361963d33bf4093d25b88509f",
+    "dosbox.h": "988abbb53c232938682732f87eb84b407512ee1b2fd7216fcc3d54e165711d31",
+    "helper.cpp": "4d0646e19b12f42701b4bec06192e4101021291db0126627b75b009777469622",
+    "upstream/dbopl.cpp": "f25fd1ad953c2f6a8ba4030d0ae583dfb76b5e6b3212e36b24d712ae63635f07",
+    "upstream/dbopl.h": "63985cee9a04d77a7b9bcde35d77b931c0a7558019655632ab6df213453d0159"
+  },
+  "license": "GPL-2.0-or-later",
+  "protocol_version": 1,
+  "stream_protocol_version": 1,
+  "helpers": {
+    "linux-amd64": {
+      "sha256": "304b1fc577ba0e5bb725d7425fe0580890b98d3a4b92ee9b43a630a09b8f34c0",
+      "bytes": 467888,
+      "compressed_sha256": "119b548346731b9185e4b036b8bdca873c3b909a1e2f38e70537576a908a66d5",
+      "compressed_bytes": 190619,
+      "target": "x86_64-linux-musl",
+      "pre_normalization_sha256": "304b1fc577ba0e5bb725d7425fe0580890b98d3a4b92ee9b43a630a09b8f34c0",
+      "normalization": "none",
+      "requirements": "Static musl executable; no shared C++/libc runtime required"
+    },
+    "windows-amd64": {
+      "sha256": "b0860893c5ec0979e1aeb084838998e2c83bf01dd22d1e1f1fe1268cac9159df",
+      "bytes": 412672,
+      "compressed_sha256": "ef49f197b10cc6978587fafdf808f26d00801615cb800e264e6326bc92aadd45",
+      "compressed_bytes": 165353,
+      "target": "x86_64-windows-gnu",
+      "pre_normalization_sha256": "b0860893c5ec0979e1aeb084838998e2c83bf01dd22d1e1f1fe1268cac9159df",
+      "normalization": "PE COFF timestamp only zeroed",
+      "requirements": "Windows10+ UCRT/KERNEL32 system components"
+    },
+    "linux-arm64": {
+      "sha256": "1c26c800c3449b7210698b78dd183d11ca0cd0fd60b04747ebd5b274cc89356b",
+      "bytes": 469168,
+      "compressed_sha256": "bdf21382f740b3b8303aeeb600c2c0fac90e4f46d1410238c2968a4767713480",
+      "compressed_bytes": 194544,
+      "target": "aarch64-linux-musl",
+      "pre_normalization_sha256": "1c26c800c3449b7210698b78dd183d11ca0cd0fd60b04747ebd5b274cc89356b",
+      "normalization": "none",
+      "requirements": "Static musl executable; no shared C++/libc runtime required"
+    }
+  },
+  "synthesis_policy": "Unmodified retained DBOPL Chip; OPL3-capable setup/mono OPL2-compatible writes; raw signed32LE; no gain/normalization",
+  "upstream_url": "https://github.com/joncampbell123/dosbox-x/tree/f95fb588686e81fdcfb4c31149addcc18ff64866",
+  "adapter": "Trim DOSBox Handler/mixer/save-state adapters only; retain exact upstream bytes; minimal integer-type shim; standalone bounded stdin/stdout CLI",
+  "build_tool": {
+    "name": "Zig",
+    "version": "0.13.0",
+    "distribution_sha256": "d45312e61ebcc48032b77bc4cf7fd6915c11fa16e4aad116b66c9468211230ea",
+    "url": "https://ziglang.org/download/0.13.0/zig-linux-x86_64-0.13.0.tar.xz"
+  },
+  "runtime_sources": {
+    "path": "audio-helper-runtime-sources.tar.gz",
+    "sha256": "952a9732d1952b53f9465c750f134a3400e87b396cadf2994ecee74beb46c3fe",
+    "bytes": 15280807,
+    "contents": "Zig0.13 LLVM C++/ABI/unwind, compiler-rt/std, musl and MinGW runtime sources, interfaces and notices"
+  }
+}

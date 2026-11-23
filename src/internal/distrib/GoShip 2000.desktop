@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=GoShip 2000
+Exec=sh -c "launcher=\\$1; shift; exec \\"\\$(dirname -- \\"\\$launcher\\")/gs2000\\" \\"\\$@\\"" org.goship2000.Game %k
+Terminal=false
+Icon=org.goship2000.Game
+StartupWMClass=goship2000
+Categories=Game;

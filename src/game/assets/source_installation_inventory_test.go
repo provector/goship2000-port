@@ -1,0 +1,228 @@
+package assets
+
+import (
+	"encoding/json"
+	"os"
+	"path/filepath"
+	"strings"
+	"testing"
+)
+
+func sourceInstallationInventoryOriginal(t *testing.T) string {
+	t.Helper()
+	p := os.Getenv("GS2000_TEST_AUDIO_ORIGINAL")
+	if p == "" {
+		t.Skip("explicit hash-bound original fixture required for source inventory integration")
+	}
+	return p
+}
+func copyFiles(t *testing.T, input, dest string, names []string) {
+	t.Helper()
+	if e := os.MkdirAll(dest, 0700); e != nil {
+		t.Fatal(e)
+	}
+	for _, name := range names {
+		b, e := os.ReadFile(filepath.Join(input, name))
+		if e != nil {
+			t.Fatal(e)
+		}
+		if e = os.WriteFile(filepath.Join(dest, name), b, 0600); e != nil {
+			t.Fatal(e)
+		}
+	}
+}
+func TestInventoryNestedEditorPreparation(t *testing.T) {
+	original := sourceInstallationInventoryOriginal(t)
+	entries, e := os.ReadDir(original)
+	if e != nil {
+		t.Fatal(e)
+	}
+	names := []string{}
+	for _, p := range entries {
+		if !p.Type().IsRegular() {
+			t.Fatalf("fixture nonregular %s", p.Name())
+		}
+		names = append(names, p.Name())
+	}
+	for _, prefix := range []string{"", "GS2000CD"} {
+		t.Run(prefix, func(t *testing.T) {
+			root := filepath.Join(t.TempDir(), "input")
+			leaf := root
+			if prefix != "" {
+				leaf = filepath.Join(root, prefix)
+			}
+			copyFiles(t, original, leaf, names)
+			output := filepath.Join(t.TempDir(), "prepared")
+			m, e := PrepareAssetsWithAudio(root, output, nil)
+			if e != nil {
+				t.Fatal(e)
+			}
+			if m.EditorMetadata == "" {
+				t.Fatal("no current editor metadata")
+			}
+			// This source-inventory check intentionally omits audio baking. It
+			// validates actual editor metadata/readback; central release checks
+			// separately call the complete audio/frontend pipeline.
+			raw, e := os.ReadFile(filepath.Join(output, filepath.FromSlash(m.EditorMetadata)))
+			if e != nil {
+				t.Fatal(e)
+			}
+			var d editorMetadata
+			if e = json.Unmarshal(raw, &d); e != nil {
+				t.Fatal(e)
+			}
+			if e = validateEditorMetadata(d); e != nil {
+				t.Fatal(e)
+			}
+			reader, e := newPreparedReader(output)
+			if e != nil {
+				t.Fatal(e)
+			}
+			for _, resource := range m.Resources {
+				for _, out := range resource.Outputs {
+					reader.outputs[out.Path] = out
+				}
+			}
+			for _, o := range d.Images {
+				if b, e := reader.verified(o, 64000); e != nil || len(b) != 64000 {
+					t.Fatal("editor image readback", e)
+				}
+			}
+			for _, v := range d.Maps {
+				if b, e := reader.verified(v.Palette, 768); e != nil || len(b) != 768 {
+					t.Fatal("palette readback", e)
+				}
+				if v.Name == "PHIL3" && v.Unavailable != "" {
+					if pixels, err := phil3EditorPixels(reader); err != nil || len(pixels) != 64000 {
+						t.Fatal("PHIL3 editor decode", len(pixels), err)
+					}
+					continue
+				}
+				if b, e := reader.verified(v.Pixels, 64000); e != nil || len(b) != 64000 {
+					t.Fatal("map readback", e)
+				}
+			}
+			for _, v := range d.Previews {
+				if b, e := reader.verified(v.Data, 65536); e != nil || len(b) != 4+v.Width*v.Height {
+					t.Fatal("preview readback", e)
+				}
+			}
+			for _, r := range m.Resources {
+				if r.Source.Kind == "archive_entry" && r.Source.Record.NameReadable == "EDITOR.PIC" {
+					want := "GS2000.CAT/EDITOR.PIC"
+					if prefix != "" {
+						want = prefix + "/" + want
+					}
+					if r.ExportPath != want {
+						t.Fatal("physicalprovenance rewritten", r.ExportPath)
+					}
+				}
+			}
+		})
+	}
+}
+func TestInventorySourceFailuresRetainCause(t *testing.T) {
+	original := sourceInstallationInventoryOriginal(t)
+	core := []string{"GS.GS2", "GS2000.CAT", "GS2000.DAT", "MBUILDER.CAT", "FONTS.GS2"}
+	for _, name := range []string{"missing", "case", "duplicate", "conflicting", "truncated", "wrong-builder", "unknown-main"} {
+		t.Run(name, func(t *testing.T) {
+			root := filepath.Join(t.TempDir(), "input")
+			copyFiles(t, original, root, core)
+			switch name {
+			case "wrong-builder":
+				if e := os.Rename(filepath.Join(root, "MBUILDER.CAT"), filepath.Join(root, "UNRELATED.CAT")); e != nil {
+					t.Fatal(e)
+				}
+			case "unknown-main":
+				p := filepath.Join(root, "GS.GS2")
+				b, e := os.ReadFile(p)
+				if e != nil {
+					t.Fatal(e)
+				}
+				b[len(b)-1] ^= 1
+				if e = os.WriteFile(p, b, 0600); e != nil {
+					t.Fatal(e)
+				}
+			case "missing":
+				if e := os.Remove(filepath.Join(root, "MBUILDER.CAT")); e != nil {
+					t.Fatal(e)
+				}
+			case "case":
+				if e := os.Rename(filepath.Join(root, "GS2000.CAT"), filepath.Join(root, "gs2000.cat")); e != nil {
+					t.Fatal(e)
+				}
+			case "duplicate":
+				copyFiles(t, original, filepath.Join(root, "second"), core)
+			case "conflicting":
+				p := filepath.Join(root, "GS2000.CAT")
+				b, e := os.ReadFile(p)
+				if e != nil {
+					t.Fatal(e)
+				}
+				b[len(b)-1] ^= 1
+				if e = os.WriteFile(p, b, 0600); e != nil {
+					t.Fatal(e)
+				}
+			case "truncated":
+				p := filepath.Join(root, "MBUILDER.CAT")
+				b, e := os.ReadFile(p)
+				if e != nil {
+					t.Fatal(e)
+				}
+				if e = os.WriteFile(p, b[:30], 0600); e != nil {
+					t.Fatal(e)
+				}
+			}
+			m, e := PrepareAssetsWithAudio(root, filepath.Join(t.TempDir(), "out"), nil)
+			if name == "unknown-main" {
+				if e != nil {
+					t.Fatal(e)
+				}
+				if m.OfficeMetadata != "" || m.EditorMetadata != "" {
+					t.Fatal("unsupported release acquired frontend capability")
+				}
+				for _, v := range m.UnsupportedVersionOperations {
+					if strings.Contains(v.Reason, "GS.GS2") && strings.Contains(v.Reason, "unsupported") {
+						return
+					}
+				}
+				t.Fatal("unsupported release cause missing", m.UnsupportedVersionOperations)
+			}
+			if e == nil {
+				t.Fatal("unsafe installation published typed metadata")
+			}
+			want := map[string]string{"missing": "MBUILDER.CAT missing", "case": "unsupported filesystem case", "duplicate": "ambiguous source installation", "conflicting": "unsupported source identity", "truncated": "directory", "wrong-builder": "MBUILDER.CAT missing"}[name]
+			if !strings.Contains(e.Error(), want) {
+				t.Fatalf("wrong diagnosis expected%s: %v", want, e)
+			}
+		})
+	}
+}
+
+// Audio extraction legitimately uses GS.GS2 without the frontend catalogs. That
+// partial scope must not be forced through a complete UI-installation gate.
+func TestInventoryKeepsAudioOnlyPartialScope(t *testing.T) {
+	original := sourceInstallationInventoryOriginal(t)
+	names := []string{"GS.GS2"}
+	for _, role := range AudioSourceRoles {
+		names = append(names, IslandIce469085.Source(role).Name)
+	}
+	input := filepath.Join(t.TempDir(), "input")
+	copyFiles(t, original, input, names)
+	output := filepath.Join(t.TempDir(), "output")
+	m, e := PrepareAssetsWithAudio(input, output, nil)
+	if e != nil {
+		t.Fatal("partial raw/audio extraction blocked", e)
+	}
+	if m.OfficeMetadata != "" || m.EditorMetadata != "" {
+		t.Fatal("partial input gained UI capability")
+	}
+	want, e := os.ReadFile(filepath.Join(input, "ASOUND.GS4"))
+	if e != nil {
+		t.Fatal(e)
+	}
+	got, e := os.ReadFile(filepath.Join(output, "loose/ASOUND.GS4"))
+	if e != nil || string(got) != string(want) {
+		t.Fatal("raw audio bytes not retained", e)
+	}
+}

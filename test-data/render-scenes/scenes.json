@@ -1,0 +1,7751 @@
+{
+  "euro6-pad": {
+    "CombatPhase": 97,
+    "ExplosionVertices": [
+      [
+        -13,
+        30,
+        34
+      ],
+      [
+        47,
+        50,
+        31
+      ],
+      [
+        15,
+        60,
+        23
+      ],
+      [
+        -37,
+        70,
+        15
+      ],
+      [
+        -11,
+        40,
+        12
+      ],
+      [
+        39,
+        70,
+        7
+      ],
+      [
+        15,
+        60,
+        -7
+      ],
+      [
+        -15,
+        40,
+        -17
+      ],
+      [
+        27,
+        30,
+        -22
+      ]
+    ],
+    "RenderScale": 1,
+    "World": "EURO6",
+    "Camera": {
+      "H0": 469100,
+      "H1": 209519,
+      "Height": 109,
+      "Angles": [
+        64756,
+        41510,
+        65535
+      ]
+    },
+    "View": {
+      "Bounds": {
+        "Left": 0,
+        "Top": 0,
+        "Right": 319,
+        "Bottom": 199
+      },
+      "Center": {
+        "X": 160,
+        "Y": 70
+      },
+      "DepthScale": 0
+    },
+    "Instances": [
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-00",
+        "ModelID": 28,
+        "H0": 167236,
+        "H1": 266240,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-01",
+        "ModelID": 28,
+        "H0": 249156,
+        "H1": 471040,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-02",
+        "ModelID": 84,
+        "H0": 151552,
+        "H1": 192765,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-03",
+        "ModelID": 47,
+        "H0": 53344,
+        "H1": 440668,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-04",
+        "ModelID": 69,
+        "H0": 51344,
+        "H1": 440668,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-05",
+        "ModelID": 47,
+        "H0": 233568,
+        "H1": 112988,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-06",
+        "ModelID": 70,
+        "H0": 231568,
+        "H1": 112988,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-07",
+        "ModelID": 14,
+        "H0": 190362,
+        "H1": 53748,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-08",
+        "ModelID": 49,
+        "H0": 191062,
+        "H1": 53748,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-09",
+        "ModelID": 26,
+        "H0": 454656,
+        "H1": 142860,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-10",
+        "ModelID": 27,
+        "H0": 455356,
+        "H1": 142860,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-11",
+        "ModelID": 26,
+        "H0": 423338,
+        "H1": 266740,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-12",
+        "ModelID": 26,
+        "H0": 424738,
+        "H1": 266740,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-13",
+        "ModelID": 14,
+        "H0": 406004,
+        "H1": 422688,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-14",
+        "ModelID": 50,
+        "H0": 184320,
+        "H1": 495116,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-15",
+        "ModelID": 154,
+        "H0": 184320,
+        "H1": 267140,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-16",
+        "ModelID": 131,
+        "H0": 469540,
+        "H1": 209896,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-17",
+        "ModelID": 88,
+        "H0": 468740,
+        "H1": 209596,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-18",
+        "ModelID": 130,
+        "H0": 468740,
+        "H1": 210196,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-19",
+        "ModelID": 46,
+        "H0": 470040,
+        "H1": 210796,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-20",
+        "ModelID": 46,
+        "H0": 469040,
+        "H1": 210796,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-21",
+        "ModelID": 121,
+        "H0": 470040,
+        "H1": 209096,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-22",
+        "ModelID": 136,
+        "H0": 469540,
+        "H1": 209096,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-23",
+        "ModelID": 51,
+        "H0": 254839,
+        "H1": 74615,
+        "Height": 0,
+        "Angles": [
+          0,
+          57346,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-24",
+        "ModelID": 51,
+        "H0": 254485,
+        "H1": 74684,
+        "Height": 0,
+        "Angles": [
+          0,
+          57346,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-25",
+        "ModelID": 51,
+        "H0": 254910,
+        "H1": 74260,
+        "Height": 0,
+        "Angles": [
+          0,
+          57345,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-26",
+        "ModelID": 39,
+        "H0": 151551,
+        "H1": 171247,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-27",
+        "ModelID": 68,
+        "H0": 151550,
+        "H1": 171675,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-28",
+        "ModelID": 15,
+        "H0": 151551,
+        "H1": 172099,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-29",
+        "ModelID": 21,
+        "H0": 151552,
+        "H1": 172526,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-30",
+        "ModelID": 17,
+        "H0": 151550,
+        "H1": 172953,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-31",
+        "ModelID": 125,
+        "H0": 207396,
+        "H1": 324584,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-32",
+        "ModelID": 125,
+        "H0": 207696,
+        "H1": 324284,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-33",
+        "ModelID": 125,
+        "H0": 207096,
+        "H1": 324284,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-34",
+        "ModelID": 52,
+        "H0": 207396,
+        "H1": 324284,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-35",
+        "ModelID": 209,
+        "H0": 207396,
+        "H1": 324434,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-36",
+        "ModelID": 125,
+        "H0": 314489,
+        "H1": 174328,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-37",
+        "ModelID": 119,
+        "H0": 288959,
+        "H1": 179328,
+        "Height": 1024,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 2,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-38",
+        "ModelID": 125,
+        "H0": 275352,
+        "H1": 53248,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-39",
+        "ModelID": 34,
+        "H0": 198708,
+        "H1": 166640,
+        "Height": 372,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-40",
+        "ModelID": 53,
+        "H0": 242188,
+        "H1": 100600,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-41",
+        "ModelID": 51,
+        "H0": 194707,
+        "H1": 166136,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-42",
+        "ModelID": 18,
+        "H0": 176782,
+        "H1": 284624,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-43",
+        "ModelID": 19,
+        "H0": 120535,
+        "H1": 405320,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-44",
+        "ModelID": 72,
+        "H0": 227580,
+        "H1": 128230,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-45",
+        "ModelID": 144,
+        "H0": 215092,
+        "H1": 191216,
+        "Height": 372,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-46",
+        "ModelID": 143,
+        "H0": 317921,
+        "H1": 300521,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-47",
+        "ModelID": 144,
+        "H0": 170720,
+        "H1": 194512,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-48",
+        "ModelID": 213,
+        "H0": 167936,
+        "H1": 258048,
+        "Height": 65386,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-49",
+        "ModelID": 19,
+        "H0": 153780,
+        "H1": 428280,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-50",
+        "ModelID": 105,
+        "H0": 293872,
+        "H1": 121139,
+        "Height": 1024,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 2,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-51",
+        "ModelID": 56,
+        "H0": 201474,
+        "H1": 223480,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-52",
+        "ModelID": 125,
+        "H0": 321588,
+        "H1": 379632,
+        "Height": 372,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-53",
+        "ModelID": 72,
+        "H0": 257459,
+        "H1": 84216,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-54",
+        "ModelID": 213,
+        "H0": 167936,
+        "H1": 249856,
+        "Height": 65386,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-55",
+        "ModelID": 105,
+        "H0": 44860,
+        "H1": 474040,
+        "Height": 1024,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 2,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-56",
+        "ModelID": 105,
+        "H0": 292580,
+        "H1": 77824,
+        "Height": 1024,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 2,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-57",
+        "ModelID": 72,
+        "H0": 127604,
+        "H1": 219088,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-58",
+        "ModelID": 20,
+        "H0": 118391,
+        "H1": 202704,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-59",
+        "ModelID": 125,
+        "H0": 210522,
+        "H1": 276925,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-60",
+        "ModelID": 213,
+        "H0": 167936,
+        "H1": 348160,
+        "Height": 65386,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-61",
+        "ModelID": 51,
+        "H0": 275658,
+        "H1": 112592,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-62",
+        "ModelID": 56,
+        "H0": 176257,
+        "H1": 249856,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-63",
+        "ModelID": 51,
+        "H0": 185781,
+        "H1": 272632,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-64",
+        "ModelID": 53,
+        "H0": 337972,
+        "H1": 248560,
+        "Height": 372,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-65",
+        "ModelID": 72,
+        "H0": 268480,
+        "H1": 103674,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-66",
+        "ModelID": 53,
+        "H0": 185349,
+        "H1": 227280,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-67",
+        "ModelID": 144,
+        "H0": 232809,
+        "H1": 293816,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-68",
+        "ModelID": 110,
+        "H0": 321588,
+        "H1": 338672,
+        "Height": 372,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-69",
+        "ModelID": 143,
+        "H0": 175394,
+        "H1": 166136,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-70",
+        "ModelID": 19,
+        "H0": 190184,
+        "H1": 326784,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-71",
+        "ModelID": 72,
+        "H0": 290521,
+        "H1": 108792,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-72",
+        "ModelID": 34,
+        "H0": 201075,
+        "H1": 176128,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-73",
+        "ModelID": 34,
+        "H0": 370740,
+        "H1": 461552,
+        "Height": 372,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-74",
+        "ModelID": 144,
+        "H0": 217163,
+        "H1": 109092,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-75",
+        "ModelID": 72,
+        "H0": 190841,
+        "H1": 187520,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-76",
+        "ModelID": 125,
+        "H0": 232042,
+        "H1": 310400,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      }
+    ],
+    "GraphicsOptions": 223,
+    "PaletteBank": "DARK",
+    "Environment": {
+      "Switches": 8807,
+      "Prefix": "EURO",
+      "Phase": 216,
+      "RNG": 55052,
+      "PixelSeed": 0,
+      "PulseRemaining": 0,
+      "PulseDraw": 0,
+      "CompassDraw": 0,
+      "CompassShown": 0,
+      "PulseAmplitude": 0,
+      "PulseVisible": false
+    },
+    "MaterialCarrier": null,
+    "NearReference": 0,
+    "OutlineThreshold": 0,
+    "ExtentLimit": 0
+  },
+  "euro6-brown": {
+    "CombatPhase": 97,
+    "ExplosionVertices": [
+      [
+        -13,
+        30,
+        34
+      ],
+      [
+        47,
+        50,
+        31
+      ],
+      [
+        15,
+        60,
+        23
+      ],
+      [
+        -37,
+        70,
+        15
+      ],
+      [
+        -11,
+        40,
+        12
+      ],
+      [
+        39,
+        70,
+        7
+      ],
+      [
+        15,
+        60,
+        -7
+      ],
+      [
+        -15,
+        40,
+        -17
+      ],
+      [
+        27,
+        30,
+        -22
+      ]
+    ],
+    "RenderScale": 1,
+    "World": "EURO6",
+    "Camera": {
+      "H0": 469100,
+      "H1": 209519,
+      "Height": 109,
+      "Angles": [
+        64756,
+        41510,
+        65535
+      ]
+    },
+    "View": {
+      "Bounds": {
+        "Left": 0,
+        "Top": 0,
+        "Right": 319,
+        "Bottom": 199
+      },
+      "Center": {
+        "X": 160,
+        "Y": 70
+      },
+      "DepthScale": 0
+    },
+    "Instances": [
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-00",
+        "ModelID": 28,
+        "H0": 167236,
+        "H1": 266240,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-01",
+        "ModelID": 28,
+        "H0": 249156,
+        "H1": 471040,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-02",
+        "ModelID": 84,
+        "H0": 151552,
+        "H1": 192765,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-03",
+        "ModelID": 47,
+        "H0": 53344,
+        "H1": 440668,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-04",
+        "ModelID": 69,
+        "H0": 51344,
+        "H1": 440668,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-05",
+        "ModelID": 47,
+        "H0": 233568,
+        "H1": 112988,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-06",
+        "ModelID": 70,
+        "H0": 231568,
+        "H1": 112988,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-07",
+        "ModelID": 14,
+        "H0": 190362,
+        "H1": 53748,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-08",
+        "ModelID": 49,
+        "H0": 191062,
+        "H1": 53748,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-09",
+        "ModelID": 26,
+        "H0": 454656,
+        "H1": 142860,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-10",
+        "ModelID": 27,
+        "H0": 455356,
+        "H1": 142860,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-11",
+        "ModelID": 26,
+        "H0": 423338,
+        "H1": 266740,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-12",
+        "ModelID": 26,
+        "H0": 424738,
+        "H1": 266740,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-13",
+        "ModelID": 14,
+        "H0": 406004,
+        "H1": 422688,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-14",
+        "ModelID": 50,
+        "H0": 184320,
+        "H1": 495116,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-15",
+        "ModelID": 154,
+        "H0": 184320,
+        "H1": 267140,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-16",
+        "ModelID": 88,
+        "H0": 468740,
+        "H1": 209596,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-17",
+        "ModelID": 130,
+        "H0": 468740,
+        "H1": 210196,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-18",
+        "ModelID": 46,
+        "H0": 470040,
+        "H1": 210796,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-19",
+        "ModelID": 46,
+        "H0": 469040,
+        "H1": 210796,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-20",
+        "ModelID": 121,
+        "H0": 470040,
+        "H1": 209096,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-21",
+        "ModelID": 136,
+        "H0": 469540,
+        "H1": 209096,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-22",
+        "ModelID": 51,
+        "H0": 254839,
+        "H1": 74615,
+        "Height": 0,
+        "Angles": [
+          0,
+          57346,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-23",
+        "ModelID": 51,
+        "H0": 254485,
+        "H1": 74684,
+        "Height": 0,
+        "Angles": [
+          0,
+          57346,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-24",
+        "ModelID": 51,
+        "H0": 254910,
+        "H1": 74260,
+        "Height": 0,
+        "Angles": [
+          0,
+          57345,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-25",
+        "ModelID": 39,
+        "H0": 151551,
+        "H1": 171247,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-26",
+        "ModelID": 68,
+        "H0": 151550,
+        "H1": 171675,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-27",
+        "ModelID": 15,
+        "H0": 151551,
+        "H1": 172099,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-28",
+        "ModelID": 21,
+        "H0": 151552,
+        "H1": 172526,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-29",
+        "ModelID": 17,
+        "H0": 151550,
+        "H1": 172953,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-30",
+        "ModelID": 125,
+        "H0": 207396,
+        "H1": 324584,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-31",
+        "ModelID": 125,
+        "H0": 207696,
+        "H1": 324284,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-32",
+        "ModelID": 125,
+        "H0": 207096,
+        "H1": 324284,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-33",
+        "ModelID": 52,
+        "H0": 207396,
+        "H1": 324284,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-34",
+        "ModelID": 209,
+        "H0": 207396,
+        "H1": 324434,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-35",
+        "ModelID": 125,
+        "H0": 314489,
+        "H1": 174328,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-36",
+        "ModelID": 119,
+        "H0": 288959,
+        "H1": 179328,
+        "Height": 1024,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 2,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-37",
+        "ModelID": 125,
+        "H0": 275352,
+        "H1": 53248,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-38",
+        "ModelID": 34,
+        "H0": 198708,
+        "H1": 166640,
+        "Height": 372,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-39",
+        "ModelID": 53,
+        "H0": 242188,
+        "H1": 100600,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-40",
+        "ModelID": 51,
+        "H0": 194707,
+        "H1": 166136,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-41",
+        "ModelID": 18,
+        "H0": 176782,
+        "H1": 284624,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-42",
+        "ModelID": 19,
+        "H0": 120535,
+        "H1": 405320,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-43",
+        "ModelID": 72,
+        "H0": 227580,
+        "H1": 128230,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-44",
+        "ModelID": 144,
+        "H0": 215092,
+        "H1": 191216,
+        "Height": 372,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-45",
+        "ModelID": 143,
+        "H0": 317921,
+        "H1": 300521,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-46",
+        "ModelID": 144,
+        "H0": 170720,
+        "H1": 194512,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-47",
+        "ModelID": 213,
+        "H0": 167936,
+        "H1": 258048,
+        "Height": 65386,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-48",
+        "ModelID": 19,
+        "H0": 153780,
+        "H1": 428280,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-49",
+        "ModelID": 105,
+        "H0": 293872,
+        "H1": 121139,
+        "Height": 1024,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 2,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-50",
+        "ModelID": 56,
+        "H0": 201474,
+        "H1": 223480,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-51",
+        "ModelID": 125,
+        "H0": 321588,
+        "H1": 379632,
+        "Height": 372,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-52",
+        "ModelID": 72,
+        "H0": 257459,
+        "H1": 84216,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-53",
+        "ModelID": 213,
+        "H0": 167936,
+        "H1": 249856,
+        "Height": 65386,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-54",
+        "ModelID": 105,
+        "H0": 44860,
+        "H1": 474040,
+        "Height": 1024,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 2,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-55",
+        "ModelID": 105,
+        "H0": 292580,
+        "H1": 77824,
+        "Height": 1024,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 2,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-56",
+        "ModelID": 72,
+        "H0": 127604,
+        "H1": 219088,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-57",
+        "ModelID": 20,
+        "H0": 118391,
+        "H1": 202704,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-58",
+        "ModelID": 125,
+        "H0": 210522,
+        "H1": 276925,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-59",
+        "ModelID": 213,
+        "H0": 167936,
+        "H1": 348160,
+        "Height": 65386,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-60",
+        "ModelID": 51,
+        "H0": 275658,
+        "H1": 112592,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-61",
+        "ModelID": 56,
+        "H0": 176257,
+        "H1": 249856,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-62",
+        "ModelID": 51,
+        "H0": 185781,
+        "H1": 272632,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-63",
+        "ModelID": 53,
+        "H0": 337972,
+        "H1": 248560,
+        "Height": 372,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-64",
+        "ModelID": 72,
+        "H0": 268480,
+        "H1": 103674,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-65",
+        "ModelID": 53,
+        "H0": 185349,
+        "H1": 227280,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-66",
+        "ModelID": 144,
+        "H0": 232809,
+        "H1": 293816,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-67",
+        "ModelID": 110,
+        "H0": 321588,
+        "H1": 338672,
+        "Height": 372,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-68",
+        "ModelID": 143,
+        "H0": 175394,
+        "H1": 166136,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-69",
+        "ModelID": 19,
+        "H0": 190184,
+        "H1": 326784,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-70",
+        "ModelID": 72,
+        "H0": 290521,
+        "H1": 108792,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-71",
+        "ModelID": 34,
+        "H0": 201075,
+        "H1": 176128,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-72",
+        "ModelID": 34,
+        "H0": 370740,
+        "H1": 461552,
+        "Height": 372,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-73",
+        "ModelID": 144,
+        "H0": 217163,
+        "H1": 109092,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-74",
+        "ModelID": 72,
+        "H0": 190841,
+        "H1": 187520,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-75",
+        "ModelID": 125,
+        "H0": 232042,
+        "H1": 310400,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      }
+    ],
+    "GraphicsOptions": 223,
+    "PaletteBank": "DARK",
+    "Environment": {
+      "Switches": 8807,
+      "Prefix": "EURO",
+      "Phase": 216,
+      "RNG": 55052,
+      "PixelSeed": 0,
+      "PulseRemaining": 0,
+      "PulseDraw": 0,
+      "CompassDraw": 0,
+      "CompassShown": 0,
+      "PulseAmplitude": 0,
+      "PulseVisible": false
+    },
+    "MaterialCarrier": null,
+    "NearReference": 0,
+    "OutlineThreshold": 0,
+    "ExtentLimit": 0
+  },
+  "euro7-pad": {
+    "CombatPhase": 97,
+    "ExplosionVertices": [
+      [
+        -13,
+        30,
+        34
+      ],
+      [
+        47,
+        50,
+        31
+      ],
+      [
+        15,
+        60,
+        23
+      ],
+      [
+        -37,
+        70,
+        15
+      ],
+      [
+        -11,
+        40,
+        12
+      ],
+      [
+        39,
+        70,
+        7
+      ],
+      [
+        15,
+        60,
+        -7
+      ],
+      [
+        -15,
+        40,
+        -17
+      ],
+      [
+        27,
+        30,
+        -22
+      ]
+    ],
+    "RenderScale": 1,
+    "World": "EURO7",
+    "Camera": {
+      "H0": 469100,
+      "H1": 201327,
+      "Height": 109,
+      "Angles": [
+        64756,
+        41510,
+        65535
+      ]
+    },
+    "View": {
+      "Bounds": {
+        "Left": 0,
+        "Top": 0,
+        "Right": 319,
+        "Bottom": 199
+      },
+      "Center": {
+        "X": 160,
+        "Y": 70
+      },
+      "DepthScale": 0
+    },
+    "Instances": [
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-00",
+        "ModelID": 28,
+        "H0": 167236,
+        "H1": 258048,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-01",
+        "ModelID": 28,
+        "H0": 249156,
+        "H1": 462848,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-02",
+        "ModelID": 84,
+        "H0": 151552,
+        "H1": 184573,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-03",
+        "ModelID": 47,
+        "H0": 53344,
+        "H1": 432476,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-04",
+        "ModelID": 69,
+        "H0": 51344,
+        "H1": 432476,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-05",
+        "ModelID": 47,
+        "H0": 233568,
+        "H1": 104796,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-06",
+        "ModelID": 70,
+        "H0": 231568,
+        "H1": 104796,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-07",
+        "ModelID": 14,
+        "H0": 190362,
+        "H1": 45556,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-08",
+        "ModelID": 49,
+        "H0": 191062,
+        "H1": 45556,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-09",
+        "ModelID": 26,
+        "H0": 454656,
+        "H1": 134668,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-10",
+        "ModelID": 27,
+        "H0": 455356,
+        "H1": 134668,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-11",
+        "ModelID": 26,
+        "H0": 423338,
+        "H1": 258548,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-12",
+        "ModelID": 26,
+        "H0": 424738,
+        "H1": 258548,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-13",
+        "ModelID": 14,
+        "H0": 406004,
+        "H1": 414496,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-14",
+        "ModelID": 50,
+        "H0": 184320,
+        "H1": 486924,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-15",
+        "ModelID": 154,
+        "H0": 184320,
+        "H1": 258948,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-16",
+        "ModelID": 131,
+        "H0": 469540,
+        "H1": 201704,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-17",
+        "ModelID": 88,
+        "H0": 468740,
+        "H1": 201404,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-18",
+        "ModelID": 130,
+        "H0": 468740,
+        "H1": 202004,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-19",
+        "ModelID": 46,
+        "H0": 470040,
+        "H1": 202604,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-20",
+        "ModelID": 46,
+        "H0": 469040,
+        "H1": 202604,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-21",
+        "ModelID": 121,
+        "H0": 470040,
+        "H1": 200904,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-22",
+        "ModelID": 136,
+        "H0": 469540,
+        "H1": 200904,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-23",
+        "ModelID": 51,
+        "H0": 254839,
+        "H1": 66423,
+        "Height": 0,
+        "Angles": [
+          0,
+          57346,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-24",
+        "ModelID": 51,
+        "H0": 254485,
+        "H1": 66492,
+        "Height": 0,
+        "Angles": [
+          0,
+          57346,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-25",
+        "ModelID": 51,
+        "H0": 254910,
+        "H1": 66068,
+        "Height": 0,
+        "Angles": [
+          0,
+          57345,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-26",
+        "ModelID": 39,
+        "H0": 151551,
+        "H1": 163055,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-27",
+        "ModelID": 68,
+        "H0": 151550,
+        "H1": 163483,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-28",
+        "ModelID": 15,
+        "H0": 151551,
+        "H1": 163907,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-29",
+        "ModelID": 21,
+        "H0": 151552,
+        "H1": 164334,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-30",
+        "ModelID": 17,
+        "H0": 151550,
+        "H1": 164761,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-31",
+        "ModelID": 125,
+        "H0": 207396,
+        "H1": 316392,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-32",
+        "ModelID": 125,
+        "H0": 207696,
+        "H1": 316092,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-33",
+        "ModelID": 125,
+        "H0": 207096,
+        "H1": 316092,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-34",
+        "ModelID": 52,
+        "H0": 207396,
+        "H1": 316092,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-35",
+        "ModelID": 209,
+        "H0": 207396,
+        "H1": 316242,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-36",
+        "ModelID": 125,
+        "H0": 314489,
+        "H1": 166136,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-37",
+        "ModelID": 119,
+        "H0": 288959,
+        "H1": 171136,
+        "Height": 1024,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 2,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-38",
+        "ModelID": 125,
+        "H0": 275352,
+        "H1": 45056,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-39",
+        "ModelID": 34,
+        "H0": 198708,
+        "H1": 158448,
+        "Height": 372,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-40",
+        "ModelID": 53,
+        "H0": 242188,
+        "H1": 92408,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-41",
+        "ModelID": 51,
+        "H0": 194707,
+        "H1": 157944,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-42",
+        "ModelID": 18,
+        "H0": 176782,
+        "H1": 276432,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-43",
+        "ModelID": 19,
+        "H0": 120535,
+        "H1": 397128,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-44",
+        "ModelID": 72,
+        "H0": 227580,
+        "H1": 120038,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-45",
+        "ModelID": 144,
+        "H0": 215092,
+        "H1": 183024,
+        "Height": 372,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-46",
+        "ModelID": 143,
+        "H0": 317921,
+        "H1": 292329,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-47",
+        "ModelID": 144,
+        "H0": 170720,
+        "H1": 186320,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-48",
+        "ModelID": 213,
+        "H0": 167936,
+        "H1": 249856,
+        "Height": 65386,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-49",
+        "ModelID": 19,
+        "H0": 153780,
+        "H1": 420088,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-50",
+        "ModelID": 105,
+        "H0": 293872,
+        "H1": 112947,
+        "Height": 1024,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 2,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-51",
+        "ModelID": 56,
+        "H0": 201474,
+        "H1": 215288,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-52",
+        "ModelID": 125,
+        "H0": 321588,
+        "H1": 371440,
+        "Height": 372,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-53",
+        "ModelID": 72,
+        "H0": 257459,
+        "H1": 76024,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-54",
+        "ModelID": 213,
+        "H0": 167936,
+        "H1": 241664,
+        "Height": 65386,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-55",
+        "ModelID": 105,
+        "H0": 44860,
+        "H1": 465848,
+        "Height": 1024,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 2,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-56",
+        "ModelID": 105,
+        "H0": 292580,
+        "H1": 69632,
+        "Height": 1024,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 2,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-57",
+        "ModelID": 72,
+        "H0": 127604,
+        "H1": 210896,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-58",
+        "ModelID": 20,
+        "H0": 118391,
+        "H1": 194512,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-59",
+        "ModelID": 125,
+        "H0": 210522,
+        "H1": 268733,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-60",
+        "ModelID": 213,
+        "H0": 167936,
+        "H1": 339968,
+        "Height": 65386,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-61",
+        "ModelID": 51,
+        "H0": 275658,
+        "H1": 104400,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-62",
+        "ModelID": 56,
+        "H0": 176257,
+        "H1": 241664,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-63",
+        "ModelID": 51,
+        "H0": 185781,
+        "H1": 264440,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-64",
+        "ModelID": 53,
+        "H0": 337972,
+        "H1": 240368,
+        "Height": 372,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-65",
+        "ModelID": 72,
+        "H0": 268480,
+        "H1": 95482,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-66",
+        "ModelID": 53,
+        "H0": 185349,
+        "H1": 219088,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-67",
+        "ModelID": 144,
+        "H0": 232809,
+        "H1": 285624,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-68",
+        "ModelID": 110,
+        "H0": 321588,
+        "H1": 330480,
+        "Height": 372,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-69",
+        "ModelID": 143,
+        "H0": 175394,
+        "H1": 157944,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-70",
+        "ModelID": 19,
+        "H0": 190184,
+        "H1": 318592,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-71",
+        "ModelID": 72,
+        "H0": 290521,
+        "H1": 100600,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-72",
+        "ModelID": 34,
+        "H0": 201075,
+        "H1": 167936,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-73",
+        "ModelID": 34,
+        "H0": 370740,
+        "H1": 453360,
+        "Height": 372,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-74",
+        "ModelID": 144,
+        "H0": 217163,
+        "H1": 100900,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-75",
+        "ModelID": 72,
+        "H0": 190841,
+        "H1": 179328,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-76",
+        "ModelID": 125,
+        "H0": 232042,
+        "H1": 302208,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      }
+    ],
+    "GraphicsOptions": 223,
+    "PaletteBank": "DARK",
+    "Environment": {
+      "Switches": 8807,
+      "Prefix": "EURO",
+      "Phase": 216,
+      "RNG": 55052,
+      "PixelSeed": 0,
+      "PulseRemaining": 0,
+      "PulseDraw": 0,
+      "CompassDraw": 0,
+      "CompassShown": 0,
+      "PulseAmplitude": 0,
+      "PulseVisible": false
+    },
+    "MaterialCarrier": null,
+    "NearReference": 0,
+    "OutlineThreshold": 0,
+    "ExtentLimit": 0
+  },
+  "euro8-field": {
+    "CombatPhase": 310,
+    "ExplosionVertices": [
+      [
+        -13,
+        30,
+        34
+      ],
+      [
+        47,
+        50,
+        31
+      ],
+      [
+        15,
+        60,
+        23
+      ],
+      [
+        -37,
+        70,
+        15
+      ],
+      [
+        -11,
+        40,
+        12
+      ],
+      [
+        39,
+        70,
+        7
+      ],
+      [
+        15,
+        60,
+        -7
+      ],
+      [
+        -15,
+        40,
+        -17
+      ],
+      [
+        27,
+        30,
+        -22
+      ]
+    ],
+    "RenderScale": 1,
+    "World": "EURO8",
+    "Camera": {
+      "H0": 231563,
+      "H1": 132457,
+      "Height": 453,
+      "Angles": [
+        62566,
+        55544,
+        65535
+      ]
+    },
+    "View": {
+      "Bounds": {
+        "Left": 0,
+        "Top": 0,
+        "Right": 319,
+        "Bottom": 199
+      },
+      "Center": {
+        "X": 160,
+        "Y": 70
+      },
+      "DepthScale": 0
+    },
+    "Instances": [
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-00",
+        "ModelID": 28,
+        "H0": 167236,
+        "H1": 266240,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-01",
+        "ModelID": 35,
+        "H0": 249156,
+        "H1": 471040,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-02",
+        "ModelID": 84,
+        "H0": 151552,
+        "H1": 192765,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-03",
+        "ModelID": 45,
+        "H0": 53344,
+        "H1": 440668,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-04",
+        "ModelID": 47,
+        "H0": 52344,
+        "H1": 440668,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-05",
+        "ModelID": 70,
+        "H0": 51344,
+        "H1": 440668,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-06",
+        "ModelID": 47,
+        "H0": 233568,
+        "H1": 112988,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-07",
+        "ModelID": 45,
+        "H0": 232568,
+        "H1": 112988,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-08",
+        "ModelID": 71,
+        "H0": 231568,
+        "H1": 112988,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 3,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-09",
+        "ModelID": 111,
+        "H0": 190362,
+        "H1": 52348,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-10",
+        "ModelID": 18,
+        "H0": 221184,
+        "H1": 266540,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-11",
+        "ModelID": 18,
+        "H0": 220884,
+        "H1": 266340,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-12",
+        "ModelID": 18,
+        "H0": 221484,
+        "H1": 266340,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-13",
+        "ModelID": 54,
+        "H0": 363544,
+        "H1": 317392,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-14",
+        "ModelID": 54,
+        "H0": 363244,
+        "H1": 317192,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-15",
+        "ModelID": 54,
+        "H0": 363844,
+        "H1": 317192,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-16",
+        "ModelID": 131,
+        "H0": 226376,
+        "H1": 116780,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-17",
+        "ModelID": 88,
+        "H0": 225576,
+        "H1": 116480,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-18",
+        "ModelID": 130,
+        "H0": 225576,
+        "H1": 117080,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-19",
+        "ModelID": 46,
+        "H0": 226876,
+        "H1": 117680,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-20",
+        "ModelID": 46,
+        "H0": 225876,
+        "H1": 117680,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-21",
+        "ModelID": 121,
+        "H0": 226876,
+        "H1": 115980,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-22",
+        "ModelID": 136,
+        "H0": 226376,
+        "H1": 115980,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-23",
+        "ModelID": 75,
+        "H0": 60440,
+        "H1": 317392,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 3,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-24",
+        "ModelID": 77,
+        "H0": 59440,
+        "H1": 317392,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-25",
+        "ModelID": 77,
+        "H0": 61440,
+        "H1": 317392,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-26",
+        "ModelID": 53,
+        "H0": 60440,
+        "H1": 318392,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-27",
+        "ModelID": 53,
+        "H0": 60440,
+        "H1": 316392,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-28",
+        "ModelID": 54,
+        "H0": 413696,
+        "H1": 233472,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-29",
+        "ModelID": 56,
+        "H0": 413696,
+        "H1": 232072,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-30",
+        "ModelID": 54,
+        "H0": 413296,
+        "H1": 233072,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-31",
+        "ModelID": 18,
+        "H0": 414096,
+        "H1": 231072,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-32",
+        "ModelID": 54,
+        "H0": 414096,
+        "H1": 233072,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-33",
+        "ModelID": 18,
+        "H0": 413296,
+        "H1": 231072,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-34",
+        "ModelID": 133,
+        "H0": 49152,
+        "H1": 444560,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-35",
+        "ModelID": 130,
+        "H0": 49952,
+        "H1": 444560,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-36",
+        "ModelID": 46,
+        "H0": 48302,
+        "H1": 444560,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-37",
+        "ModelID": 132,
+        "H0": 48452,
+        "H1": 445260,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-38",
+        "ModelID": 136,
+        "H0": 49152,
+        "H1": 443760,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-39",
+        "ModelID": 53,
+        "H0": 69303,
+        "H1": 302008,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-40",
+        "ModelID": 72,
+        "H0": 380033,
+        "H1": 198904,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-41",
+        "ModelID": 56,
+        "H0": 298994,
+        "H1": 433080,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-42",
+        "ModelID": 72,
+        "H0": 68895,
+        "H1": 261048,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-43",
+        "ModelID": 110,
+        "H0": 373640,
+        "H1": 248056,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-44",
+        "ModelID": 18,
+        "H0": 134130,
+        "H1": 326584,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-45",
+        "ModelID": 55,
+        "H0": 76880,
+        "H1": 289016,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-46",
+        "ModelID": 125,
+        "H0": 373294,
+        "H1": 265240,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-47",
+        "ModelID": 51,
+        "H0": 258019,
+        "H1": 261048,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-48",
+        "ModelID": 34,
+        "H0": 93436,
+        "H1": 334776,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-49",
+        "ModelID": 72,
+        "H0": 367057,
+        "H1": 242982,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-50",
+        "ModelID": 55,
+        "H0": 440651,
+        "H1": 373736,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-51",
+        "ModelID": 48,
+        "H0": 119864,
+        "H1": 317392,
+        "Height": 1024,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 2,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-52",
+        "ModelID": 55,
+        "H0": 403907,
+        "H1": 220088,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-53",
+        "ModelID": 42,
+        "H0": 323000,
+        "H1": 469240,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-54",
+        "ModelID": 53,
+        "H0": 86334,
+        "H1": 318392,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-55",
+        "ModelID": 51,
+        "H0": 413798,
+        "H1": 269240,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-56",
+        "ModelID": 119,
+        "H0": 371277,
+        "H1": 64640,
+        "Height": 1024,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 2,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-57",
+        "ModelID": 53,
+        "H0": 104366,
+        "H1": 265540,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-58",
+        "ModelID": 34,
+        "H0": 416322,
+        "H1": 200704,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-59",
+        "ModelID": 119,
+        "H0": 208744,
+        "H1": 334776,
+        "Height": 1024,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 2,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-60",
+        "ModelID": 144,
+        "H0": 121272,
+        "H1": 272632,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-61",
+        "ModelID": 125,
+        "H0": 427344,
+        "H1": 220288,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-62",
+        "ModelID": 72,
+        "H0": 45086,
+        "H1": 339968,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-63",
+        "ModelID": 55,
+        "H0": 118780,
+        "H1": 326584,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-64",
+        "ModelID": 72,
+        "H0": 436274,
+        "H1": 212096,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-65",
+        "ModelID": 53,
+        "H0": 198519,
+        "H1": 334976,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-66",
+        "ModelID": 34,
+        "H0": 61232,
+        "H1": 333776,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-67",
+        "ModelID": 18,
+        "H0": 364773,
+        "H1": 269240,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-68",
+        "ModelID": 125,
+        "H0": 211336,
+        "H1": 308716,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-69",
+        "ModelID": 72,
+        "H0": 63984,
+        "H1": 292816,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-70",
+        "ModelID": 53,
+        "H0": 338623,
+        "H1": 231672,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-71",
+        "ModelID": 53,
+        "H0": 309685,
+        "H1": 282080,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-72",
+        "ModelID": 125,
+        "H0": 52507,
+        "H1": 285624,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-73",
+        "ModelID": 18,
+        "H0": 396089,
+        "H1": 179128,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-74",
+        "ModelID": 53,
+        "H0": 206638,
+        "H1": 359552,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-75",
+        "ModelID": 34,
+        "H0": 113634,
+        "H1": 331774,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-76",
+        "ModelID": 34,
+        "H0": 405673,
+        "H1": 269240,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-77",
+        "ModelID": 51,
+        "H0": 55606,
+        "H1": 413696,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-78",
+        "ModelID": 144,
+        "H0": 91543,
+        "H1": 294016,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      }
+    ],
+    "GraphicsOptions": 223,
+    "PaletteBank": "DAY",
+    "Environment": {
+      "Switches": 1123,
+      "Prefix": "EURO",
+      "Phase": 388,
+      "RNG": 12063,
+      "PixelSeed": 0,
+      "PulseRemaining": 0,
+      "PulseDraw": 0,
+      "CompassDraw": 0,
+      "CompassShown": 0,
+      "PulseAmplitude": 0,
+      "PulseVisible": false
+    },
+    "MaterialCarrier": null,
+    "NearReference": 0,
+    "OutlineThreshold": 0,
+    "ExtentLimit": 0
+  },
+  "jungle": {
+    "CombatPhase": 310,
+    "ExplosionVertices": [
+      [
+        -13,
+        30,
+        34
+      ],
+      [
+        47,
+        50,
+        31
+      ],
+      [
+        15,
+        60,
+        23
+      ],
+      [
+        -37,
+        70,
+        15
+      ],
+      [
+        -11,
+        40,
+        12
+      ],
+      [
+        39,
+        70,
+        7
+      ],
+      [
+        15,
+        60,
+        -7
+      ],
+      [
+        -15,
+        40,
+        -17
+      ],
+      [
+        27,
+        30,
+        -22
+      ]
+    ],
+    "RenderScale": 1,
+    "World": "PHIL1",
+    "Camera": {
+      "H0": 231563,
+      "H1": 99689,
+      "Height": 453,
+      "Angles": [
+        62566,
+        55544,
+        65535
+      ]
+    },
+    "View": {
+      "Bounds": {
+        "Left": 0,
+        "Top": 0,
+        "Right": 319,
+        "Bottom": 199
+      },
+      "Center": {
+        "X": 160,
+        "Y": 70
+      },
+      "DepthScale": 0
+    },
+    "Instances": [
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-00",
+        "ModelID": 28,
+        "H0": 167236,
+        "H1": 233472,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-01",
+        "ModelID": 35,
+        "H0": 249156,
+        "H1": 438272,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-02",
+        "ModelID": 84,
+        "H0": 151552,
+        "H1": 159997,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-03",
+        "ModelID": 45,
+        "H0": 53344,
+        "H1": 407900,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-04",
+        "ModelID": 47,
+        "H0": 52344,
+        "H1": 407900,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-05",
+        "ModelID": 70,
+        "H0": 51344,
+        "H1": 407900,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-06",
+        "ModelID": 47,
+        "H0": 233568,
+        "H1": 80220,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-07",
+        "ModelID": 45,
+        "H0": 232568,
+        "H1": 80220,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-08",
+        "ModelID": 71,
+        "H0": 231568,
+        "H1": 80220,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 3,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-09",
+        "ModelID": 111,
+        "H0": 190362,
+        "H1": 19580,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-10",
+        "ModelID": 18,
+        "H0": 221184,
+        "H1": 233772,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-11",
+        "ModelID": 18,
+        "H0": 220884,
+        "H1": 233572,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-12",
+        "ModelID": 18,
+        "H0": 221484,
+        "H1": 233572,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-13",
+        "ModelID": 54,
+        "H0": 363544,
+        "H1": 284624,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-14",
+        "ModelID": 54,
+        "H0": 363244,
+        "H1": 284424,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-15",
+        "ModelID": 54,
+        "H0": 363844,
+        "H1": 284424,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-16",
+        "ModelID": 131,
+        "H0": 226376,
+        "H1": 84012,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-17",
+        "ModelID": 88,
+        "H0": 225576,
+        "H1": 83712,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-18",
+        "ModelID": 130,
+        "H0": 225576,
+        "H1": 84312,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-19",
+        "ModelID": 46,
+        "H0": 226876,
+        "H1": 84912,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-20",
+        "ModelID": 46,
+        "H0": 225876,
+        "H1": 84912,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-21",
+        "ModelID": 121,
+        "H0": 226876,
+        "H1": 83212,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-22",
+        "ModelID": 136,
+        "H0": 226376,
+        "H1": 83212,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-23",
+        "ModelID": 75,
+        "H0": 60440,
+        "H1": 284624,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 3,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-24",
+        "ModelID": 77,
+        "H0": 59440,
+        "H1": 284624,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-25",
+        "ModelID": 77,
+        "H0": 61440,
+        "H1": 284624,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-26",
+        "ModelID": 53,
+        "H0": 60440,
+        "H1": 285624,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-27",
+        "ModelID": 53,
+        "H0": 60440,
+        "H1": 283624,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-28",
+        "ModelID": 54,
+        "H0": 413696,
+        "H1": 200704,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-29",
+        "ModelID": 56,
+        "H0": 413696,
+        "H1": 199304,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-30",
+        "ModelID": 54,
+        "H0": 413296,
+        "H1": 200304,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-31",
+        "ModelID": 18,
+        "H0": 414096,
+        "H1": 198304,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-32",
+        "ModelID": 54,
+        "H0": 414096,
+        "H1": 200304,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-33",
+        "ModelID": 18,
+        "H0": 413296,
+        "H1": 198304,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-34",
+        "ModelID": 133,
+        "H0": 49152,
+        "H1": 411792,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-35",
+        "ModelID": 130,
+        "H0": 49952,
+        "H1": 411792,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-36",
+        "ModelID": 46,
+        "H0": 48302,
+        "H1": 411792,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-37",
+        "ModelID": 132,
+        "H0": 48452,
+        "H1": 412492,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-38",
+        "ModelID": 136,
+        "H0": 49152,
+        "H1": 410992,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": false,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-39",
+        "ModelID": 53,
+        "H0": 69303,
+        "H1": 269240,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-40",
+        "ModelID": 72,
+        "H0": 380033,
+        "H1": 166136,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-41",
+        "ModelID": 56,
+        "H0": 298994,
+        "H1": 400312,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-42",
+        "ModelID": 72,
+        "H0": 68895,
+        "H1": 228280,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-43",
+        "ModelID": 110,
+        "H0": 373640,
+        "H1": 215288,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-44",
+        "ModelID": 18,
+        "H0": 134130,
+        "H1": 293816,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-45",
+        "ModelID": 55,
+        "H0": 76880,
+        "H1": 256248,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-46",
+        "ModelID": 125,
+        "H0": 373294,
+        "H1": 232472,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-47",
+        "ModelID": 51,
+        "H0": 258019,
+        "H1": 228280,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-48",
+        "ModelID": 34,
+        "H0": 93436,
+        "H1": 302008,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-49",
+        "ModelID": 72,
+        "H0": 367057,
+        "H1": 210214,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-50",
+        "ModelID": 55,
+        "H0": 440651,
+        "H1": 340968,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-51",
+        "ModelID": 48,
+        "H0": 119864,
+        "H1": 284624,
+        "Height": 1024,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 2,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-52",
+        "ModelID": 55,
+        "H0": 403907,
+        "H1": 187320,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-53",
+        "ModelID": 42,
+        "H0": 323000,
+        "H1": 436472,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-54",
+        "ModelID": 53,
+        "H0": 86334,
+        "H1": 285624,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-55",
+        "ModelID": 51,
+        "H0": 413798,
+        "H1": 236472,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-56",
+        "ModelID": 119,
+        "H0": 371277,
+        "H1": 31872,
+        "Height": 1024,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 2,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-57",
+        "ModelID": 53,
+        "H0": 104366,
+        "H1": 232772,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-58",
+        "ModelID": 34,
+        "H0": 416322,
+        "H1": 167936,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-59",
+        "ModelID": 119,
+        "H0": 208744,
+        "H1": 302008,
+        "Height": 1024,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 2,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-60",
+        "ModelID": 144,
+        "H0": 121272,
+        "H1": 239864,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-61",
+        "ModelID": 125,
+        "H0": 427344,
+        "H1": 187520,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-62",
+        "ModelID": 72,
+        "H0": 45086,
+        "H1": 307200,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-63",
+        "ModelID": 55,
+        "H0": 118780,
+        "H1": 293816,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-64",
+        "ModelID": 72,
+        "H0": 436274,
+        "H1": 179328,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-65",
+        "ModelID": 53,
+        "H0": 198519,
+        "H1": 302208,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-66",
+        "ModelID": 34,
+        "H0": 61232,
+        "H1": 301008,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-67",
+        "ModelID": 18,
+        "H0": 364773,
+        "H1": 236472,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-68",
+        "ModelID": 125,
+        "H0": 211336,
+        "H1": 275948,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-69",
+        "ModelID": 72,
+        "H0": 63984,
+        "H1": 260048,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-70",
+        "ModelID": 53,
+        "H0": 338623,
+        "H1": 198904,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-71",
+        "ModelID": 53,
+        "H0": 309685,
+        "H1": 249312,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-72",
+        "ModelID": 125,
+        "H0": 52507,
+        "H1": 252856,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-73",
+        "ModelID": 18,
+        "H0": 396089,
+        "H1": 146360,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-74",
+        "ModelID": 53,
+        "H0": 206638,
+        "H1": 326784,
+        "Height": 0,
+        "Angles": [
+          0,
+          49152,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-75",
+        "ModelID": 34,
+        "H0": 113634,
+        "H1": 299006,
+        "Height": 0,
+        "Angles": [
+          0,
+          16384,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-76",
+        "ModelID": 34,
+        "H0": 405673,
+        "H1": 236472,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-77",
+        "ModelID": 51,
+        "H0": 55606,
+        "H1": 380928,
+        "Height": 0,
+        "Angles": [
+          0,
+          0,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      },
+      {
+        "GeometryID": "",
+        "Impact": false,
+        "Explosion": false,
+        "ID": "fixture-78",
+        "ModelID": 144,
+        "H0": 91543,
+        "H1": 261248,
+        "Height": 0,
+        "Angles": [
+          0,
+          32768,
+          0
+        ],
+        "Callback": 0,
+        "Oriented": true,
+        "GraphChild": null
+      }
+    ],
+    "GraphicsOptions": 223,
+    "PaletteBank": "DAY",
+    "Environment": {
+      "Switches": 1123,
+      "Prefix": "EURO",
+      "Phase": 388,
+      "RNG": 12063,
+      "PixelSeed": 0,
+      "PulseRemaining": 0,
+      "PulseDraw": 0,
+      "CompassDraw": 0,
+      "CompassShown": 0,
+      "PulseAmplitude": 0,
+      "PulseVisible": false
+    },
+    "MaterialCarrier": null,
+    "NearReference": 0,
+    "OutlineThreshold": 0,
+    "ExtentLimit": 0
+  },
+  "gulf": {
+    "CombatPhase": 310,
+    "ExplosionVertices": [
+      [
+        -13,
+        30,
+        34
+      ],
+      [
+        47,
+        50,
+        31
+      ],
+      [
+        15,
+        60,
+        23
+      ],
+      [
+        -37,
+        70,
+        15
+      ],
+      [
+        -11,
+        40,
+        12
+      ],
+      [
+        39,
+        70,
+        7
+      ],
+      [
+        15,
+        60,
+        -7
+      ],
+      [
+        -15,
+        40,
+        -17
+      ],
+      [
+        27,
+        30,
+        -22
+      ]
+    ],
+    "RenderScale": 1,
+    "World": "GULF2",
+    "Camera": {
+      "H0": 231563,
+      "H1": 132457,
+      "Height": 453,
+      "Angles": [
+        62566,
+        55544,
+        65535
+      ]
+    },
+    "View": {
+      "Bounds": {
+        "Left": 0,
+        "Top": 0,
+        "Right": 319,
+        "Bottom": 199
+      },
+      "Center": {
+        "X": 160,
+        "Y": 70
+      },
+      "DepthScale": 0
+    },
+    "Instances": [],
+    "GraphicsOptions": 223,
+    "PaletteBank": "DAY",
+    "Environment": {
+      "Switches": 1123,
+      "Prefix": "EURO",
+      "Phase": 388,
+      "RNG": 12063,
+      "PixelSeed": 0,
+      "PulseRemaining": 0,
+      "PulseDraw": 0,
+      "CompassDraw": 0,
+      "CompassShown": 0,
+      "PulseAmplitude": 0,
+      "PulseVisible": false
+    },
+    "MaterialCarrier": null,
+    "NearReference": 0,
+    "OutlineThreshold": 0,
+    "ExtentLimit": 0
+  },
+  "antarctic": {
+    "CombatPhase": 310,
+    "ExplosionVertices": [
+      [
+        -13,
+        30,
+        34
+      ],
+      [
+        47,
+        50,
+        31
+      ],
+      [
+        15,
+        60,
+        23
+      ],
+      [
+        -37,
+        70,
+        15
+      ],
+      [
+        -11,
+        40,
+        12
+      ],
+      [
+        39,
+        70,
+        7
+      ],
+      [
+        15,
+        60,
+        -7
+      ],
+      [
+        -15,
+        40,
+        -17
+      ],
+      [
+        27,
+        30,
+        -22
+      ]
+    ],
+    "RenderScale": 1,
+    "World": "ANTC1",
+    "Camera": {
+      "H0": 231563,
+      "H1": 132457,
+      "Height": 453,
+      "Angles": [
+        62566,
+        55544,
+        65535
+      ]
+    },
+    "View": {
+      "Bounds": {
+        "Left": 0,
+        "Top": 0,
+        "Right": 319,
+        "Bottom": 199
+      },
+      "Center": {
+        "X": 160,
+        "Y": 70
+      },
+      "DepthScale": 0
+    },
+    "Instances": [],
+    "GraphicsOptions": 223,
+    "PaletteBank": "DAY",
+    "Environment": {
+      "Switches": 1123,
+      "Prefix": "EURO",
+      "Phase": 388,
+      "RNG": 12063,
+      "PixelSeed": 0,
+      "PulseRemaining": 0,
+      "PulseDraw": 0,
+      "CompassDraw": 0,
+      "CompassShown": 0,
+      "PulseAmplitude": 0,
+      "PulseVisible": false
+    },
+    "MaterialCarrier": null,
+    "NearReference": 0,
+    "OutlineThreshold": 0,
+    "ExtentLimit": 0
+  },
+  "euro-trees": {
+    "CombatPhase": 310,
+    "ExplosionVertices": [
+      [
+        -13,
+        30,
+        34
+      ],
+      [
+        47,
+        50,
+        31
+      ],
+      [
+        15,
+        60,
+        23
+      ],
+      [
+        -37,
+        70,
+        15
+      ],
+      [
+        -11,
+        40,
+        12
+      ],
+      [
+        39,
+        70,
+        7
+      ],
+      [
+        15,
+        60,
+        -7
+      ],
+      [
+        -15,
+        40,
+        -17
+      ],
+      [
+        27,
+        30,
+        -22
+      ]
+    ],
+    "RenderScale": 1,
+    "World": "EURO7",
+    "Camera": {
+      "H0": 176128,
+      "H1": 256000,
+      "Height": 380,
+      "Angles": [
+        65000,
+        0,
+        0
+      ]
+    },
+    "View": {
+      "Bounds": {
+        "Left": 0,
+        "Top": 0,
+        "Right": 319,
+        "Bottom": 199
+      },
+      "Center": {
+        "X": 160,
+        "Y": 70
+      },
+      "DepthScale": 0
+    },
+    "Instances": [],
+    "GraphicsOptions": 223,
+    "PaletteBank": "DAY",
+    "Environment": {
+      "Switches": 1123,
+      "Prefix": "EURO",
+      "Phase": 388,
+      "RNG": 12063,
+      "PixelSeed": 0,
+      "PulseRemaining": 0,
+      "PulseDraw": 0,
+      "CompassDraw": 0,
+      "CompassShown": 0,
+      "PulseAmplitude": 0,
+      "PulseVisible": false
+    },
+    "MaterialCarrier": null,
+    "NearReference": 0,
+    "OutlineThreshold": 0,
+    "ExtentLimit": 0
+  }
+}

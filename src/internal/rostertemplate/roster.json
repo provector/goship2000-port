@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "revision": 0,
+  "roster_slots": [
+    {
+      "statistics": {
+        "award_counters": [
+          1,
+          1,
+          1,
+          2,
+          2,
+          3,
+          2,
+          1
+        ],
+        "last_mission_score": 400,
+        "best_mission_score": 950,
+        "career_score": 17600,
+        "mission_campaign_counter": 44,
+        "phoenix_counter": 0
+      },
+      "id": "legacy-accf22eb1f545511-slot-0",
+      "name": "Matt \"ProVector\" Baker",
+      "squadron": "Retro Works",
+      "emblem": 12,
+      "rank": "lieutenant_colonel",
+      "status": "mia",
+      "mission_type": "single",
+      "theatre": "persian_gulf",
+      "legacy_status_byte": 3,
+      "legacy_record_base64": "TWF0dCAiUHJvVmVjdG9yIiBQaWVrYXJza2kAAAAAAAAAAAAAAQEBAgIDAgEAAAAAAAAAAVJldHJvIFdvcmtzAAAAAAAAAAAAAAAAAAAAAAAAAAAMCQUDAAAAAAAAAAAAAAAAAAEBtgMAAJABAAAsAAAAwEQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAMBI="
+    },
+    {
+      "statistics": {
+        "award_counters": [
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1
+        ],
+        "last_mission_score": 904,
+        "best_mission_score": 1775,
+        "career_score": 12200,
+        "mission_campaign_counter": 117,
+        "phoenix_counter": 200
+      },
+      "id": "legacy-accf22eb1f545511-slot-1",
+      "name": "Jim \"Mongoose\" Day",
+      "squadron": "Thunder From Above",
+      "emblem": 2,
+      "rank": "major",
+      "status": "mia",
+      "mission_type": "training",
+      "theatre": "persian_gulf",
+      "legacy_status_byte": 3,
+      "legacy_record_base64": "SmltICJNb25nb29zZSIgRGF5AAAAAAAAAAAAAAAAAAAAAAAAAQABAAEBAQEAAAAAAAAAAFRodW5kZXIgRnJvbSBBYm92ZQAAAAAAAAAAAQANBwICCAADAAAAAP//AAAAAAAAAAEA7wYAAIgDAAB1AAAAqC8AAAAAAAAAAAAAVmluY2VudAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQcBAGQAAABOZXdtYW4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBBgEAyAAAAFR1cm5lcgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAEFAQBkAAAARGlsbG9uAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQQBAAAAMBI="
+    },
+    {
+      "statistics": {
+        "award_counters": [
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          2,
+          1
+        ],
+        "last_mission_score": 650,
+        "best_mission_score": 1450,
+        "career_score": 5030,
+        "mission_campaign_counter": 7,
+        "phoenix_counter": 200
+      },
+      "id": "legacy-accf22eb1f545511-slot-2",
+      "name": "Detmar \"Spike\" Peterke",
+      "squadron": "Snake Eyes",
+      "emblem": 4,
+      "rank": "first_lieutenant",
+      "status": "kia",
+      "mission_type": "training",
+      "theatre": "persian_gulf",
+      "legacy_status_byte": 4,
+      "legacy_record_base64": "RGV0bWFyICJTcGlrZSIgUGV0ZXJrZQAAAAAAAAAAAAAAAAAAAAEAAQEBAgEAAAAAAAAAAFNuYWtlIEV5ZXMAAAAAAAAAAAAAAAAAAAAAAgAAAAAEBgEEAAAAAP//AAAAAAAAAAEAqgUAAIoCAAAHAAAAphMAAAAAAAAAAAAASGVucnkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQQBAGQAAABMZXdpcwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAwEAyAAAAFdvbGZlAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAEDAQBkAAAATWNDbGVsbGFuAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQIBAAAAMBI="
+    },
+    {
+      "statistics": {
+        "award_counters": [
+          1,
+          1,
+          1,
+          2,
+          1,
+          1,
+          1,
+          1
+        ],
+        "last_mission_score": 450,
+        "best_mission_score": 1800,
+        "career_score": 9000,
+        "mission_campaign_counter": 10,
+        "phoenix_counter": 200
+      },
+      "id": "legacy-accf22eb1f545511-slot-3",
+      "name": "Darrell \"Psyclone\" Dennies",
+      "squadron": "Peacemakers",
+      "emblem": 6,
+      "rank": "captain",
+      "status": "kia",
+      "mission_type": "training",
+      "theatre": "persian_gulf",
+      "legacy_status_byte": 4,
+      "legacy_record_base64": "RGFycmVsbCAiUHN5Y2xvbmUiIERlbm5pZXMAAAAAAAAAAAAAAQEBAgEBAQEAAAAAAAAAAFBlYWNlbWFrZXJzAAAAAAAAAAAAAAAAAAAAAwEAAAAGBwAEAAAAAP//AAAAAAAAAAEACAcAAMIBAAAKAAAAKCMAAAAAAAAAAAAAU3BlbmNlcgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQQBAGQAAABTbm93AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAwEAyAAAAFBvd2VycwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAEGAQBkAAAARG91Z2xhcwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQQBAAAAMBI="
+    },
+    {
+      "statistics": {
+        "award_counters": [
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1
+        ],
+        "last_mission_score": 500,
+        "best_mission_score": 1050,
+        "career_score": 2500,
+        "mission_campaign_counter": 4,
+        "phoenix_counter": 200
+      },
+      "id": "legacy-accf22eb1f545511-slot-4",
+      "name": "Michael \"Bart\" Reis",
+      "squadron": "Bad Cats",
+      "emblem": 11,
+      "rank": "second_lieutenant",
+      "status": "kia",
+      "mission_type": "training",
+      "theatre": "persian_gulf",
+      "legacy_status_byte": 4,
+      "legacy_record_base64": "TWljaGFlbCAiQmFydCIgUmVpcwAAAAAAAAAAAAAAAAAAAAAAAAABAAEBAQEAAAAAAAAAAEJhZCBDYXRzAAAAAAAAAAAAAAAAAAAAAAAABAEAAAALBQAEAAAAAP//AAAAAAAAAAEAGgQAAPQBAAAEAAAAxAkAAAAAAAAAAAAASXJ3aW4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQQBAGQAAABPbHNlbgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAwEAyAAAAEdvcmRvbgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAEEAQBkAAAAQWRhbXMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQIBAAAAMBI="
+    },
+    {
+      "statistics": {
+        "award_counters": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "last_mission_score": 0,
+        "best_mission_score": 0,
+        "career_score": 0,
+        "mission_campaign_counter": 0,
+        "phoenix_counter": 0
+      },
+      "id": "legacy-accf22eb1f545511-slot-5",
+      "name": "Erase Me",
+      "squadron": "Erasables",
+      "emblem": 15,
+      "rank": "warrant_officer_candidate",
+      "status": "mia",
+      "mission_type": "training",
+      "theatre": "central_europe",
+      "legacy_status_byte": 3,
+      "legacy_record_base64": "RXJhc2UgTWUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEVyYXNhYmxlcwAAAAAAAAAAAAAAAAAAAAAABQAAAAAPAAADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAMBI="
+    }
+  ]
+}
