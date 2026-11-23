@@ -31,6 +31,7 @@
 - QOL Addition: In-sim graphics options menu for the above settings. Press `[ALT]+[O]` to open. `ENTER` apply, `Esc` to cancel.
 - QOL Addition: ***Relative Height Collective mode*** - Use it with you XBOX/PS controller to smoothly change collective height in **Easy Flight Mode**
 - QOL Addition: ***Corrected Avoidance*** - Avoidance was quite quirky in the original, corrected path finding and obstacle avoidance that wont kill you when flying into a jungle
+- QOL Addition: `[Alt]+[←]/[Alt]+[→]` Proper 'yaw' rotation on keyboard (no joystick needed)
 - Saves and Replays maintained in Documents or Home directories by default. 
 - Automatic Steam Game Installation detection. No setup needed. 
 - BUG Fixes: PHIL scenario map texture fix, Wingmen statistic where not always accounted for during missle defense roll (fixed)
