@@ -51,7 +51,7 @@ Bug Fixes:
 
 <!-- Maintainer: add your repository’s Releases and Issues links here after publication. -->
 
-[QUICK START GUIDE](#quick-start) · [HOTAS Support](#controller-setup-full-hotas-support) · [Graphics Settings](#graphics-options) · [Port Settings](#port-settings) · [Building Instructions](#building-from-source) · [Screenshots](#screenshots) · [Legal notice](#legal-notice)
+[QUICK START GUIDE](#quick-start) · [TROUBLESHOOTING](#troubleshooting) · [HOTAS Support](#controller-setup-full-hotas-support) · [Graphics Settings](#graphics-options) · [Port Settings](#port-settings) · [Building Instructions](#building-from-source) · [Screenshots](#screenshots) · [Legal notice](#legal-notice)
 
 ## Main Features
 
@@ -70,8 +70,7 @@ Bug Fixes:
 - Full Legacy Vanilla graphics support (320x200, 10fps, integer rendering engine) and copy protection support (Set in Setup)
 
 ### Known Issues
-- "Observe and Report..." missions are still almost impossible to complete (like in vanilla ;)
-- Replays may stutter on the forward speed due to used JSON storage and compression method. WIP on optimizing them with protobuffers.
+- Possible graphic texture glitch on EUR scenarios when looking at green fields from Mast
 
 The project is in release-candidate testing. Bug reports and reproducible recordings are welcome.
 
@@ -84,6 +83,10 @@ Choose your graphics and controls, then **Save & Exit**.
 6. Launch `gs2000.exe` on Windows or `./gs2000` on Linux. The first launch prepares the required assets from your original installation.
 
 For Raspberry Pi, use a 64-bit Linux installation with a working desktop graphics stack. Hardware GLES support depends on the installed graphics libraries and drivers; see the package’s platform notes.
+
+## Troubleshooting
+
+- If you run into any issues with openGL renderer on linux systems use `LIBGL_ALWAYS_SOFTWARE=1 ./gs2000` to start GoShip in pure software mode. 
 
 ## Screenshots
 
