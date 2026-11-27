@@ -44,7 +44,8 @@ func Acquire(trees ...Tree) (*os.File, error) {
 		var below []string
 		write := t.Write
 		for {
-			claims[p] = claims[p] || write
+			key := PathKey(p)
+			claims[key] = claims[key] || write
 			below = append(below, p)
 			id, cached := ids[p]
 			if !cached {
@@ -62,7 +63,7 @@ func Acquire(trees ...Tree) (*os.File, error) {
 						f.Close()
 						return nil, e
 					}
-					key := id + "/" + rel
+					key := PathKey(id + "/" + rel)
 					claims[key] = claims[key] || j == 0 && t.Write
 				}
 			}

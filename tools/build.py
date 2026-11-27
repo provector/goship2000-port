@@ -12,7 +12,7 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 MODULE = ROOT / "src"
-TARGETS = ("linux-amd64", "windows-amd64", "linux-arm64")
+TARGETS = ("linux-amd64", "windows-amd64", "linux-arm64", "darwin-arm64", "darwin-amd64")
 
 
 def source_id():
@@ -64,6 +64,15 @@ def runtime_files(dest, target):
         if blob[offset:offset+6] != b"PE\0\0\x64\x86":
             raise ValueError("Expected an amd64 PE SDL2 library")
         shutil.copy2(dll, dest)
+    elif target.startswith("darwin-"):
+        archive = MODULE/"internal/sdlruntime/darwin/SDL2.framework.tar.gz"
+        manifest = json.loads((libs.parent/"component.json").read_text())
+        expected = next(f["sha256"] for f in manifest["files"] if f["path"] == "darwin/SDL2.framework.tar.gz")
+        if hashlib.sha256(archive.read_bytes()).hexdigest() != expected:
+            raise ValueError("Mac SDL2 framework archive differs from its manifest")
+        with tarfile.open(archive) as framework:
+            framework.extractall(dest/"lib", filter="data")
+        shutil.copy2(ROOT/"distrib/macos.txt", dest/"MACOS.txt")
     else:
         lib = libs/"libSDL2-2.0.so.0"
         header = lib.read_bytes()[:20]

@@ -16,6 +16,8 @@ From this source directory, the essential commands are:
 ```sh
 zig c++ -target x86_64-linux-musl -O2 -std=c++17 -static -s -I . dbopl.cpp helper.cpp -o audio-bake-linux-amd64
 zig c++ -target x86_64-windows-gnu -O2 -std=c++17 -static -s -I . dbopl.cpp helper.cpp -o audio-bake-windows-amd64.exe
+zig c++ -target aarch64-macos.11.0 -O2 -std=c++17 -s -I . dbopl.cpp helper.cpp -o audio-bake-darwin-arm64
+zig c++ -target x86_64-macos.11.0 -O2 -std=c++17 -s -I . dbopl.cpp helper.cpp -o audio-bake-darwin-amd64
 zig c++ -target aarch64-linux-musl -O2 -std=c++17 -static -s -I . dbopl.cpp helper.cpp -o audio-bake-linux-arm64
 ```
 
@@ -50,3 +52,5 @@ L.2 adds bounded `--stream` transactions to helper.cpp only. The retained Chip
 core and pinned upstream revision are unchanged. Rebuild all embedded platform
 payloads with the same recipe; publish complete corresponding source/notices.
 Batch OPL27 output must still match immutable Step27 PCM.
+
+For just the two Mac helpers, add --mac-only. Darwin links the system libSystem.

@@ -3,13 +3,14 @@ package configuration
 import (
 	"fmt"
 	"gunship2000-assets/internal/playerdirs"
+	"gunship2000-assets/internal/storeowner"
 	"os"
 	"path/filepath"
 	"strings"
 )
 
 func Within(child, parent string) bool {
-	rel, err := filepath.Rel(parent, child)
+	rel, err := filepath.Rel(storeowner.PathKey(parent), storeowner.PathKey(child))
 	return err == nil && rel != ".." && !strings.HasPrefix(rel, ".."+string(filepath.Separator))
 }
 

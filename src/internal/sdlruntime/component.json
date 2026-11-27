@@ -14,6 +14,11 @@
     {
       "source": "Installed Ubuntu libsdl2-classic:amd64 2.32.10+dfsg-6, unmodified copy",
       "path": "/usr/lib/x86_64-linux-gnu/sdl2-classic/libSDL2-2.0.so.0.3200.10"
+    },
+    {
+      "url": "https://github.com/libsdl-org/SDL/releases/download/release-2.32.10/SDL2-2.32.10.dmg",
+      "archive_sha256": "4a7ac31640d70214e848f994be8a12849c0f97918a7e6c2e27a40036166d1a7f",
+      "contents": "Complete upstream universal SDL2.framework with its links, resources, license and signature."
     }
   ],
   "files": [
@@ -41,6 +46,11 @@
       "path": "windows-amd64/SDL2.dll",
       "bytes": 1785344,
       "sha256": "53e8fa7e9ed43c30bd650c39396f0d9d2067d2fff0b926c9433b75202592e4aa"
+    },
+    {
+      "path": "darwin/SDL2.framework.tar.gz",
+      "bytes": 1659957,
+      "sha256": "8894818f255214ff943931abaf332483e7dcc9f1dc1e66ab83ad1ead8bbbda3c"
     }
   ],
   "linux_dependencies": "System ELF dependencies remain required; see ldd/readelf records in evidence/stepQ2. No packages installed or upgraded."

@@ -1,0 +1,36 @@
+name: Experimental macOS packages
+on:
+  push:
+    branches: [experimental/macos]
+
+permissions:
+  contents: read
+
+jobs:
+  native:
+    name: Native ${{ matrix.target }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: darwin-arm64
+            runner: macos-15
+          - target: darwin-amd64
+            runner: macos-15-intel
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.27.3'
+          cache-dependency-path: src/go.sum
+      - name: Build, extract and exercise packaged runtime
+        run: bash test/macos/native-check.sh "${{ matrix.target }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: goship2000-prod-${{ matrix.target }}-v1.RC1-W5.4
+          path: ${{ runner.temp }}/goship-build/artifacts/*
+          if-no-files-found: error

@@ -1,0 +1,17 @@
+GoShip 2000 1.RC1-W5.4 — experimental macOS build
+
+Extract the entire tar.gz together. Open Terminal in the extracted folder and
+run ./setup, then ./gs2000. Keep lib/SDL2.framework and support.g2pak with the
+executables. SETUP runs before preparation. Under Original Installation,
+choose Custom and select your legitimate original game directory, for example
+original/ beside the packaged executables.
+
+The default writable root is ~/Library/Application Support/GoShip 2000/Data.
+Saves Location and the absolute GOSHIP2000_DATA_DIR override remain available.
+The installation fallback and configuration, pilot and replay layouts follow
+the shared game rules. Use a disposable data folder for experimental testing.
+
+Raylib is embedded. The native OPL helper is verified and unpacked on demand
+into the user's cache. SDL2.framework includes its upstream notices. This is
+a command-line distribution, without a Developer ID signature or notarization.
+Native CI and physical flight, sound and controller acceptance are separate.

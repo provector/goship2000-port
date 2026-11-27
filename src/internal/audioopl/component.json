@@ -43,6 +43,26 @@
       "pre_normalization_sha256": "1c26c800c3449b7210698b78dd183d11ca0cd0fd60b04747ebd5b274cc89356b",
       "normalization": "none",
       "requirements": "Static musl executable; no shared C++/libc runtime required"
+    },
+    "darwin-arm64": {
+      "sha256": "c7cc76a707f8a67bd0698f913842e8f38fcb326aa13271b489d1553fede9e600",
+      "bytes": 533368,
+      "compressed_sha256": "f522bf1b80d720f19fec2d36046425ba56a53a1aa13943872e70915d25f65d2c",
+      "compressed_bytes": 145506,
+      "target": "aarch64-macos.11.0",
+      "pre_normalization_sha256": "c7cc76a707f8a67bd0698f913842e8f38fcb326aa13271b489d1553fede9e600",
+      "normalization": "none",
+      "requirements": "macOS libSystem; Zig 0.13 libc++ runtime"
+    },
+    "darwin-amd64": {
+      "sha256": "9667846d871a30a3edb58d5d3081f1cb27c9c60796e8319600d33db242cadb83",
+      "bytes": 495246,
+      "compressed_sha256": "4a44f07f52ac84d13039e64029650e7008e1a6033ef46bcb46240f1efafa52b9",
+      "compressed_bytes": 148328,
+      "target": "x86_64-macos.11.0",
+      "pre_normalization_sha256": "9667846d871a30a3edb58d5d3081f1cb27c9c60796e8319600d33db242cadb83",
+      "normalization": "none",
+      "requirements": "macOS libSystem; Zig 0.13 libc++ runtime"
     }
   },
   "synthesis_policy": "Unmodified retained DBOPL Chip; OPL3-capable setup/mono OPL2-compatible writes; raw signed32LE; no gain/normalization",
