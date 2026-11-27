@@ -2,7 +2,6 @@
 # Executed by the architecture matrix on a fresh runner, without original assets.
 set -euo pipefail
 target=$1
-repo=$(pwd)
 out="$RUNNER_TEMP/goship-build"
 scratch=$(mktemp -d "$RUNNER_TEMP/goship-mac.XXXXXXXX")
 arch=${target#darwin-}
@@ -40,7 +39,6 @@ ln -s "$app/lib" "$scratch/bin/lib"
  go test -mod=readonly -c -o "$scratch/bin/check-guid" ./game/sdlraw
  "$scratch/bin/check-guid" -test.v -test.run '^TestVirtualDeviceGUIDMatchesSDL$'
 )
-(cd "$scratch/cwd"
- swift "$repo/test/macos/window-smoke.swift" "$app/gs2000" __log-console
- swift "$repo/test/macos/window-smoke.swift" "$app/setup"
-)
+# Publish the verified extraction and disposable store for the two GUI steps.
+printf 'MAC_SMOKE_APP=%s\nMAC_SMOKE_CWD=%s\nGOSHIP2000_DATA_DIR=%s\n' \
+    "$app" "$scratch/cwd" "$GOSHIP2000_DATA_DIR" >> "$GITHUB_ENV"

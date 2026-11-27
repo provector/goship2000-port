@@ -16,7 +16,11 @@ import (
 func Run() error {
 	runtime.LockOSThread()
 	defer runtime.UnlockOSThread()
-	rl.SetTraceLogLevel(rl.LogError)
+	if os.Getenv("GOSHIP2000_LOG_WINDOW_TRACE") == "1" {
+		rl.SetTraceLogLevel(rl.LogAll)
+	} else {
+		rl.SetTraceLogLevel(rl.LogError)
+	}
 	rl.SetConfigFlags(rl.FlagWindowResizable)
 	rl.InitWindow(1100, 620, "goship2000-log")
 	if !rl.IsWindowReady() {
