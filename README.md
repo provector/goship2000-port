@@ -2,14 +2,14 @@
 
 **Gunship 2000 (MS-DOS, 1991) port for modern desktop platforms**
 
-**Version:** 1.RC1-W5.4 · **Platforms:** Windows x64, Linux x64 and Linux ARM64
+**Version:** 1.RC1-W5.4 · **Platforms:** Windows x64, Linux x64 and Linux ARM64 (macOS-Experimental)
 
 **Validated On:** Windows x64 (10 and 11), Raspbian Worm (Raspberry Pi5), and Linux x64 (Ubuntu 26.04 LTS)
 
 **Requirements**: 1.5Ghz Potato CPU (Slowest tested on was AMD GX-215JJ) and 1Gb (linux)/2Gb (windows) of RAM for Legacy Mode (320x200, 10fps/60fps). Recommended 4Gb of RAM for smooth operations and large replays, and a half decent modern cpu for higher resolutions.
 
 ## Update Log
-**DIRECT DOWNLOAD (Latest Release 1.RC1-W5.4)**: [*[Windows x64](../../releases/download/1.RC1-W5.4/goship2000-prod-windows-amd64-v1.RC1-W5.4.zip)*] [*[Linux x64](../../releases/download/1.RC1-W5.4/goship2000-prod-linux-amd64-v1.RC1-W5.4.tar.gz)*] [*[Arm64](../../releases/download/1.RC1-W5.4/goship2000-prod-linux-arm64-v1.RC1-W5.4.tar.gz)*] (*Upon first run game will do a one time asset processing, it might take a moment
+**DIRECT DOWNLOAD (Latest Release 1.RC1-W5.4)**: [*[Windows x64](../../releases/download/1.RC1-W5.4/goship2000-prod-windows-amd64-v1.RC1-W5.4.zip)*] [*[Linux x64](../../releases/download/1.RC1-W5.4/goship2000-prod-linux-amd64-v1.RC1-W5.4.tar.gz)*] [*[Arm64](../../releases/download/1.RC1-W5.4/goship2000-prod-linux-arm64-v1.RC1-W5.4.tar.gz)*] [*[macOS-Experimental](../../releases/tag/1.RC1-W3.5-macos)*] (*Upon first run game will do a one time asset processing, it might take a moment*)
 
 ### Beta Release 1.RC1-W5.4 
 
