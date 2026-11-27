@@ -56,3 +56,26 @@ See [the test guide](../test/TESTING.md) and [the name and location map](../test
 * `src/game/menus/r5_policy.go`, `correctiveFlightProfile`, selects the new generated/authored policies for destroyed fuel supply, replacement orders and joystick height assist. Strict replay and isolated practice select the film's profile. The format and historical command interpretation are unchanged. In W3, damaged fuel delivery can end flight on actual contact. The 609 flag denotes power/system failure and does not by itself establish destruction.
 * `src/game/assets/editor_assets.go`, `phil3EditorPixels`, uses a bounded last-byte read for the identified PHIL3 editor member. The loose tree and new packs supply its own map. Historical packs that kept only its digest reuse the corresponding PHIL3 briefing sheet in the editor palette. Only the top-left 166 by 130 pixels are used for the overview. The logical preparation identity still covers all manifest leaves. This path has no authority over helicopter navigation, GPS terrain or scenery.
 * `src/game/menus/gps_session.go` admits a replacement Fly To during active regroup, disengage and landing approach. The isolated draft still checks owner and control state again at confirmation. A sighted infantry contact belonging to a pending pickup or drop gets the existing navigation triangle in the GPS drawing layer only.
+
+## Session-local live mission point
+
+`game/menus/session_point.go` (under `src/`) captures one completed recorder boundary. The writer owns the original prefix, its prepared frames, cursor and open file. `replay.SessionPoint` owns a copy of the unfinished row block and counters. The live recorder's previous control and last row are detached. The saved scene carries no writer or film capability. Capture checks the recorder ordinal, event count, current scene hash and the actual last row (or launch hash at zero rows). This is a comparison of current owners. It does not reread the prefix.
+
+`RenderingPreview.copyPointScene` and `InitializedMission.CopyMissionState` copy the logical world, actors, stores, goals and RNG. Combat controllers bind to the copied world, flight binds to its player state and result targets bind to its targets. Instance lists and presentation history refer to copies of the same mutable model through an identity map. The copy includes visual streams, canonical avionics feedback, environment, palettes, input ownership, bounded witnesses, accepted hits, interpolation endpoints, and the previous world pixels used for feedback fills. New mutable fields on these owners require a copying decision. The prepared world, map grid/atlas and combat city lookup are read-only. Disposable rendering scratch and physical input/audio queues have no place in this graph.
+
+Every load builds a new scene and recorder control record. It validates the scene, installs its observer, binds the live renderer and current display preferences, and prepares fresh input before truncating. The single window owner publishes the two prepared owners together after truncation succeeds. The existing mission session, score revision, durable store and audio player retain their identities. Only mission-local fuel receipts are restored on the result owner. The existing input clock rebase, key-release guard, audio handover and modal fades run at the live boundary. End and abandonment release the point.
+
+`game/menus/session_point_reference_test.go` retains the former prefix reconstruction for comparison. Its independent engine consumes the original operations and validates their checkpoints. Ordinary film playback and isolated Resume continue to use the replay engine.
+
+## Live maneuvers and service retirement
+
+`game/replay.ManeuverCompatibility` and its authored counterpart freeze the GPS empty-confirm, hover and carrier return rules for new sorties. The recording container is unchanged. The carrier's launch berths and crew IDs are fixed-size values on the preview/scene. Frame painting places deck aircraft in the original carrier model's plane tree. Source animation visits keep their original order. The private Arctic Fleet regression accepts an explicit `GS2000_TEST_CARRIER_MISSION` path and the normal prepared mission assets.
+
+The PC 469.085 resident service predicate uses the remainder of the packed pilot counter divided by 100. Fifty missions qualify outside an ongoing Campaign. General takes precedence. The frozen result context and pending sortie carry the rule so an earlier pending award can finish under its original interpretation.
+
+### Deferred SETUP presentation
+
+- Next time the controls preview is touched, modestly reduce its blue panel height and check all labels, axes, hats and buttons.
+- Investigate a small scaling or filtering adjustment for sharper SETUP glyphs and borders if the current host supports it directly.
+
+For a naval flight, the combat dispatcher also checks an active follower's oriented footprint against model 64's raised rectangular contact region. The swept rotor envelope is independent of displayed animation phase. The immutable carrier row indices, model measurements and contact dimensions may be shared across mission-point copies; each load uses the restored mission's own entity poses.

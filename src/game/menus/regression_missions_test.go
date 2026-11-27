@@ -286,7 +286,7 @@ func TestRegressionMissionEditorFlightRoundTrip(t *testing.T) {
 				if e = os.MkdirAll(out, 0700); e != nil {
 					t.Fatal(e)
 				}
-				b, e := os.ReadFile(filepath.Join(store.Directory, d.ID+".g2m"))
+				b, e := os.ReadFile(savedMissionPath(t, store.Directory, d.ID))
 				if e != nil {
 					t.Fatal(e)
 				}

@@ -1,6 +1,7 @@
 package storeowner
 
 import (
+	"errors"
 	"fmt"
 	"golang.org/x/sys/windows"
 	"os"
@@ -47,3 +48,5 @@ func objectID(path string) (string, error) {
 	}
 	return fmt.Sprintf("@%x-%x-%x", info.VolumeSerialNumber, info.FileIndexHigh, info.FileIndexLow), nil
 }
+
+func contended(err error) bool { return errors.Is(err, windows.ERROR_LOCK_VIOLATION) }

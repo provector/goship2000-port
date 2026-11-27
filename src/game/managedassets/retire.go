@@ -25,8 +25,11 @@ func retireGenerated(root string) error {
 		return fmt.Errorf("unidentified generator")
 	}
 	expected := map[string]string{"manifest.json": assets.Hash(raw)}
+	if _, b := preparedSource(root); b != nil {
+		expected[usedSourceFile] = assets.Hash(b)
+	}
 	if _, e = os.Lstat(filepath.Join(root, "packs.json")); e == nil {
-		// A verified packed layout owns exactly these five files.
+		// The verified packed layout also owns the catalog and three data packs.
 		if _, e = assets.LogicalResourceProfile(root); e != nil {
 			return e
 		}

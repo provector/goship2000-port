@@ -74,8 +74,18 @@ func (s *LiveState) applyHeightQ32Curve(in LiveInput, f *flight.State, p flight.
 		if admitted {
 			axis := in.Axes[2]
 			moved := abs32(int32(axis)-int32(s.HeightAxisAnchor)) >= 4
+			if power.IndependentHover && f.Hover != 0 && !s.HeightKnown && !(s.HeightAxisSampled && moved && axis != 0) {
+				if !s.HeightAxisSampled || axis == 0 {
+					s.HeightAxisAnchor = axis
+				}
+				s.HeightAxisSampled = true
+				return
+			}
 			if s.HeightAxisSampled && moved && axis != 0 {
-				f.Hover, f.HeightControl = 0, 0
+				f.HeightControl = 0
+				if !power.IndependentHover {
+					f.Hover = 0
+				}
 			}
 			if !s.HeightAxisSampled || moved || axis == 0 {
 				s.HeightAxisAnchor = axis

@@ -44,9 +44,16 @@ func loopAcknowledge(t *testing.T, c *FrontEnd) []string {
 }
 
 func TestGenuinePreparedLoopsAndRestart(t *testing.T) {
-	for _, name := range []string{"return", "damaged-return", "crash", "flight-return", "crew-choice", "outcome-rescue", "outcome-mia", "campaign-return", "campaign-win"} {
+	for _, name := range []string{"return", "damaged-return", "crash", "forced-fuel-contact", "flight-return", "crew-choice", "outcome-rescue", "outcome-mia", "campaign-return", "campaign-win"} {
 		t.Run(name, func(t *testing.T) {
-			c := developmentScenarioController(t, name)
+			var c *FrontEnd
+			if name == "crash" {
+				c = historicalCriticalFuelScenario(t, name)
+			} else if name == "forced-fuel-contact" {
+				c = developmentScenarioController(t, "crash")
+			} else {
+				c = developmentScenarioController(t, name)
+			}
 			p, r := c.Rendering, c.Rendering.Flight
 			before := c.Store.State()
 			if c.Mission.ResultLaunch == nil {
@@ -69,7 +76,7 @@ func TestGenuinePreparedLoopsAndRestart(t *testing.T) {
 						t.Fatal(err)
 					}
 				}
-				if name != "crash" {
+				if name != "crash" && name != "forced-fuel-contact" {
 					if err := c.Handle(Actions{}); err != nil {
 						t.Fatal(err)
 					}
@@ -103,6 +110,19 @@ func TestGenuinePreparedLoopsAndRestart(t *testing.T) {
 			before.Revision = afterStage.Revision
 			if !reflect.DeepEqual(before, afterStage) {
 				t.Fatal("pre-ack career mutation")
+			}
+			if name == "crash" || name == "forced-fuel-contact" {
+				if len(r.DamageEvents) < 2 || !r.DamageEvents[0].Result.Applied || !r.DamageEvents[1].Result.Applied || r.DamageEvents[1].DamageAfter[5]&3 != 2 {
+					t.Fatal("two accepted fuel-bucket hits required", r.DamageEvents)
+				}
+				result := p.Initialized.Sortie.Result
+				if name == "forced-fuel-contact" && (!p.correctiveFlight || result.Reason != "disabled-contact" || proposal.Result.Loss || proposal.AcceptedPilot.Status != gamestate.StatusActive) {
+					t.Fatal("forced-contact survivor fixture", result, proposal.Result.NormalizedFlags, proposal.AcceptedPilot.Status)
+				}
+				if name == "crash" && (!proposal.Result.Loss || r.DamageEvents[1].Result.SourceStatus != 0x10 || r.DamageEvents[1].Result.Countdown != 4) {
+					t.Fatal("historical terminal and career loss", result, proposal.Result.NormalizedFlags)
+				}
+				t.Logf("scenario=%s pilot=%s switches=%#x initialRNG=%d secondHitStatus=%#x countdown=%d end=%s normalized=%v disposition=%v", name, before.SelectedPilot().Name, c.DevelopmentScenario.LaunchSwitches, c.DevelopmentScenario.InitialRNG, r.DamageEvents[1].Result.SourceStatus, r.DamageEvents[1].Result.Countdown, result.Reason, proposal.Result.NormalizedFlags, proposal.AcceptedPilot.Status)
 			}
 			if name == "crash" && proposal.AcceptedPilot.Status != gamestate.StatusKIA {
 				t.Fatal("source10 not KIA", proposal.Result.NormalizedFlags)

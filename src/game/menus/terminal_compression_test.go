@@ -4,14 +4,26 @@ import (
 	"encoding/json"
 	"fmt"
 	"gunship2000-assets/game/flight"
+	"gunship2000-assets/game/replay"
 	"testing"
 )
+
+// W3 changed a second critical fuel hit to a forced landing for new sorties.
+func historicalCriticalFuelScenario(t *testing.T, name string) *FrontEnd {
+	t.Helper()
+	c := developmentScenarioControllerProfile(t, name, replay.V45Compatibility)
+	p := c.Rendering
+	if c.Store.State().SelectedPilot() == nil || c.Mission.Settings.EnemyQuality != 2 || p.correctiveFlight || p.Flight.State.Terminal != nil || len(p.Flight.acceptedPlayerHits) != 2 || p.Flight.Systems.Damage[3] != 0 {
+		t.Fatal("expected an undamaged aircraft and two pending fuel hits under the pre-W3 rule")
+	}
+	return c
+}
 
 func TestRealTerminalRequiresDeliveryWithoutDrawMutation(t *testing.T) {
 	for _, scale := range []int{1, 2} {
 		for _, mode := range []string{"smooth", "stepped"} {
 			t.Run(fmt.Sprintf("%d/%s", scale, mode), func(t *testing.T) {
-				c := developmentScenarioController(t, "n6-critical-fuel")
+				c := historicalCriticalFuelScenario(t, "n6-critical-fuel")
 				p, r := c.Rendering, c.Rendering.Flight
 				p.Scene.RenderScale = scale
 				p.presentation.mode = mode
@@ -46,6 +58,7 @@ func TestRealTerminalRequiresDeliveryWithoutDrawMutation(t *testing.T) {
 						t.Fatal(err)
 					}
 				}
+				t.Logf("scale=%d mode=%s delivered logical frames=%d last fade=%t", scale, mode, r.TerminalPresentation.Frames, r.TerminalPresentation.Fade)
 				if r.TerminalPresentation.Frames != 4 || r.TerminalPresentation.Fade || c.Screen != ScreenDebrief {
 					t.Fatal("final jump/delivery", r.TerminalPresentation, c.Screen)
 				}

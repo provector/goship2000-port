@@ -1,4 +1,4 @@
-// Package setupui is terminal-only. The game imports configuration, not this UI.
+// Package setupui owns the SETUP cell interface. The game imports configuration, not this UI.
 package setupui
 
 import (
@@ -49,6 +49,7 @@ type UI struct {
 	settings          []Setting
 	presetButtons     *tview.Form
 	popup             bool
+	originalPicker    *tview.Flex
 	busy              bool
 	Rebuild           func(func(string)) error
 	Saved             bool
@@ -62,7 +63,6 @@ var white = tcell.ColorWhite.TrueColor()
 var amber = tcell.NewRGBColor(160, 96, 0)
 
 func New(d *configuration.Document) *UI {
-	d.Config.Original = managedassets.OriginalForSetup(d.InstallDirectory(), d.Config.Original)
 	u := &UI{App: tview.NewApplication(), Doc: d, pendingLocation: filepath.Dir(d.Path), focus: map[string]int{}}
 	u.Help = tview.NewTextView().SetDynamicColors(true).SetWrap(true).SetWordWrap(true)
 	u.Help.SetBackgroundColor(blue)
@@ -79,10 +79,17 @@ func New(d *configuration.Document) *UI {
 	u.App.SetRoot(u.Pages, true).EnableMouse(false)
 	u.App.SetBeforeDrawFunc(func(s tcell.Screen) bool {
 		_, h := s.Size()
-		u.Main.ResizeItem(u.helpPanel, min(10, max(2, h-5)), 0)
+		rows := 10
+		if u.helpPanel.controls {
+			rows = controlsPanelRows
+		}
+		u.Main.ResizeItem(u.helpPanel, min(rows, max(2, h-5)), 0)
 		return false
 	})
 	u.App.SetMouseCapture(func(event *tcell.EventMouse, action tview.MouseAction) (*tcell.EventMouse, tview.MouseAction) {
+		if u.originalPicker != nil && event != nil && u.originalPicker.InRect(event.Position()) {
+			return event, action
+		}
 		if buttons := u.presetButtons; buttons != nil && event != nil {
 			for i := 0; i < buttons.GetButtonCount(); i++ {
 				if buttons.GetButton(i).InRect(event.Position()) {
@@ -184,7 +191,7 @@ func New(d *configuration.Document) *UI {
 	})
 
 	u.initControllers()
-	u.mainIDs = []string{"graphics", "sound", "controls", "settings", "rebuild", "discard", "save"}
+	u.mainIDs = []string{"graphics", "sound", "controls", "settings", "rebuild", "convert_replays", "discard", "save"}
 	for i, id := range u.mainIDs {
 		u.insertMainItem(i, id)
 	}
@@ -206,7 +213,7 @@ func (u *UI) showHelp(id string) {
 	t := u.text(id)
 	s := t.Tooltip
 	if id == "original" {
-		s += "\nLocal fallback: " + configuration.Relative(u.Doc.InstallDirectory(), configuration.DefaultOriginal)
+		s += "\nSuggested Custom folder: " + configuration.Relative(u.Doc.InstallDirectory(), configuration.DefaultOriginal)
 	}
 	if id == "saves_location" {
 		s += "\n" + u.pendingLocation
@@ -267,6 +274,8 @@ func (u *UI) insertMainItem(index int, id string) {
 			u.saveAndExit(false)
 		case "discard":
 			u.App.Stop()
+		case "convert_replays":
+			u.convertReplays()
 		case "rebuild":
 			u.rebuild()
 		default:
@@ -343,6 +352,13 @@ func (u *UI) open(id string) {
 	}
 }
 func (u *UI) displayValue(s Setting, config *configuration.Config) string {
+	if s.ID == "original" {
+		if config.OriginalSource == configuration.OriginalUnselected {
+			return "Choose Steam, GOG or Custom"
+		}
+		selected, _ := managedassets.PreferredInstallation(*config, u.Doc.InstallDirectory(), nil)
+		return selected.String()
+	}
 	if s.Kind == "location" {
 		return u.pendingLocation
 	}
@@ -427,6 +443,10 @@ func (u *UI) activate(row int) {
 		return
 	}
 	s := u.settings[row]
+	if s.ID == "original" {
+		u.selectInstallation(row, managedassets.InstalledGames())
+		return
+	}
 	switch s.Kind {
 	case "preset":
 		u.confirmGraphicsPreset(s.ID)
@@ -470,6 +490,11 @@ func (u *UI) overlay(p tview.Primitive, w, h int) {
 	u.App.SetFocus(p)
 }
 func (u *UI) closePopup() {
+	if u.originalPicker != nil {
+		u.App.EnableMouse(false)
+		u.originalPicker = nil
+	}
+
 	if u.presetButtons != nil {
 		u.App.EnableMouse(false)
 		u.presetButtons = nil
@@ -555,14 +580,13 @@ func (u *UI) message(text string) {
 }
 func (u *UI) Run() error {
 	defer u.writers.Wait()
-	u.startControllers()
-	defer u.stopControllers()
+
 	return u.App.Run()
 }
 func (u *UI) rebuild() { u.runRebuild() }
 
 // Static equal-size, midpoint-aligned preview crosses; no hardware sampling.
-const NeutralAxes = "        Pitch               Collective\n          ░                     ░\n          ░                     ░\n Roll ░░░░█░░░░         Yaw ░░░░█░░░░\n          ░                     ░\n          ░                     ░"
+const NeutralAxes = "        Pitch               Collective\n          ░                     ░\n          ░                     ░\n      ░░░░█░░░░             ░░░░█░░░░\n          ░                     ░\n          ░                     ░\n      Roll/Bank             Yaw/Rotor"
 
 func (u *UI) body(p tview.Primitive) {
 	if table, ok := p.(*tview.Table); ok {

@@ -12,7 +12,7 @@ func testFilm(id string) *Film {
 	return &Film{Header: Header{Version: Version, ID: id, Title: "Last Mission", Simulation: Compatibility, InputSchema: InputCompatibility, InitializationSchema: "accepted-native-launch-v1", Resources: strings.Repeat("a", 64), Complete: true}, Launch: json.RawMessage(`{"typed_launch":true}`), End: End{Checkpoint: map[string]string{"flight": strings.Repeat("b", 64)}}}
 }
 func TestRejectRetiredAndUnknownStorage(t *testing.T) {
-	for _, v := range []uint16{1, 4, 65535} {
+	for _, v := range []uint16{1, 5, 65535} {
 		b := append([]byte(nil), blockPrefix...)
 		order.PutUint16(b[8:10], v)
 		if _, e := Unmarshal(b); e == nil || !strings.Contains(e.Error(), "unsupported G2R storage version") {

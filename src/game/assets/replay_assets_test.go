@@ -30,7 +30,7 @@ func replayOriginalMetadata(t *testing.T) replayMetadata {
 		}
 		for _, v := range dir {
 			b := raw[v.Offset:v.End]
-			r := &Resource{name: v.NameReadable, Payload: b, backing: raw, Source: SourceLocation{Path: name, Kind: "archive_entry", SHA256: Hash(raw), Offset: v.Offset, PayloadSHA256: Hash(b)}}
+			r := &Resource{name: v.NameReadable, Payload: b, backing: raw, Source: SourceLocation{Path: name, Container: name, Kind: "archive_entry", SHA256: Hash(raw), Offset: v.Offset, PayloadSHA256: Hash(b)}}
 			if r.name == "REPLAY.PIC" {
 				pixels, e := replayPicturePixels(r)
 				if e != nil {

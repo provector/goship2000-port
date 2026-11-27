@@ -1,37 +1,45 @@
 package menus
 
-// Operational window chord only: no Action, recording or config write.
-// Recognize each Enter press while Alt is down, then apply the window API only
-// after both keys are released. GLFW fullscreen focus changes can synthesize
-// releases followed by fresh Enter makes for a still-held physical key. Deferring
-// the API avoids that ambiguity without a timer, platform hook or guessed repeat.
+import "gunship2000-assets/game/configuration"
+
+// GLFW queues genuine makes separately from keyboard repeat. Wait for F11 to
+// come up before changing the desktop, which can synthesize focus/key events.
+// Each make retains its original modifier even if Alt is released first.
 type windowShortcuts struct {
-	enterConsumed bool
-	down          bool
-	pending       int
+	pending             []configuration.WindowMode
+	blockedUntilRelease bool
 }
 
-func (w *windowShortcuts) Read(focused, alt, enterDown, enterMake bool) (toggles int, suppress bool) {
-	if !focused {
-		w.pending = 0 // Leaving the app cancels a pending window gesture.
-		w.enterConsumed = w.enterConsumed || enterDown
-		w.down = enterDown
-		return 0, w.enterConsumed
+func (s *windowShortcuts) read(allowed, alt, otherModifier, down bool, makes int, current configuration.WindowMode) (configuration.WindowMode, bool) {
+	if !allowed {
+		s.pending = s.pending[:0]
+		s.blockedUntilRelease = down
+		return current, false
 	}
-	if alt && (enterMake || enterDown && !w.down) && !w.enterConsumed {
-		w.pending++
-		w.enterConsumed = true
+	if s.blockedUntilRelease {
+		s.blockedUntilRelease = down
+		return current, false
 	}
-	suppress = w.enterConsumed || w.pending > 0
-	if !enterDown && !enterMake {
-		w.down = false
-		w.enterConsumed = false
-	} else {
-		w.down = enterDown
+	if !otherModifier {
+		style := configuration.Borderless
+		if alt {
+			style = configuration.FullScreen
+		}
+		for range makes {
+			s.pending = append(s.pending, style)
+		}
 	}
-	if !alt && !enterDown && !enterMake {
-		toggles = w.pending
-		w.pending = 0
+	if down || len(s.pending) == 0 {
+		return current, false
 	}
-	return toggles, suppress
+	target := current
+	for _, style := range s.pending {
+		if target == style {
+			target = configuration.Windowed
+		} else {
+			target = style
+		}
+	}
+	s.pending = s.pending[:0]
+	return target, target != current
 }

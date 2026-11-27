@@ -35,6 +35,10 @@ func refreshStockText(ui map[string]Text) {
 		}
 	}
 	defaults := DefaultText()
+	upgradeStockText(ui, defaults, map[string]Text{
+		"original":           {Tooltip: "Select the folder containing your original game files. SETUP can also find supported Steam installations."},
+		"swap_yaw_roll_axis": {Label: "Swap Yaw/Roll Axis"},
+	})
 	resolution := ui["render_scale"]
 	if resolution.Choices == nil {
 		resolution.Choices = map[string]ChoiceText{}

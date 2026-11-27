@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"gunship2000-assets/internal/branding"
+	"gunship2000-assets/internal/playerdirs"
 	"io"
 	"os"
 	"path/filepath"
@@ -122,7 +123,7 @@ func StartSession(saves, build, settings string) (*Session, error) {
 	return session, err
 }
 func startDiskSession(saves, build, settings string) (*Session, error) {
-	root := filepath.Join(saves, "reports")
+	root := playerdirs.Archive(saves, "reports", true)
 	if e := os.MkdirAll(root, 0700); e != nil {
 		return nil, e
 	}
@@ -149,7 +150,15 @@ func startDiskSession(saves, build, settings string) (*Session, error) {
 	currentSession.Store(s)
 	go s.journalLoop()
 	s.wg.Add(1)
-	go func() { defer s.wg.Done(); s.recover(root) }()
+	go func() {
+		defer s.wg.Done()
+		s.recover(root)
+		for _, archive := range playerdirs.ArchiveReaders(saves, "reports") {
+			if archive != root {
+				s.recover(archive)
+			}
+		}
+	}()
 	return s, nil
 }
 
@@ -308,6 +317,32 @@ func StartupFailure(stage string, cause error) error {
 	}
 	return fmt.Errorf("Asset preparation failed. Report: %s\n%w", file, cause)
 }
+
+// StartupError makes the final startup report synchronously, before the dialog
+// can be dismissed. A caller may supply an owned saves root when initialization
+// failed before the normal diagnostic session could be opened.
+func StartupError(component, saves string, cause error) error {
+	if currentSession.Load() == nil && saves != "" {
+		s, _ := StartSession(saves, branding.ProductTitle+" "+branding.Flavor, component+" startup")
+		defer s.Close()
+	}
+	Error("startup", component+" startup failed", "error", cause)
+	if file, ok := requestReport("startup", cause.Error(), component+" startup failed.", true); ok {
+		return fmt.Errorf("%w\n\nReport: %s", cause, file)
+	}
+	return cause
+}
+
+func GuardStartup(work func() error) (err error) {
+	defer func() {
+		if v := recover(); v != nil {
+			Error("startup", "Startup panic", "panic", v, "stack", string(debug.Stack()))
+			err = fmt.Errorf("unexpected startup failure: %v", v)
+		}
+	}()
+	return work()
+}
+
 func StartupWarning(message, detail string) {
 	Warn("startup", message, "detail", detail)
 	if s := currentSession.Load(); s != nil {
@@ -444,7 +479,7 @@ func (s *Session) makeReport(dir, session, file string, req reportRequest, lines
 		return false
 	}
 	replay.ReleaseReportPin(dir, req.Context.Film)
-	rel, _ := filepath.Rel(s.saves, final)
+	rel := final
 	s.notice(req.Disposition + " Diagnostics saved to " + rel + ". Please include this report when reporting the issue.")
 	return true
 }
@@ -476,6 +511,9 @@ func (s *Session) recover(root string) {
 	for _, entry := range dirs {
 		dir := filepath.Join(root, entry.Name())
 		if !entry.IsDir() || !strings.HasPrefix(entry.Name(), "session-") || dir == s.dir {
+			continue
+		}
+		if _, err := os.Lstat(filepath.Join(dir, "owner.lease")); !os.IsNotExist(err) {
 			continue
 		}
 		var ctx MissionContext

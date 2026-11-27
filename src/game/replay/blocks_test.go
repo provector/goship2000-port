@@ -15,7 +15,7 @@ func blocksOp(i int) Operation {
 		Index int
 		Data  string
 	}{i, strings.Repeat("input", 400)})
-	return Operation{Kind: "boundary", Payload: b, Checkpoint: map[string]string{"flight": "retained"}}
+	return Operation{Kind: "boundary", Payload: b, Checkpoint: map[string]string{"flight": BytesDigest([]byte("retained"))}}
 }
 func captureBlocks(t *testing.T, s Store, id string, n int) *Film {
 	t.Helper()

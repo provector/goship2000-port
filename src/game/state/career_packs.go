@@ -31,16 +31,22 @@ type storeHeader struct {
 	ImportRoster []byte           `json:"original_roster_base64,omitempty"`
 }
 type careerPacks struct {
-	dir, cfg, id string
-	roster       rosterDocument
-	meta         []byte
-	importRoster []byte
-	slots        [6]userpack.Entries
-	records      userpack.Entries // File extents, not decoded histories.
-	owners       map[string]string
-	home         map[string]int
+	dir, cfg, id, root string
+	roster             rosterDocument
+	meta               []byte
+	importRoster       []byte
+	slots              [6]userpack.Entries
+	records            userpack.Entries // File extents, not decoded histories.
+	owners             map[string]string
+	home               map[string]int
 }
 
+func (s *SaveStore) PackDirectory() string {
+	if s.packed != nil {
+		return s.packed.dir
+	}
+	return s.Directory
+}
 func playerPack(i int) string { return fmt.Sprintf("player%d.g2pak", i) }
 func existingPacks(d string) bool {
 	for i := 0; i < 6; i++ {
@@ -286,7 +292,7 @@ func (p *careerPacks) publish(changes map[string]*[]byte, initial bool) error {
 	if l := roster.Legacy; l != nil {
 		if source == nil {
 			var e error
-			source, e = readArchivedRoster(p.dir, l)
+			source, e = readArchivedRoster(p.root, l)
 			if e != nil {
 				return e
 			}
@@ -453,7 +459,7 @@ func (s *SaveStore) quarantine(reason string) error {
 	if len(discard) == 0 {
 		return nil
 	}
-	dir := filepath.Join(p.dir, abandonedSessionDirectory)
+	dir := filepath.Join(s.Directory, abandonedSessionDirectory)
 	if e := plainDir(dir); e != nil {
 		return e
 	}
@@ -481,7 +487,26 @@ func newStoreID() (string, error) {
 // ValidateStoredRoster checks an existing SETUP destination without importing,
 // initializing or recovering files in that store.
 func ValidateStoredRoster(dir, config string) error {
-	p := careerPacks{dir: dir, cfg: config}
+	p := careerPacks{dir: dir, cfg: config, root: dir}
+	loc, err := readPackLocation(dir)
+	if err == nil {
+		p.dir = filepath.Join(dir, "pilots")
+		p.id = loc.Store
+	} else if !os.IsNotExist(err) {
+		return err
+	} else if !existingPacks(dir) {
+		p.dir = filepath.Join(dir, "pilots")
+	}
+	if err := requirePackDirectory(p.dir); err != nil {
+		return err
+	}
+	if err := p.validatePacks(); err != nil {
+		return err
+	}
+	probe := SaveStore{Directory: dir, packed: &p}
+	return probe.loadWithSessions(false)
+}
+func (p *careerPacks) validatePacks() error {
 	if err := p.refresh(); err != nil {
 		return err
 	}

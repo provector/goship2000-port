@@ -3,6 +3,7 @@ package replay
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/klauspost/compress/s2"
 	"os"
 	"path/filepath"
 	"strings"
@@ -20,10 +21,10 @@ func TestRecorderExactBoundsAndIndependentCount(t *testing.T) {
 	if r.Limit() != 128<<20 {
 		t.Fatal("default", r.Limit())
 	}
-	o := Operation{Kind: "boundary", Payload: json.RawMessage(`{"Kind":"reset"}`), Checkpoint: map[string]string{"flight": "x"}}
-	b, _ := json.Marshal(o)
+	o := Operation{Kind: "boundary", Payload: json.RawMessage(`{"Kind":"reset"}`), Checkpoint: map[string]string{"flight": BytesDigest([]byte("x"))}}
+	b, _ := protoRow(o)
 	// This is an explicit arithmetic boundary fixture; actual writes follow.
-	compressed := len(encoder.EncodeAll(append(b, '\n'), nil))
+	compressed := len(s2.Encode(nil, b))
 	r.limit = r.bytes + 3*descriptorSize + int64(compressed) + sealReserve
 	if e = r.Append(o); e != nil {
 		t.Fatal("exact compressed capacity", e)

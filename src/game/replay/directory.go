@@ -55,8 +55,8 @@ func checkPrefix(r io.ReaderAt) error {
 	if !bytes.Equal(b[:8], magic[:]) {
 		return fmt.Errorf("unrecognized film format")
 	}
-	if v := order.Uint16(b[8:10]); v != 2 {
-		return fmt.Errorf("unsupported G2R storage version %d (supported compressed versions: 2 and 3)", v)
+	if v := order.Uint16(b[8:10]); v != 4 {
+		return fmt.Errorf("unsupported G2R storage version %d (expected current protobuf/S2)", v)
 	}
 	if !bytes.Equal(b[:], blockPrefix) {
 		return invalidBlock
@@ -100,7 +100,7 @@ func Marshal(f *Film) ([]byte, error) {
 		if err != nil {
 			return nil, err
 		}
-		row, err := json.Marshal(op)
+		row, err := protoRow(op)
 		if err != nil {
 			return nil, err
 		}
@@ -116,7 +116,7 @@ func Marshal(f *Film) ([]byte, error) {
 			count = 0
 		}
 		pending.Write(row)
-		pending.WriteByte('\n')
+
 		count++
 	}
 	if count > 0 {
@@ -124,7 +124,7 @@ func Marshal(f *Film) ([]byte, error) {
 			return nil, err
 		}
 	}
-	m := manifest{f.Header, f.End, int64(out.Len()), idx.Len() / descriptorSize, BytesDigest(idx.Bytes())}
+	m := manifest{protoS2, f.Header, f.End, int64(out.Len()), idx.Len() / descriptorSize, BytesDigest(idx.Bytes())}
 	out.Write(idx.Bytes())
 	if err = writeManifest(&out, m); err != nil {
 		return nil, err

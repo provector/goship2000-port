@@ -2,6 +2,7 @@ package diagnostics
 
 import (
 	"gunship2000-assets/game/replay"
+	"gunship2000-assets/internal/playerdirs"
 	"os"
 	"path/filepath"
 )
@@ -16,7 +17,7 @@ func RememberWarning(sortie, reason string) {
 	s.mu.Lock()
 	req := reportRequest{Context: s.context, Reason: reason}
 	s.mu.Unlock()
-	if e := saveRecord(filepath.Join(s.saves, "reports", "pending-"+sortie+".json"), req); e != nil {
+	if e := saveRecord(filepath.Join(filepath.Dir(s.dir), "pending-"+sortie+".json"), req); e != nil {
 		s.failure("pending diagnostic", e)
 	}
 }
@@ -27,16 +28,26 @@ func RecallWarning(sortie string) string {
 		return ""
 	}
 	var req reportRequest
-	if loadRecord(filepath.Join(s.saves, "reports", "pending-"+sortie+".json"), &req) != nil {
-		return ""
+	for _, dir := range playerdirs.ArchiveReaders(s.saves, "reports") {
+		if loadRecord(filepath.Join(dir, "pending-"+sortie+".json"), &req) == nil {
+			SetMission(req.Context.Mission, req.Context.Film, req.Context.Phase, req.Context.Step)
+			return req.Reason
+		}
 	}
-	SetMission(req.Context.Mission, req.Context.Film, req.Context.Phase, req.Context.Step)
-	return req.Reason
+	return ""
 }
 
 func ForgetWarning(sortie string) {
 	s := currentSession.Load()
 	if s != nil && s.dir != "" && replay.ValidID(sortie) {
-		os.Remove(filepath.Join(s.saves, "reports", "pending-"+sortie+".json"))
+		for _, dir := range playerdirs.ArchiveReaders(s.saves, "reports") {
+			path := filepath.Join(dir, "pending-"+sortie+".json")
+			var req reportRequest
+			if loadRecord(path, &req) == nil {
+				if err := os.Remove(path); err != nil {
+					s.failure("pending diagnostic retirement", err)
+				}
+			}
+		}
 	}
 }

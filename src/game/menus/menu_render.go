@@ -180,7 +180,7 @@ func (c *FrontEnd) drawRoster(frame []byte) {
 		c.text(frame, 3, "MISSIONS:", x+22, y+28, 9)
 		c.text(frame, 3, missions, x+64, y+28, 9)
 	}
-	if c.Highlight >= 0 && c.Highlight < 6 {
+	if c.Draft == nil && c.Highlight >= 0 && c.Highlight < 6 {
 		p := state.Slots[c.Highlight]
 		if p == nil {
 			p = &gamestate.Pilot{Rank: gamestate.RankWOC, Statistics: &gamestate.PilotStatistics{}}
@@ -220,9 +220,7 @@ func (c *FrontEnd) drawEmblem(frame []byte, selector int, small bool, x, y int) 
 
 func (c *FrontEnd) drawEditor(frame []byte) {
 	d := c.Draft
-	// The same saved-source roster sheet is the editor backdrop. A clear draft
-	// panel avoids carrying text from an earlier draft while retaining the artwork.
-	assetdata.OfficeFill(frame, 23, 10, 250, 66, 15)
+	// The clean roster sheet supplies the writing surface and its lower margin.
 	c.clippedText(frame, 5, d.Pilot.Name, 25, 12, 0, [4]int{25, 12, 200, 8})
 	c.drawEmblem(frame, d.Pilot.Emblem, false, 23, 20)
 	c.clippedText(frame, 5, d.Pilot.Squadron, 25, 66, 0, [4]int{25, 66, 200, 8})

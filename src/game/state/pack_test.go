@@ -67,7 +67,7 @@ func TestPackedResultPhoenixAndSlotReplacement(t *testing.T) {
 		t.Fatal("replacement acknowledged prior pilot result")
 	}
 	for i := 0; i < 6; i++ {
-		a, e := userpack.Open(filepath.Join(dir, playerPack(i)))
+		a, e := userpack.Open(filepath.Join(dir, "pilots", playerPack(i)))
 		if e != nil {
 			t.Fatal(e)
 		}
@@ -162,7 +162,7 @@ func TestPartialSlotJournal(t *testing.T) {
 			t.Fatal("child failed before durable cut point", e, string(out))
 		}
 		dir := filepath.Join(app, "saves")
-		raw, e := os.ReadFile(filepath.Join(dir, packIntent))
+		raw, e := os.ReadFile(filepath.Join(dir, "pilots", packIntent))
 		if e != nil {
 			t.Fatal(e)
 		}
@@ -179,7 +179,7 @@ func TestPartialSlotJournal(t *testing.T) {
 			t.Fatal("journal revision not restored")
 		}
 		for _, v := range j.Images {
-			h, _ := userpack.HashFile(filepath.Join(dir, playerPack(v.Slot)))
+			h, _ := userpack.HashFile(filepath.Join(dir, "pilots", playerPack(v.Slot)))
 			if h != v.After {
 				t.Fatal("partial slot publication")
 			}
@@ -208,19 +208,19 @@ func TestPartialSlotJournal(t *testing.T) {
 		a := p.slots[i]
 		h, _ := a.Get("slot.json")
 		a["slot.json"] = userpack.Value(append(h, '\n'))
-		stage, e := userpack.Stage(dir, a)
+		stage, e := userpack.Stage(filepath.Join(dir, "pilots"), a)
 		if e != nil {
 			t.Fatal(e)
 		}
-		old, _ := userpack.HashFile(filepath.Join(dir, playerPack(i)))
+		old, _ := userpack.HashFile(filepath.Join(dir, "pilots", playerPack(i)))
 		newHash, _ := userpack.HashFile(stage)
 		j.Images = append(j.Images, packImage{i, filepath.Base(stage), old, newHash})
 	}
 	b, _ := json.Marshal(j)
-	if e = writeSaveAtomic(dir, packIntent, b); e != nil {
+	if e = writeSaveAtomic(filepath.Join(dir, "pilots"), packIntent, b); e != nil {
 		t.Fatal(e)
 	}
-	if e = userpack.Replace(filepath.Join(dir, j.Images[0].Stage), filepath.Join(dir, playerPack(0))); e != nil {
+	if e = userpack.Replace(filepath.Join(dir, "pilots", j.Images[0].Stage), filepath.Join(dir, "pilots", playerPack(0))); e != nil {
 		t.Fatal(e)
 	}
 	os.Exit(37) // Simulate process death while both kernel leases are held.
@@ -244,7 +244,7 @@ func TestImportedRosterReopensFromPacks(t *testing.T) {
 	if e = MigrateCareer(dir, "", app); e != nil {
 		t.Fatal(e)
 	}
-	if e = os.Rename(filepath.Join(dir, "imports"), filepath.Join(app, "detached-evidence")); e != nil {
+	if e = os.Rename(filepath.Join(app, "imports"), filepath.Join(app, "detached-evidence")); e != nil {
 		t.Fatal(e)
 	}
 	s, e := OpenManagedCareer(dir, "", app, true)
@@ -297,7 +297,7 @@ func TestFreshManagedRosterRejectsPartialImportAndPreservesEstablishedPacks(t *t
 				t.Fatal("missing checked default roster")
 			}
 			s.Close()
-			if _, err = os.Stat(filepath.Join(dir, "imports")); !os.IsNotExist(err) {
+			if _, err = os.Stat(filepath.Join(app, "imports")); !os.IsNotExist(err) {
 				t.Fatal("partial import committed", err)
 			}
 			if err = os.WriteFile(filepath.Join(original, "ROSTER.DAT"), []byte("changed"), 0600); err != nil {
@@ -311,7 +311,7 @@ func TestFreshManagedRosterRejectsPartialImportAndPreservesEstablishedPacks(t *t
 				t.Fatal("legacy source replaced existing data")
 			}
 			reopened.Close()
-			if err = os.WriteFile(filepath.Join(dir, "player0.g2pak"), []byte("invalid port pack"), 0600); err != nil {
+			if err = os.WriteFile(filepath.Join(dir, "pilots", "player0.g2pak"), []byte("invalid port pack"), 0600); err != nil {
 				t.Fatal(err)
 			}
 			if broken, e := OpenManagedCareer(dir, original, app, true); e == nil {

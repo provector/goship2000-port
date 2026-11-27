@@ -21,7 +21,7 @@ func TestSealedSnapshotOwnsResultAndCachedOperation(t *testing.T) {
 	}
 	snapshot.Operations[0].Checkpoint["flight"] = "changed"
 	op, err := f.OperationAt(0)
-	if err != nil || op.Checkpoint["flight"] != "retained" {
+	if err != nil || op.Checkpoint["flight"] != BytesDigest([]byte("retained")) {
 		t.Fatal("snapshot mutated cached operation", err)
 	}
 }

@@ -98,7 +98,7 @@ func TestSessionDeathRecovery(t *testing.T) {
 					owner.Close()
 					t.Fatal("second process acquired the live store")
 				}
-				if found, _ := filepath.Glob(filepath.Join(root, "reports", "*", "crash_report.zip")); len(found) != 0 {
+				if found, _ := filepath.Glob(filepath.Join(filepath.Dir(root), "reports", "*", "crash_report.zip")); len(found) != 0 {
 					t.Fatal("reported live owner")
 				}
 				if e := cmd.Process.Kill(); e != nil {
@@ -118,7 +118,7 @@ func TestSessionDeathRecovery(t *testing.T) {
 				t.Fatal(e)
 			}
 			s.Close()
-			files, _ := filepath.Glob(filepath.Join(root, "reports", "*", "crash_report.zip"))
+			files, _ := filepath.Glob(filepath.Join(filepath.Dir(root), "reports", "*", "crash_report.zip"))
 			if len(files) != 1 {
 				t.Fatal(files)
 			}
@@ -154,7 +154,7 @@ func TestHandledReportBoundedAndFailureIsolated(t *testing.T) {
 	Report("one", "distinct failure", "Your mission result was saved.")
 	Report("one", "same incident", "duplicate")
 	s.Close()
-	files, _ := filepath.Glob(filepath.Join(root, "reports", "*", "incident-*", "error_report.zip"))
+	files, _ := filepath.Glob(filepath.Join(filepath.Dir(root), "reports", "*", "incident-*", "error_report.zip"))
 	if len(files) != 1 {
 		t.Fatal(files)
 	}
@@ -274,7 +274,7 @@ func TestLegacyPIDResidueAndCleanDebriefWarning(t *testing.T) {
 		t.Fatal("request failed")
 	}
 	next.Close()
-	if _, err := os.Stat(filepath.Join(root, "reports", "pending-"+id+".json")); !os.IsNotExist(err) {
+	if _, err := os.Stat(filepath.Join(filepath.Dir(root), "reports", "pending-"+id+".json")); !os.IsNotExist(err) {
 		t.Fatal(err)
 	}
 }
@@ -302,7 +302,7 @@ func TestPreparationErrorArchiveExistsBeforeWindowDismissal(t *testing.T) {
 	}
 	defer s.Close()
 	e = StartupFailure("Read originals", fmt.Errorf("selected original test, destination cache: FONTS.GS2 missing"))
-	files, _ := filepath.Glob(filepath.Join(root, "reports", "*", "incident-*", "error_report.zip"))
+	files, _ := filepath.Glob(filepath.Join(filepath.Dir(root), "reports", "*", "incident-*", "error_report.zip"))
 	if len(files) != 1 || !strings.Contains(e.Error(), files[0]) {
 		t.Fatalf("archive path missing: %v; %v", e, files)
 	}
@@ -311,5 +311,55 @@ func TestPreparationErrorArchiveExistsBeforeWindowDismissal(t *testing.T) {
 		if !strings.Contains(data[k], "FONTS.GS2 missing") {
 			t.Fatalf("missing cause in %s", k)
 		}
+	}
+}
+
+func TestRecoverPendingWarningFromPreviousReportDirectory(t *testing.T) {
+	for _, collision := range []bool{false, true} {
+		t.Run(fmt.Sprintf("occupied-%t", collision), func(t *testing.T) {
+			base := t.TempDir()
+			saves := filepath.Join(base, "saves")
+			old := filepath.Join(saves, "reports")
+			if err := os.MkdirAll(old, 0700); err != nil {
+				t.Fatal(err)
+			}
+			const sortie = "0123456789abcdef0123456789abcdef"
+			const reason = "verified failure before relocation"
+			name := "pending-" + sortie + ".json"
+			if err := saveRecord(filepath.Join(old, name), reportRequest{Reason: reason}); err != nil {
+				t.Fatal(err)
+			}
+			dest := filepath.Join(base, "reports")
+			if collision {
+				if err := os.WriteFile(dest, []byte("another application"), 0600); err != nil {
+					t.Fatal(err)
+				}
+			}
+			for restart := 0; restart < 2; restart++ {
+				s, err := StartSession(saves, "test", "")
+				if err != nil {
+					t.Fatal(err)
+				}
+				if got := RecallWarning(sortie); got != reason {
+					s.Close()
+					t.Fatalf("reopen %d: %q", restart, got)
+				}
+				if restart == 1 {
+					ForgetWarning(sortie)
+				}
+				s.Close()
+			}
+			for _, dir := range []string{old, dest} {
+				if _, err := os.Stat(filepath.Join(dir, name)); err == nil {
+					t.Fatal("warning repeated after retirement", dir)
+				}
+			}
+			if collision {
+				b, err := os.ReadFile(dest)
+				if err != nil || string(b) != "another application" {
+					t.Fatal("changed unrelated report destination", err)
+				}
+			}
+		})
 	}
 }

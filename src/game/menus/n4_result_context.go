@@ -21,7 +21,7 @@ func (c *FrontEnd) freezeResultContext(f *gamestate.SortieFacts) error {
 	if len(m.Entities) < 80 || len(m.FlightRows) != f.ActorCount || len(m.Flight) != f.ActorCount || len(m.CrewPerformance) != f.ActorCount {
 		return fmt.Errorf("result actor/world provenance incomplete")
 	}
-	ctx := &gamestate.SortieResultContext{Version: 1, LaunchPose: l.LaunchPose, Seed: gamestate.ResultSeed(l.Start.ID), SeedPolicy: gamestate.ResultSeedPolicy}
+	ctx := &gamestate.SortieResultContext{RetireByMissions: l.Start.RetireByMissions, Version: 1, LaunchPose: l.LaunchPose, Seed: gamestate.ResultSeed(l.Start.ID), SeedPolicy: gamestate.ResultSeedPolicy}
 	if p.r5Mechanics {
 		ctx.GameplayPolicy = gamestate.SafeGameplayPolicy
 		ctx.RetainedCampaignSHA256 = l.RetainedCampaignSHA256

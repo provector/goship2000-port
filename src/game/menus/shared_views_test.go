@@ -7,6 +7,7 @@ import (
 	"gunship2000-assets/game/configuration"
 	"gunship2000-assets/game/render3d"
 	"gunship2000-assets/game/replay"
+	"gunship2000-assets/internal/testfixture"
 	"image/png"
 	"os"
 	"path/filepath"
@@ -16,7 +17,11 @@ import (
 
 func displayFixture(t *testing.T) render3d.Scene {
 	t.Helper()
-	b, e := os.ReadFile(filepath.Join(os.Getenv("GS2000_Q32_GROUND_SCENES"), "pad-scene.json"))
+	root := os.Getenv("GS2000_Q32_GROUND_SCENES")
+	if root == "" {
+		root = testfixture.Path("ground-scenes")
+	}
+	b, e := os.ReadFile(filepath.Join(root, "pad-scene.json"))
 	if e != nil {
 		t.Fatal(e)
 	}

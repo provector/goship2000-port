@@ -21,8 +21,15 @@ func (c *FrontEnd) r83Profile() bool {
 	return c.r86Profile() || c.simulationProfile == replay.R83Compatibility || c.simulationProfile == replay.R83AuthoredCompatibility
 }
 
+func (c *FrontEnd) routeAcquisitionProfile() bool {
+	return c.simulationProfile == "" || c.simulationProfile == replay.RouteAcquisitionCompatibility || c.simulationProfile == replay.RouteAcquisitionAuthoredCompatibility
+}
+
+func (c *FrontEnd) maneuverProfile() bool {
+	return c.routeAcquisitionProfile() || c.simulationProfile == replay.ManeuverCompatibility || c.simulationProfile == replay.ManeuverAuthoredCompatibility
+}
 func (c *FrontEnd) exitWaypointProfile() bool {
-	return c.simulationProfile == "" || c.simulationProfile == replay.W31Compatibility || c.simulationProfile == replay.W31AuthoredCompatibility
+	return c.maneuverProfile() || c.simulationProfile == replay.W31Compatibility || c.simulationProfile == replay.W31AuthoredCompatibility
 }
 
 func (c *FrontEnd) correctiveFlightProfile() bool {

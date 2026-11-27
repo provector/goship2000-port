@@ -173,6 +173,9 @@ func (p *RenderingPreview) initializeFlight(a *assetdata.OfficeAssets, m *gamest
 	r.Combat.SetFeedbackEnabled(p.p7Mechanics)
 	r.Combat.SetOrdersEnabled(p.r1Mechanics)
 	r.Combat.SetCorridorNavigation(p.corridorNavigation)
+	if p.independentManeuvers {
+		r.Combat.EnableCarrierClearance()
+	}
 	if p.admitExitWaypoint {
 		r.Combat.EnableExitWaypoint()
 	}
@@ -546,7 +549,7 @@ func (c *FrontEnd) advanceFlight(seconds float64) (err error) {
 				engineCount = 1
 			}
 		}
-		power := flight.Input{PoweredEngineCount: engineCount, Damage: r.Systems.Damage, FuelSupplyFailed: p.correctiveFlight && r.Systems.Damage[3]&3 == 2}
+		power := flight.Input{IndependentHover: p.independentManeuvers, PoweredEngineCount: engineCount, Damage: r.Systems.Damage, FuelSupplyFailed: p.correctiveFlight && r.Systems.Damage[3]&3 == 2}
 		live := r.commandInput.Live
 		keyboardCollective := hasCommand && command&0xff <= 1
 		if p.resilientFlight {
@@ -659,7 +662,7 @@ func (c *FrontEnd) advanceFlight(seconds float64) (err error) {
 				r.Defenses.SetManualHeld(r.commandInput.jammerHeld, r.Systems.DamageMasks[0], random)
 			}
 		}
-		in := flight.Input{PoweredEngineCount: engineCount, FuelSupplyFailed: power.FuelSupplyFailed, DF: t.DF, E0: t.E0, Phase: t.Phase, X: r.Axes.X, Y: r.Axes.Y, Switches: p.Initialized.Switches, MassTerm: r.MassTerm, GearFlags: r.SystemFlags, Damage: r.Systems.Damage, WindHeading: r.WindHeading, WindStrength: r.WindStrength, Random: random}
+		in := flight.Input{IndependentHover: p.independentManeuvers, PoweredEngineCount: engineCount, FuelSupplyFailed: power.FuelSupplyFailed, DF: t.DF, E0: t.E0, Phase: t.Phase, X: r.Axes.X, Y: r.Axes.Y, Switches: p.Initialized.Switches, MassTerm: r.MassTerm, GearFlags: r.SystemFlags, Damage: r.Systems.Damage, WindHeading: r.WindHeading, WindStrength: r.WindStrength, Random: random}
 		in.ShakeDisplay = func(remaining int16) { p.playerShake.advance(remaining, t.Phase, int(p.ViewControls.Mode)) }
 		if p.p4Mechanics {
 			in.SourceSoundGate = 0x40 // source semantic DE40; host mute is transport policy.
@@ -671,6 +674,9 @@ func (c *FrontEnd) advanceFlight(seconds float64) (err error) {
 		if r.commandInput.Live != nil {
 			in.ControlFlags = 2
 			in.Yaw = r.liveControls.Yaw
+		}
+		if p.independentManeuvers && r.State.Hover != 0 && (keyboardCollective || r.State.Collective != beforeCollective) {
+			r.State.HeightControl = 0
 		}
 		if e := p.Scene.Environment; e != nil {
 			in.GustActive = e.PulseRemaining != 0

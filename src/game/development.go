@@ -388,7 +388,7 @@ func runDevelopment(args []string) int {
 			if (*menuSmoke || *briefingSmoke || *preflightSmoke || *sceneSmoke) && *smoke == 0 {
 				*smoke = 1200
 			}
-			err = menuui.RunOfficeWindow(controller.Office, menuui.WindowOptions{InstallDirectory: paths.install(), AppDirectory: paths.Directory, Runtime: paths.Config.Runtime, DrawFPSCPU: paths.Config.DrawFPSCPU, FrontEnd: controller, AudioPreferences: paths.Config.audioPreferences(), SoundEffectsEnabled: &paths.Config.SoundEffectsEnabled, MusicEnabled: &paths.Config.MusicEnabled, Width: *width, Height: *height, SquarePixels: *square, DrawPointer: *pointer, TickRate: *rate, Development: true, MenuSmoke: *menuSmoke, BriefingSmoke: *briefingSmoke, PreflightSmoke: *preflightSmoke, SceneSmoke: *sceneSmoke, StartupSmoke: *startup && *smoke > 0, SmokeFrames: *smoke, CaptureDirectory: *capture})
+			err = menuui.RunOfficeWindow(controller.Office, menuui.WindowOptions{WindowMode: configuration.Config(paths.Config).WindowMode(), SavesDirectory: paths.Saves, InstallDirectory: paths.install(), AppDirectory: paths.Directory, Runtime: paths.Config.Runtime, DrawFPSCPU: paths.Config.DrawFPSCPU, FrontEnd: controller, AudioPreferences: paths.Config.audioPreferences(), SoundEffectsEnabled: &paths.Config.SoundEffectsEnabled, MusicEnabled: &paths.Config.MusicEnabled, Width: *width, Height: *height, SquarePixels: *square, DrawPointer: *pointer, TickRate: *rate, Development: true, MenuSmoke: *menuSmoke, BriefingSmoke: *briefingSmoke, PreflightSmoke: *preflightSmoke, SceneSmoke: *sceneSmoke, StartupSmoke: *startup && *smoke > 0, SmokeFrames: *smoke, CaptureDirectory: *capture})
 		}
 		if err != nil {
 			return startupError(err)
@@ -411,7 +411,7 @@ func runDevelopment(args []string) int {
 		err = menuui.WriteOfficeFrame(*frame, office, *pointer, *seed, *rate)
 	} else {
 		fmt.Println("Office presentation: C computer mode; P/Space pause; N/. single tick while paused; Escape closes. No destination navigation.")
-		err = menuui.RunOfficeWindow(office, menuui.WindowOptions{Runtime: paths.Config.Runtime, DrawFPSCPU: paths.Config.DrawFPSCPU, Width: *width, Height: *height, SquarePixels: *square, DrawPointer: *pointer, TickRate: *rate, SmokeFrames: *smoke, CaptureDirectory: *capture, Development: true})
+		err = menuui.RunOfficeWindow(office, menuui.WindowOptions{WindowMode: configuration.Config(paths.Config).WindowMode(), SavesDirectory: paths.Saves, Runtime: paths.Config.Runtime, DrawFPSCPU: paths.Config.DrawFPSCPU, Width: *width, Height: *height, SquarePixels: *square, DrawPointer: *pointer, TickRate: *rate, SmokeFrames: *smoke, CaptureDirectory: *capture, Development: true})
 	}
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "office:", err)

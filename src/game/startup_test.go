@@ -297,13 +297,14 @@ func TestManagedRealInstallationWhenRequested(t *testing.T) {
 func TestPreparationPublishesSourceOnlyAfterValidation(t *testing.T) {
 	p, fixture, _ := fakeStartup(t)
 	p.Config.Original = "original"
+	p.Config.OriginalSource = configuration.OriginalUnselected
 	candidate := filepath.Join(t.TempDir(), "External Game")
 	if err := os.Mkdir(candidate, 0700); err != nil {
 		t.Fatal(err)
 	}
 	selected := ""
 	services := managedassets.Services{
-		Discover: func() string { return "" },
+		Installations: func() []managedassets.Installation { return nil },
 		Prepare: func(input, output string) (*assetdata.Manifest, error) {
 			if input != candidate {
 				t.Fatalf("wrong preparation input %q", input)
@@ -312,20 +313,21 @@ func TestPreparationPublishesSourceOnlyAfterValidation(t *testing.T) {
 		},
 		Load:   fixture.load,
 		Rename: fixture.rename,
-		SourceSelected: func(choice string) error {
+		SourceUsed: func(choice string) {
 			if _, err := fixture.load(p.Assets); err != nil {
 				t.Fatalf("choice published before assets were readable: %v", err)
 			}
 			selected = choice
-			return nil
 		},
 	}
 	run := func() error { _, err := managedassets.Ensure(sharedPaths(p), false, io.Discard, services); return err }
 	err := run()
-	if !errors.Is(err, managedassets.ErrOriginalUnavailable) || !strings.Contains(err.Error(), p.Original) || !strings.Contains(err.Error(), "PORT SETTINGS") {
+	if !errors.Is(err, managedassets.ErrOriginalUnavailable) || !strings.Contains(err.Error(), p.Original) || !strings.Contains(err.Error(), "Port Settings") {
 		t.Fatalf("missing location prompt: %v", err)
 	}
-	services.Discover = func() string { return candidate }
+	services.Installations = func() []managedassets.Installation {
+		return []managedassets.Installation{{Source: configuration.OriginalSteam, Path: candidate}}
+	}
 	services.Ready = func(*assetdata.OfficeAssets) error { return errors.New("candidate validation failed") }
 	if err = run(); err == nil || selected != "" {
 		t.Fatal("invalid source published", err, selected)
@@ -334,7 +336,7 @@ func TestPreparationPublishesSourceOnlyAfterValidation(t *testing.T) {
 	if err = run(); err != nil || selected != candidate {
 		t.Fatal("validated source missing", err, selected)
 	}
-	services.Discover = func() string { t.Fatal("reused cache invoked discovery"); return "" }
+	services.Installations = func() []managedassets.Installation { t.Fatal("reused cache invoked discovery"); return nil }
 	if err = run(); err != nil {
 		t.Fatal(err)
 	}

@@ -119,6 +119,12 @@ const T5AuthoredCompatibility = "native-obstacle-clearance-stepT5-authored-v1"
 const U24Compatibility = "native-low-city-stepU24-v1"
 const U24AuthoredCompatibility = "native-low-city-stepU24-authored-v1"
 
+const RouteAcquisitionCompatibility = "native-route-acquisition-v1"
+const RouteAcquisitionAuthoredCompatibility = "native-route-acquisition-authored-v1"
+
+const ManeuverCompatibility = "native-flight-maneuvers-v1"
+const ManeuverAuthoredCompatibility = "native-flight-maneuvers-authored-v1"
+
 const W31Compatibility = "native-exit-waypoint-w31-v1"
 const W31AuthoredCompatibility = "native-exit-waypoint-w31-authored-v1"
 
@@ -129,7 +135,7 @@ const V45Compatibility = "native-engine-power-v45-v1"
 const V45AuthoredCompatibility = "native-engine-power-v45-authored-v1"
 
 func (f *Film) EnginePowerMechanics() bool {
-	return f != nil && (f.Header.Simulation == W31Compatibility || f.Header.Simulation == W31AuthoredCompatibility || f.Header.Simulation == W3Compatibility || f.Header.Simulation == W3AuthoredCompatibility || f.Header.Simulation == V45Compatibility || f.Header.Simulation == V45AuthoredCompatibility)
+	return f != nil && (f.Header.Simulation == RouteAcquisitionCompatibility || f.Header.Simulation == RouteAcquisitionAuthoredCompatibility || f.Header.Simulation == ManeuverCompatibility || f.Header.Simulation == ManeuverAuthoredCompatibility || f.Header.Simulation == W31Compatibility || f.Header.Simulation == W31AuthoredCompatibility || f.Header.Simulation == W3Compatibility || f.Header.Simulation == W3AuthoredCompatibility || f.Header.Simulation == V45Compatibility || f.Header.Simulation == V45AuthoredCompatibility)
 }
 
 const U26Compatibility = "native-flight-resilience-stepU26-v1"
@@ -298,7 +304,7 @@ func (f *Film) FormationMechanics() bool {
 
 func (f *Film) Authored() bool {
 	if f.WingmanRouteEditMechanics() {
-		return f.Header.Simulation == W31AuthoredCompatibility || f.Header.Simulation == W3AuthoredCompatibility || f.Header.Simulation == V45AuthoredCompatibility || f.Header.Simulation == U25AuthoredCompatibility || f.Header.Simulation == U26AuthoredCompatibility
+		return f.Header.Simulation == RouteAcquisitionAuthoredCompatibility || f.Header.Simulation == ManeuverAuthoredCompatibility || f.Header.Simulation == W31AuthoredCompatibility || f.Header.Simulation == W3AuthoredCompatibility || f.Header.Simulation == V45AuthoredCompatibility || f.Header.Simulation == U25AuthoredCompatibility || f.Header.Simulation == U26AuthoredCompatibility
 	}
 	if f.LowCityMechanics() {
 		return f.Header.Simulation == U24AuthoredCompatibility

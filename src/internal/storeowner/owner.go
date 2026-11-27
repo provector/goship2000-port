@@ -6,12 +6,15 @@ package storeowner
 import (
 	"crypto/sha256"
 	"encoding/binary"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
 	"runtime"
 	"strings"
 )
+
+var ErrInUse = errors.New("managed installation or store already in use")
 
 type Tree struct {
 	Path  string
@@ -76,7 +79,10 @@ func Acquire(trees ...Tree) (*os.File, error) {
 		offset := binary.LittleEndian.Uint64(sum[:8]) >> 2
 		if err := lockRange(f, offset, write); err != nil {
 			f.Close()
-			return nil, fmt.Errorf("managed installation or store already in use, or ownership unavailable: %w", err)
+			if contended(err) {
+				return nil, fmt.Errorf("%w: %w", ErrInUse, err)
+			}
+			return nil, fmt.Errorf("ownership unavailable: %w", err)
 		}
 	}
 	return f, nil

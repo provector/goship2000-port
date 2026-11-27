@@ -89,19 +89,20 @@ type focusReset struct {
 	damage     [2]byte
 }
 type filmRecorder struct {
-	lastOperation   replay.Operation
-	lastFocusReset  focusReset
-	focusResetValid bool
-	Spool           *replay.Temporary
-	Film            *replay.Film
-	Pending         *replay.Operation
-	Ordinal         uint64
-	PreviousControl []byte
-	Events          []replay.Event
-	EventIndex      uint64
-	Error           string
-	Sealed          bool
-	InitialKinds    [80]byte
+	lastOperation    replay.Operation
+	launchCheckpoint map[string]string // Immutable validation anchor until the first completed row.
+	lastFocusReset   focusReset
+	focusResetValid  bool
+	Spool            *replay.Temporary
+	Film             *replay.Film
+	Pending          *replay.Operation
+	Ordinal          uint64
+	PreviousControl  []byte
+	Events           []replay.Event
+	EventIndex       uint64
+	Error            string
+	Sealed           bool
+	InitialKinds     [80]byte
 }
 type FilmPlayback struct {
 	reachedSupport         *navigation.SupportCommand
@@ -189,15 +190,12 @@ func (p *RenderingPreview) FilmCheckpoint() map[string]string {
 		Terminal         terminalPresentation
 		Directions       [4]bool
 		Trigger, Pressed bool
-	}{logical, r.Notifications, r.TerminalPresentation, r.commandInput.Directions, r.commandInput.Trigger, r.commandInput.TriggerPressed}}), "mission": filmHash(p.Initialized), "combat": filmHash(r.Combat.FilmState()), "navigation": filmHash(struct {
+	}{logical, r.Notifications, r.TerminalPresentation, r.commandInput.Directions, r.commandInput.Trigger, r.commandInput.TriggerPressed}}), "mission": p.replayHashes.missionHash(p.Initialized), "combat": filmHash(r.Combat.FilmState()), "navigation": filmHash(struct {
 		Routes   [5]navigation.Route
 		Avionics any
 		View     render3d.CameraState
 		Speech   any
-	}{r.Navigation, r.Avionics, p.ViewControls.ReplayState(), r.AcquisitionSpeech}), "environment": filmHash(p.Scene.Environment), "pending-hit": filmHash(filmPendingHits(r.acceptedPlayerHits)), "palette": filmHash(p.PaletteState.ReplayState()), "visual": filmHash(p.Visual), "reference": filmHash(struct {
-		Buffer []byte
-		Bottom int
-	}{p.avionicsReference, p.avionicsReferenceBottom})}
+	}{r.Navigation, r.Avionics, p.ViewControls.ReplayState(), r.AcquisitionSpeech}), "environment": filmHash(p.Scene.Environment), "pending-hit": filmHash(filmPendingHits(r.acceptedPlayerHits)), "palette": filmHash(p.PaletteState.ReplayState()), "visual": filmHash(p.Visual), "reference": p.replayHashes.referenceHash(p.avionicsReference, p.avionicsReferenceBottom)}
 	if p.p4Mechanics {
 		out["appearance"] = filmHash(p.p4AppearanceCheckpoint())
 	}
@@ -454,7 +452,17 @@ func (c *FrontEnd) beginFilmRecording(final *FinalPreflightConfiguration) {
 			f.Header.Simulation = replay.T5AuthoredCompatibility
 		}
 	}
-	if c.exitWaypointProfile() {
+	if c.routeAcquisitionProfile() {
+		f.Header.Simulation = replay.RouteAcquisitionCompatibility
+		if final.Mission.Inputs.MissionType == gamestate.MissionSimulated {
+			f.Header.Simulation = replay.RouteAcquisitionAuthoredCompatibility
+		}
+	} else if c.maneuverProfile() {
+		f.Header.Simulation = replay.ManeuverCompatibility
+		if final.Mission.Inputs.MissionType == gamestate.MissionSimulated {
+			f.Header.Simulation = replay.ManeuverAuthoredCompatibility
+		}
+	} else if c.exitWaypointProfile() {
 		f.Header.Simulation = replay.W31Compatibility
 		if final.Mission.Inputs.MissionType == gamestate.MissionSimulated {
 			f.Header.Simulation = replay.W31AuthoredCompatibility
@@ -498,7 +506,7 @@ func (c *FrontEnd) beginFilmRecording(final *FinalPreflightConfiguration) {
 	diagnostics.SetMission(final.Mission.World, f.Header.ID, "flight", 0)
 	diagnostics.Info("recording", "Recording started", "id", f.Header.ID)
 	c.filmDiagnostics = spool
-	p.filmRecorder = &filmRecorder{Film: f, Spool: spool, PreviousControl: filmJSON(p.filmControl()), InitialKinds: p.filmInitialKinds()}
+	p.filmRecorder = &filmRecorder{Film: f, Spool: spool, launchCheckpoint: initial, PreviousControl: filmJSON(p.filmControl()), InitialKinds: p.filmInitialKinds()}
 	p.installFilmObserver()
 }
 func (p *RenderingPreview) installFilmObserver() {
@@ -619,6 +627,7 @@ func (c *FrontEnd) filmFinishEnding() {
 		return
 	}
 	if f := p.filmRecorder; f != nil && !f.Sealed {
+		p.sessionPoint = nil
 		c.filmFinishStep()
 		if f.Error != "" {
 			c.filmError = f.Error
@@ -685,6 +694,12 @@ func (c *FrontEnd) sealedRecording() (*replay.Film, error) {
 }
 
 func NewFilmPlayback(a *assetdata.OfficeAssets, f *replay.Film, options configuration.RuntimeOptions) (out *FilmPlayback, err error) {
+	return newFilmPlayback(a, f, options, false)
+}
+
+// Only the live recorder can supply a session prefix. It has no ending to validate.
+// Every completed operation still takes the strict playback path.
+func newFilmPlayback(a *assetdata.OfficeAssets, f *replay.Film, options configuration.RuntimeOptions, prefix bool) (out *FilmPlayback, err error) {
 	defer func() {
 		if v := recover(); v != nil {
 			out = nil
@@ -694,14 +709,24 @@ func NewFilmPlayback(a *assetdata.OfficeAssets, f *replay.Film, options configur
 	if a == nil || a.World == nil || a.Cockpit == nil || a.Missions == nil {
 		return nil, fmt.Errorf("film needs complete prepared simulation resources")
 	}
-	if e := f.Validate(); e != nil {
-		return nil, e
+	if !prefix {
+		if e := f.Validate(); e != nil {
+			return nil, e
+		}
 	}
-	compatible, e := filmMatchesInstalledResources(f, a)
-	if e != nil {
-		return nil, e
+	// Session reconstruction retains the very asset owner that created the
+	// recorder. Rehashing its installed files would synchronously stall the window.
+	var e error
+	if !prefix {
+		compatible, err := filmMatchesInstalledResources(f, a)
+		if err != nil {
+			return nil, err
+		}
+		if !compatible {
+			return nil, fmt.Errorf("film needs a different resource profile")
+		}
 	}
-	if !compatible || f.Header.ClockPolicy != flight.NativeClockPolicy {
+	if f.Header.ClockPolicy != flight.NativeClockPolicy {
 		return nil, fmt.Errorf("film needs a different resource or clock profile")
 	}
 	var launch filmLaunch
@@ -716,10 +741,10 @@ func NewFilmPlayback(a *assetdata.OfficeAssets, f *replay.Film, options configur
 	if f.R83Mechanics() && !launch.Runtime.AvoidancePolicy.Valid() {
 		return nil, fmt.Errorf("R8.3 film lacks a valid avoidance policy")
 	}
-	if !f.Legacy() && f.End.Summary == nil {
+	if !prefix && !f.Legacy() && f.End.Summary == nil {
 		return nil, fmt.Errorf("current film needs frozen source summary")
 	}
-	if !f.BlockStorage() {
+	if !prefix && !f.BlockStorage() {
 		if e = validateFilmOperations(f); e != nil {
 			return nil, e
 		}
@@ -755,6 +780,7 @@ func NewFilmPlayback(a *assetdata.OfficeAssets, f *replay.Film, options configur
 		return nil, e
 	}
 	p := engine.Rendering
+	p.replayHashes = &replayHashCache{}
 	// Constructor owners are identical. Select the recorded simulation rules
 	// before any tick: historical films omit the P.3 formation/RNG visits.
 	p.Flight.Combat.SetFormationEnabled(f.FormationMechanics())
@@ -853,6 +879,18 @@ func (q *FilmPlayback) Step() (err error) {
 			return q.fail(fmt.Errorf("incomplete logical stream"))
 		}
 	}
+	if e = q.applyOperation(o); e != nil {
+		return e
+	}
+	if q.Cursor == q.Film.OperationCount() {
+		if e := q.validateFilmSummary(); e != nil {
+			return q.fail(e)
+		}
+		q.Done = true
+	}
+	return nil
+}
+func (q *FilmPlayback) applyOperation(o replay.Operation) error {
 	q.reachedCheckpoint = nil
 	q.reachedSupport = nil
 	defer func() { q.reachedCheckpoint = nil; q.current = nil }()
@@ -923,12 +961,6 @@ func (q *FilmPlayback) Step() (err error) {
 		return q.fail(fmt.Errorf("source event sequence differs"))
 	}
 	q.Cursor++
-	if q.Cursor == q.Film.OperationCount() {
-		if e := q.validateFilmSummary(); e != nil {
-			return q.fail(e)
-		}
-		q.Done = true
-	}
 	return nil
 }
 func (q *FilmPlayback) Resume() error {
@@ -1213,6 +1245,9 @@ func (f *filmRecorder) failRecording(phase string, err error) {
 // AbandonFilmRecording only closes this uncommitted film spool. It does not
 // publish/delete films or touch career, consumed IDs, Campaign or Phoenix.
 func (c *FrontEnd) AbandonFilmRecording() {
+	if c.Rendering != nil {
+		c.Rendering.sessionPoint = nil
+	}
 	if c.Rendering != nil && c.Rendering.filmRecorder != nil {
 		f := c.Rendering.filmRecorder
 		if f.Spool != nil {

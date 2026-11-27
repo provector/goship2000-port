@@ -334,7 +334,7 @@ func TestSaveLegacyBoundedFieldsAndSeventhBlock(t *testing.T) {
 	if err := preserveLegacyImport(dir, *state.Legacy); err != nil {
 		t.Fatal(err)
 	}
-	path := filepath.Join(dir, filepath.FromSlash(state.Legacy.PreservedPath))
+	path := filepath.Join(filepath.Dir(dir), filepath.FromSlash(state.Legacy.PreservedPath))
 	if !bytes.Equal(raw, mustReadSaveBytes(t, path)) {
 		t.Fatal("immutable copy differs")
 	}

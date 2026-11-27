@@ -2,6 +2,7 @@ package configuration
 
 import (
 	"fmt"
+	"gunship2000-assets/internal/playerdirs"
 	"os"
 	"path/filepath"
 	"strings"
@@ -34,7 +35,7 @@ func ResolvedNewPath(p string) (string, error) {
 		}
 		ancestor = next
 	}
-	ancestor, err = filepath.EvalSymlinks(ancestor)
+	ancestor, err = resolveExistingPath(ancestor)
 	if err != nil {
 		return "", err
 	}
@@ -58,6 +59,25 @@ func ValidateStorePaths(install, data string, c Config) error {
 	}
 	if Within(a, b) || Within(b, a) {
 		return fmt.Errorf("assets/saves: generated assets and career saves must not overlap")
+	}
+	orig, err := ResolvedNewPath(Relative(install, c.Original))
+	if err != nil {
+		return err
+	}
+	return validateSiblings(b, orig, a)
+}
+
+func validateSiblings(saves, original, assets string) error {
+	for _, n := range []string{"reports", "imports", "screenshots", "temp"} {
+		p := playerdirs.Sibling(saves, n)
+		if playerdirs.IsCareerDirectory(saves, p) {
+			continue
+		}
+		for _, v := range []string{original, assets} {
+			if Within(v, p) || Within(p, v) {
+				return fmt.Errorf("managed %s directory %s overlaps %s", n, p, v)
+			}
+		}
 	}
 	return nil
 }

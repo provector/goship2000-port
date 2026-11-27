@@ -229,3 +229,53 @@ func TestPoweredHeightConflictingHoldNeedsDeliberateMovement(t *testing.T) {
 		t.Fatal("moving axis lost to hold")
 	}
 }
+
+func TestHoverAllowsVerticalAndHeadingAdjustment(t *testing.T) {
+	params, q := heightFixture(t)
+	for _, separateYaw := range []bool{false, true} {
+		f := flight.State{Pose: flight.Pose{H0: 200000, H1: 200000, Height: 500}, Rotor: 1, Collective: 24, Thrust: 1486, RadarAltitude: 498, Hover: 1, HeightControl: 1, HeightTarget: 500}
+		power := flight.Input{IndependentHover: true, PoweredEngineCount: 2, DF: 6}
+		if separateYaw {
+			power.ControlFlags = 2
+			power.Yaw = 50
+		} else {
+			power.X = 50
+		}
+		if err := flight.Step(&f, params, power, q); err != nil {
+			t.Fatal(err)
+		}
+		if f.Hover != 1 || f.HeightControl != 1 || f.Pose.Angles[1] == 0 || f.Pose.H0 != 200000 || f.Pose.H1 != 200000 {
+			t.Fatal("yaw/stabilization", separateYaw, f)
+		}
+		s := LiveState{}
+		in := LiveInput{Mode: "relative_height", Bound: [4]bool{false, false, true}}
+		for _, axis := range []int16{0, 0, 1, 2, 3} {
+			in.Axes[2] = axis
+			s.ApplyHeightWithPower(in, &f, params, true, false, power, 0)
+		}
+		if f.HeightControl == 0 {
+			t.Fatal("uncommanded height change")
+		}
+		in.Axes[2] = 4
+		s.ApplyHeightWithPower(in, &f, params, true, false, power, 0)
+		if f.HeightControl != 0 || f.Hover != 1 {
+			t.Fatal("slow deliberate movement ignored")
+		}
+		in.Axes[2] = 90
+		for n := 0; n < 80; n++ {
+			s.ApplyHeightWithPower(in, &f, params, true, false, power, 0)
+			power.E0 = n%2 == 0
+			power.Phase = uint16(n)
+			if err := flight.Step(&f, params, power, q); err != nil {
+				t.Fatal(err)
+			}
+		}
+		if f.Pose.Height <= 500 || f.Hover != 1 || f.Pose.H0 != 200000 || f.Pose.H1 != 200000 {
+			t.Fatal("vertical movement without drift", f)
+		}
+		power.Y = 80
+		if err := flight.Step(&f, params, power, q); err != nil || f.Hover != 0 {
+			t.Fatal("cyclic cancellation", f.Hover, err)
+		}
+	}
+}

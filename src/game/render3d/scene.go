@@ -8,6 +8,9 @@ import (
 )
 
 type drawItem struct {
+	carrier     bool
+	pose        Pose
+	occupants   map[[2]int][]drawItem
 	floatIndex  int
 	impact      bool
 	geometry    *world.Geometry
@@ -377,6 +380,8 @@ func (f *frame) walk() {
 				model = &copyModel
 			}
 			if item, ok := f.placedItem(model, rel, pos, in.Angles, in.oriented(), in.Callback, in.ID); ok {
+				item.carrier = in.ModelID == 64 && !in.oriented()
+				item.pose = in.Pose
 				item.graphChild = in.GraphChild
 				item.impact = in.Impact
 				buckets[key] = append(buckets[key], item)
@@ -431,13 +436,7 @@ func (f *frame) walk() {
 						}
 					}
 				}
-				for _, item := range sourceQueueOrder(queue) {
-					if f.visit != nil {
-						f.visit(item)
-					} else {
-						f.drawItem(item)
-					}
-				}
+				f.drawQueue(sourceQueueOrder(queue))
 				return
 			}
 			if node >= len(g.Planes) || node >= len(g.Children) {
@@ -463,19 +462,58 @@ func (f *frame) walk() {
 		if len(g.Children) > 0 {
 			walk(g.Root, -1, 0, 0)
 		} else {
-			for _, item := range buckets[[2]int{-1, 0}] {
-				if f.visit != nil {
-					f.visit(item)
-				} else {
-					f.drawItem(item)
-				}
-			}
+			f.drawQueue(buckets[[2]int{-1, 0}])
 			if f.visit == nil {
 				for _, group := range g.DirectGroups {
 					f.geometryID = g.ID
 					f.group(group, verts, false, false, true)
 				}
 			}
+		}
+	}
+}
+
+// Insert deck aircraft into the carrier's painter traversal so the island
+// occludes them from starboard. Animation visitation keeps its source order.
+func (f *frame) drawQueue(queue []drawItem) {
+	if f.visit != nil {
+		for _, item := range queue {
+			f.visit(item)
+		}
+		return
+	}
+	if f.scene.DeckCrew != ([5]string{}) {
+		for i := range queue {
+			ship := &queue[i]
+			if !ship.carrier || len(ship.geometry.Children) == 0 {
+				continue
+			}
+			for j, aircraft := range queue {
+				if aircraft.geometry == nil || aircraft.id == "" || !slices.Contains(f.scene.DeckCrew[:], aircraft.id) {
+					continue
+				}
+				x, z := int32(aircraft.pose.H0-ship.pose.H0), int32(aircraft.pose.H1-ship.pose.H1)
+				dx, dz := int16(x), int16(z)
+				if int32(dx) != x || int32(dz) != z {
+					continue
+				}
+				height := int16(aircraft.pose.Height - ship.pose.Height)
+				deck, err := world.RegionHeight(ship.geometry.Heights, dx, dz, height)
+				if err != nil || deck <= 0 || height > ship.geometry.Extent {
+					continue
+				}
+				leaf := insertionLeaf(ship.geometry, world.Vertex{dx, height, dz})
+				if ship.occupants == nil {
+					ship.occupants = make(map[[2]int][]drawItem)
+				}
+				ship.occupants[leaf] = append(ship.occupants[leaf], aircraft)
+				queue[j].geometry = nil
+			}
+		}
+	}
+	for _, item := range queue {
+		if item.geometry != nil {
+			f.drawItem(item)
 		}
 	}
 }
@@ -595,9 +633,20 @@ func (f *frame) drawItem(item drawItem) {
 	} else {
 		verts = f.verticesForInstance(g, item.matrix, item.translation, item.id)
 	}
-	var draw func(int, int)
-	draw = func(node, depth int) {
+	var draw func(int, int, int, int)
+	draw = func(node, depth, parent, side int) {
 		if node == 255 || node < 0 {
+			for _, aircraft := range item.occupants[[2]int{parent, side}] {
+				if f.fp == nil {
+					f.drawItem(aircraft)
+					continue
+				}
+				// The parent still needs its transformed vertices after this leaf.
+				shipVertices := f.fp.model
+				f.fp.model = nil
+				f.drawItem(aircraft)
+				f.fp.model, f.floatPoints = shipVertices, shipVertices
+			}
 			return
 		}
 		if node >= len(g.Children) || node >= len(g.Planes) || depth > len(g.Planes) {
@@ -612,14 +661,14 @@ func (f *frame) drawItem(item drawItem) {
 		if negative {
 			first, last = 0, 1
 		}
-		draw(child(node, first), depth+1)
+		draw(child(node, first), depth+1, node, first)
 		if node < len(g.PlaneGroups) {
 			f.group(g.PlaneGroups[node], verts, negative, item.outline, false)
 		}
-		draw(child(node, last), depth+1)
+		draw(child(node, last), depth+1, node, last)
 	}
 	if len(g.Children) > 0 {
-		draw(g.Root, 0)
+		draw(g.Root, 0, -1, 0)
 	} else {
 		for _, group := range g.DirectGroups {
 			f.group(group, verts, false, item.outline, false)

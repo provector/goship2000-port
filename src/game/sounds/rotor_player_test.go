@@ -41,7 +41,7 @@ func TestRotorMixerMuteGainPauseAndOwnership(t *testing.T) {
 	}
 	r := &rotorPCM{}
 	opens := 0
-	p.openRotor = func(got []byte) (rotorPlayback, error) {
+	p.openRotor = func(got []byte, _ uint16) (rotorPlayback, error) {
 		opens++
 		if !bytes.Equal(got, data) {
 			t.Fatal("wrong prepared initialized carrier")
@@ -105,7 +105,7 @@ func TestRotorFailureIsVisibleAndBoundedFallback(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	p.openRotor = func([]byte) (rotorPlayback, error) { return nil, errors.New("test missing packaged helper") }
+	p.openRotor = func([]byte, uint16) (rotorPlayback, error) { return nil, errors.New("test missing packaged helper") }
 	p.PlayInitializationStart()
 	out := make([]float32, 3)
 	p.Render(out, 3)
@@ -115,7 +115,7 @@ func TestRotorFailureIsVisibleAndBoundedFallback(t *testing.T) {
 	// A stopped worker is reported on the application Sync thread. Neither
 	// Render nor Sync attempts an unbounded helper restart or replays startup.
 	r := &rotorPCM{failure: "test broken pipe"}
-	p.openRotor = func([]byte) (rotorPlayback, error) { return r, nil }
+	p.openRotor = func([]byte, uint16) (rotorPlayback, error) { return r, nil }
 	p.PlayInitializationStart()
 	p.Render(out, 3)
 	if out[0] != 0 || out[1] != 0 || out[2] != 0 {
@@ -137,7 +137,7 @@ func TestMissingDeviceNeverStartsOrQueuesRotorHelper(t *testing.T) {
 		t.Fatal(err)
 	}
 	opens := 0
-	p.openRotor = func([]byte) (rotorPlayback, error) { opens++; return &rotorPCM{}, nil }
+	p.openRotor = func([]byte, uint16) (rotorPlayback, error) { opens++; return &rotorPCM{}, nil }
 	p.SetDeviceClock(false) // Explicit device failure; default headless tests differ.
 	p.PlayInitializationStart()
 	for i := 0; i < 100; i++ {

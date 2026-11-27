@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/klauspost/compress/s2"
 	"io"
 	"os"
 	"path/filepath"
@@ -226,7 +227,7 @@ func (t *Temporary) Append(o Operation) error {
 			return fmt.Errorf("invalid film event sequence")
 		}
 	}
-	b, e := json.Marshal(o)
+	b, e := protoRow(o)
 	if e != nil {
 		return e
 	}
@@ -236,7 +237,7 @@ func (t *Temporary) Append(o Operation) error {
 	if t.count >= MaxOperations {
 		return fmt.Errorf("film operation capacity reached")
 	}
-	n := len(b) + 1
+	n := len(b)
 	if t.batch > 0 && t.pending.Len()+n > blockTarget {
 		if e = t.flushBatch(); e != nil {
 			return e
@@ -244,12 +245,12 @@ func (t *Temporary) Append(o Operation) error {
 	}
 	old := t.pending.Len()
 	t.pending.Write(b)
-	t.pending.WriteByte('\n')
+
 	// Fast admission for normal blocks. Close to the limit, measure the actual
 	// compressed candidate before accepting this operation into the private prefix.
 	room := t.limit - t.bytes - int64(t.blocks+1)*descriptorSize - descriptorSize - sealReserve
-	if int64(encoder.MaxEncodedSize(t.pending.Len())) > room {
-		if int64(len(encoder.EncodeAll(t.pending.Bytes(), nil))) > room {
+	if int64(s2.MaxEncodedLen(t.pending.Len())) > room {
+		if int64(len(s2.Encode(nil, t.pending.Bytes()))) > room {
 			t.pending.Truncate(old)
 			return fmt.Errorf("compressed film reached %d-byte limit including directory and finalisation reserve", t.limit)
 		}
@@ -310,7 +311,7 @@ func (t *Temporary) Seal(f *Film) error {
 	if e == nil {
 		e = t.buffer.Flush()
 	}
-	m := manifest{f.Header, f.End, at, t.blocks, fmt.Sprintf("%x", hash.Sum(nil))}
+	m := manifest{protoS2, f.Header, f.End, at, t.blocks, fmt.Sprintf("%x", hash.Sum(nil))}
 	if e == nil {
 		e = writeManifest(t.file, m)
 	}

@@ -64,7 +64,7 @@ func TestRecoverableWaypointCommitsAndReports(t *testing.T) {
 		t.Fatal("repeat commit", err)
 	}
 	s.Close()
-	paths, _ := filepath.Glob(filepath.Join(c.Store.Directory, "reports", "session-*", "incident-*", "error_report.zip"))
+	paths, _ := filepath.Glob(filepath.Join(filepath.Dir(c.Store.Directory), "reports", "session-*", "incident-*", "error_report.zip"))
 	if len(paths) != 1 {
 		t.Fatal(paths)
 	}
@@ -242,7 +242,7 @@ func TestUnexpectedSessionArchivesVerifiedPrefix(t *testing.T) {
 		t.Fatal(e)
 	}
 	session.Close()
-	paths, _ := filepath.Glob(filepath.Join(root, "reports", "session-*", "crash_report.zip"))
+	paths, _ := filepath.Glob(filepath.Join(filepath.Dir(root), "reports", "session-*", "crash_report.zip"))
 	if len(paths) != 1 {
 		t.Fatal(paths)
 	}

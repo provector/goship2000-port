@@ -12,11 +12,8 @@ import (
 //go:embed goship2000.png
 var gameIcon []byte
 
-//go:embed goship2000-setup.png
-var setupIcon []byte
-
 func SetGameIcon()  { setIcon(gameIcon) }
-func SetSetupIcon() { setIcon(setupIcon) }
+func SetSetupIcon() { setIcon(SetupIconPNG) }
 
 // GLFW copies the supplied pixels before returning.
 func setIcon(png []byte) {

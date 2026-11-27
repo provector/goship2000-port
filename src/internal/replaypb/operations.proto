@@ -1,0 +1,15 @@
+syntax = "proto3";
+package goship.experiment.replay;
+option go_package = "gunship2000-assets/internal/replaypb";
+message OperationBlock { repeated Operation operations = 1; }
+message Operation {
+ // IDs match the care-package prototype. Every present SHA-256 is stored.
+ uint32 kind = 1;
+ bytes payload_json = 2;
+ uint64 present = 3;
+ reserved 4; // the prototype's delta mask is never used here
+ bytes hashes = 5;
+ repeated Event events = 6;
+ bool events_present = 7;
+}
+message Event { uint64 index=1; uint32 kind=2; uint32 actor=3; uint32 target=4; uint32 sequence=5; uint32 timestamp=6; }

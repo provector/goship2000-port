@@ -6,7 +6,12 @@ import (
 	"gunship2000-assets/game/controllers"
 )
 
-// The preview has its own bottom-anchored band; text wrapping never owns its y.
+const (
+	controlsHelpRows    = 3
+	controlsPreviewRows = 7                                                  // Top labels, five cross rows, bottom labels.
+	controlsPanelRows   = 2 + controlsHelpRows + 1 + controlsPreviewRows + 1 // Borders and blank rows above/below the preview.
+)
+
 type helpPanel struct {
 	*tview.Box
 	text              *tview.TextView
@@ -26,20 +31,21 @@ func (h *helpPanel) Draw(s tcell.Screen) {
 	if w < 1 || height < 1 {
 		return
 	}
-	band := 0
-	if h.controls && height >= 7 && w >= 44 {
-		band = 6
-	}
-	textHeight := height - band
-	if h.controls && band == 0 {
-		textHeight = max(0, height-1)
+	textHeight := height
+	showPreview := h.controls && height >= 1+1+controlsPreviewRows+1 && w >= 44
+	if h.controls {
+		if showPreview {
+			textHeight = min(controlsHelpRows, height-controlsPreviewRows-2)
+		} else {
+			textHeight = max(0, height-1)
+		}
 	}
 	h.text.SetRect(x, y, w, textHeight)
 	if textHeight > 0 {
 		h.text.Draw(s)
 	}
-	if band > 0 {
-		h.drawControls(s, x, y+height-band, w)
+	if showPreview {
+		h.drawControls(s, x, y+textHeight+1, w)
 	} else if h.controls {
 		tview.Print(s, "Controls preview needs more room", x, y+height-1, w, tview.AlignLeft, yellow)
 	}

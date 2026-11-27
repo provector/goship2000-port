@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	assetdata "gunship2000-assets/game/assets"
+	"gunship2000-assets/internal/playerdirs"
 	"os"
 	"path/filepath"
 	"strings"
@@ -153,7 +154,7 @@ func ParseLegacyRoster(path string, raw []byte) (SaveState, error) {
 }
 
 func preserveLegacyImport(directory string, legacy LegacyImport) error {
-	dir := filepath.Join(directory, "imports")
+	dir := playerdirs.Archive(directory, "imports", true)
 	for _, next := range []string{dir, filepath.Join(dir, legacy.SourceSHA256)} {
 		if info, err := os.Lstat(next); err == nil && (!info.IsDir() || info.Mode()&os.ModeSymlink != 0) {
 			return fmt.Errorf("legacy import destination must be a non-symlink directory: %s", next)

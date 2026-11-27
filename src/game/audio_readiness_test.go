@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	assetdata "gunship2000-assets/game/assets"
 	"io"
 	"os"
@@ -23,22 +24,9 @@ func audioOriginalTestDirectory(t *testing.T) string {
 func copyAudioTestSources(t *testing.T, base string) string {
 	t.Helper()
 	d := filepath.Join(t.TempDir(), "original")
-	if e := os.Mkdir(d, 0700); e != nil {
-		t.Fatal(e)
-	}
-	roles := append(append([]assetdata.SourceRole{}, assetdata.AudioSourceRoles...), assetdata.RoleMainExecutable, assetdata.RoleLogoPlayer, assetdata.RoleIntroPlayer, assetdata.RoleSimulationExecutable)
-	for _, role := range roles {
-		source := assetdata.IslandIce469085.Source(role)
-		b, e := os.ReadFile(filepath.Join(base, source.Name))
-		if e != nil {
-			t.Fatal(e)
-		}
-		if assetdata.Hash(b) != source.SHA256 {
-			t.Fatalf("source identity differs %s", source.Name)
-		}
-		if e = os.WriteFile(filepath.Join(d, source.Name), b, 0600); e != nil {
-			t.Fatal(e)
-		}
+	// Preparation validates the coherent installation before reaching audio.
+	if err := copyPPreparedFixture(base, d); err != nil {
+		t.Fatal(err)
 	}
 	return d
 }
@@ -47,11 +35,33 @@ func TestAudioUnknownProfileRetainsRawWithoutInvokingHelper(t *testing.T) {
 	input := copyAudioTestSources(t, audioOriginalTestDirectory(t))
 	parent := t.TempDir()
 	output := filepath.Join(parent, "output")
-	name := assetdata.IslandIce469085.Source(assetdata.RoleAudioGS4).Name
+	// Offset-based executable carriers must fail before any generic export.
+	executable := assetdata.IslandIce469085.Source(assetdata.RoleAudioGS4)
+	exePath := filepath.Join(input, executable.Name)
+	intact, err := os.ReadFile(exePath)
+	if err != nil || assetdata.Hash(intact) != executable.SHA256 {
+		t.Fatal("required executable fixture", err)
+	}
+	altered := bytes.Clone(intact)
+	altered[len(altered)-1] ^= 1
+	if err = os.WriteFile(exePath, altered, 0600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err = prepareAssets(input, filepath.Join(parent, "rejected")); !errors.Is(err, assetdata.ErrPreparationSource) || !strings.Contains(err.Error(), executable.Name+": unsupported executable/table layout") {
+		t.Fatal("unknown executable was not rejected at layout validation", err)
+	}
+	if err = os.WriteFile(exePath, intact, 0600); err != nil {
+		t.Fatal(err)
+	}
+	// TARGET.BIN is a data bank. Its unsupported payload can be retained raw.
+	name := assetdata.IslandIce469085.Source(assetdata.RoleAudioTarget).Name
 	p := filepath.Join(input, name)
 	b, e := os.ReadFile(p)
 	if e != nil {
 		t.Fatal(e)
+	}
+	if assetdata.Hash(b) != assetdata.IslandIce469085.Source(assetdata.RoleAudioTarget).SHA256 {
+		t.Fatal("unexpected starting audio carrier")
 	}
 	b[len(b)-1] ^= 1
 	if e = os.WriteFile(p, b, 0600); e != nil {
@@ -59,6 +69,7 @@ func TestAudioUnknownProfileRetainsRawWithoutInvokingHelper(t *testing.T) {
 	}
 	block := filepath.Join(parent, "blocked-temp")
 	os.WriteFile(block, []byte("file"), 0600)
+	t.Setenv("XDG_CACHE_HOME", block)
 	t.Setenv("TMPDIR", block)
 	manifest, e := prepareAssets(input, output)
 	if e != nil {
@@ -69,7 +80,7 @@ func TestAudioUnknownProfileRetainsRawWithoutInvokingHelper(t *testing.T) {
 	}
 	out, e := os.ReadFile(filepath.Join(output, "loose", name))
 	if e != nil || !bytes.Equal(out, b) {
-		t.Fatal("unknown MZ audio payload lost or rewritten", e)
+		t.Fatal("unknown sample bank payload lost or rewritten", e)
 	}
 	found := false
 	for _, u := range manifest.UnsupportedVersionOperations {

@@ -10,9 +10,9 @@ type Action struct {
 // actions are separately labelled; controller bindings do not enable them.
 var Actions = []Action{
 	{"flight.pitch", "Flight", "Pitch", "Up / Down / KP8 / KP2", "PC base manual printed22–23; menus/renderer_window.go cyclic dispatch", "supported", []string{"flight"}, true},
-	{"flight.roll", "Flight", "Roll", "Left / Right / KP4 / KP6", "PC base manual printed22–23; menus/renderer_window.go cyclic dispatch", "supported", []string{"flight"}, true},
+	{"flight.roll", "Flight", "Roll/Bank", "Left / Right / KP4 / KP6", "PC base manual printed22–23; menus/renderer_window.go cyclic dispatch", "supported", []string{"flight"}, true},
 	{"flight.collective", "Flight", "Collective", "= / -; Shift+= / Shift+-", "PC base manual printed22–23; flight command dispatch", "supported", []string{"flight"}, true},
-	{"flight.yaw", "Flight", "Yaw", "—", "Islands & Ice printed8–9/PDF9–10; tail rotor; current default keyboard profile has no independent yaw keys; alternate arrows are manual-only", "mapping only", []string{"flight"}, true},
+	{"flight.yaw", "Flight", "Yaw/Rotor", "—", "Islands & Ice printed8–9/PDF9–10; tail rotor; current default keyboard profile has no independent yaw keys; alternate arrows are manual-only", "mapping only", []string{"flight"}, true},
 	{"menu.selector1", "Menus / Editor", "Selector 1", "Enter", "inputLatch.Read: Enter/LMB", "supported", []string{"menus", "editor"}, false},
 	{"menu.selector2", "Menus / Editor", "Selector 2 / mode toggle", "Space", "inputLatch.Read: Space/RMB", "supported", []string{"menus", "editor"}, false},
 }
@@ -204,7 +204,8 @@ func init() {
 		{"preflight.outfit", "Preflight / Roster", "Open Outfit", "—", "menus/front_end.go/mission_session.go/n4_debrief.go: AREA selection; contextual Enter", "supported", []string{"preflight", "roster"}, false},
 		{"preflight.options", "Preflight / Roster", "Mission options", "—", "menus/front_end.go/mission_session.go/n4_debrief.go: AREA selection; contextual Enter", "supported", []string{"preflight", "roster"}, false},
 		{"preflight.ack", "Preflight / Roster", "Final acknowledgement", "—", "menus/front_end.go/mission_session.go/n4_debrief.go: AREA selection; contextual Enter", "supported", []string{"preflight", "roster"}, false},
-		{"window.fullscreen", "Window / Time", "Session fullscreen toggle", "Alt+Enter", "menus/renderer_window.go, window_shortcuts.go; Q1.3 chord consumed before simulation; PC manual printed22–23", "supported", []string{"*"}, false},
+		{"window.fullscreen", "Window / Time", "Session fullscreen toggle", "Alt+F11", "menus/renderer_window.go, window_shortcuts.go; session window shortcut", "supported", []string{"*"}, false},
+		{"window.session_point", "Window / Time", "Live mission Save/Load", "Alt+L", "menus/session_point_window.go; one fixed session point in an eligible recorded sortie", "supported", []string{"flight"}, false},
 		{"window.release_mouse", "Window / Time", "Release mouse capture", "Ctrl+F10", "menus/renderer_window.go, window_shortcuts.go; Q1.3 chord consumed before simulation; PC manual printed22–23", "supported", []string{"*"}, false},
 		{"window.quit", "Window / Time", "Quit confirmation", "Alt+Q", "menus/renderer_window.go, window_shortcuts.go; Q1.3 chord consumed before simulation; PC manual printed22–23", "supported", []string{"*"}, false},
 		{"window.faster", "Window / Time", "Increase live compression", "]", "menus/renderer_window.go, window_shortcuts.go; Q1.3 chord consumed before simulation; PC manual printed22–23", "supported", []string{"flight"}, false},

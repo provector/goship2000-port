@@ -12,7 +12,7 @@ func TestPausedGraphics(t *testing.T) {
 	p := run.player.Preview()
 	before := p.FilmCheckpoint()
 	ref := bytes.Clone(p.avionicsReference)
-	g := graphicsOptions{draft: displayPreferences{runtime: c.Runtime, window: displayWindow{811, 599, false}}, dirty: true}
+	g := graphicsOptions{draft: displayPreferences{runtime: c.Runtime, window: displayWindow{width: 811, height: 599}}, dirty: true}
 	for _, screen := range []Screen{ScreenOffice, ScreenStartup, ScreenMissionEditor, ScreenQuit} {
 		mock := *c
 		mock.Screen = screen
@@ -94,4 +94,22 @@ func TestReplayGraphicsReadOnlyUntilResume(t *testing.T) {
 		t.Fatal(err)
 	}
 	check(true)
+}
+
+func TestWindowTraversalAfterConstrainedPreview(t *testing.T) {
+	g := graphicsOptions{row: 3, draft: displayPreferences{window: displayWindow{width: 1024, height: 768}}}
+	g.cycle(1)
+	g.draft.window.height = 831 // compositor constrained the requested 1280x1024.
+	g.cycle(1)
+	if g.draft.window.String() != configuration.BorderlessLabel {
+		t.Fatal(g.values())
+	}
+	for _, delta := range []int{-1, 1} {
+		for range 12 {
+			g.cycle(delta)
+		}
+		if g.draft.window.String() != configuration.BorderlessLabel {
+			t.Fatal(delta, g.values())
+		}
+	}
 }

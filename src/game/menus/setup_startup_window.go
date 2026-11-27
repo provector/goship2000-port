@@ -6,39 +6,14 @@ import (
 	"fmt"
 	rl "github.com/gen2brain/raylib-go/raylib"
 	assetdata "gunship2000-assets/game/assets"
+	"gunship2000-assets/game/diagnostics"
 	"gunship2000-assets/internal/branding"
 	"image/color"
 	"runtime"
 	"strings"
+	"time"
 )
 
-// These asset-free windows run before any SaveStore is opened. No original art,
-// terminal, desktop dialog utility or prepared content is required.
-func ConfigurationWarning(message string) error {
-	runtime.LockOSThread()
-	defer runtime.UnlockOSThread()
-	rl.SetConfigFlags(0)
-	rl.InitWindow(760, 300, "GoShip 2000 - Configuration")
-	if !rl.IsWindowReady() {
-		return fmt.Errorf("could not open configuration warning window: %s", message)
-	}
-	defer rl.CloseWindow()
-	branding.SetSetupIcon()
-	rl.SetTargetFPS(30)
-	scroll := 0
-	for !rl.WindowShouldClose() {
-		if rl.IsKeyPressed(rl.KeyEnter) || rl.IsKeyPressed(rl.KeyEscape) || rl.IsMouseButtonPressed(rl.MouseButtonLeft) {
-			break
-		}
-		rl.BeginDrawing()
-		rl.ClearBackground(rl.NewColor(0, 0, 90, 255))
-		scrollStartupText(message, 25, 206, &scroll)
-		rl.DrawRectangle(290, 245, 180, 32, rl.Maroon)
-		rl.DrawText("OK / Enter", 320, 251, 18, rl.White)
-		rl.EndDrawing()
-	}
-	return nil
-}
 func drawStartupText(text string, x, y, width, font int, colors ...color.RGBA) int {
 	ink := rl.White
 	if len(colors) > 0 {
@@ -79,25 +54,10 @@ func drawStartupText(text string, x, y, width, font int, colors ...color.RGBA) i
 	return y
 }
 
-func scrollStartupText(text string, top, height int, scroll *int) {
-	delta := int(rl.GetMouseWheelMove()) * 40
-	if rl.IsKeyDown(rl.KeyDown) {
-		delta -= 8
-	}
-	if rl.IsKeyDown(rl.KeyUp) {
-		delta += 8
-	}
-	*scroll = max(0, *scroll-delta)
-	rl.BeginScissorMode(14, int32(top), 732, int32(height))
-	end := drawStartupText(text, 20, top-*scroll, 720, 16, rl.Yellow)
-	rl.EndScissorMode()
-	*scroll = min(*scroll, max(0, end+*scroll-top-height))
-}
-
 // The worker owns preparation and emits actual stage events. A usable cache
 // completes without opening a progress window. Closing a progress window never
 // tears down a transaction mid-promotion: work is allowed to finish safely.
-func PreparationWindow(work func(func(assetdata.PreparationProgress)) error) error {
+func PreparationWindow(saves string, work func(func(assetdata.PreparationProgress)) error) error {
 	updates := make(chan assetdata.PreparationProgress, 1)
 	done := make(chan error, 1)
 	emit := func(p assetdata.PreparationProgress) {
@@ -114,73 +74,77 @@ func PreparationWindow(work func(func(assetdata.PreparationProgress)) error) err
 			}
 		}
 	}
-	go func() { done <- work(emit) }()
+	go func() { done <- diagnostics.GuardStartup(func() error { return work(emit) }) }()
 	var current assetdata.PreparationProgress
 	select {
 	case err := <-done:
-		if err != nil {
-			_ = ConfigurationWarning("Asset preparation failed.\n" + err.Error())
-		}
 		return err
 	case current = <-updates:
 	}
 	runtime.LockOSThread()
 	defer runtime.UnlockOSThread()
+	rl.SetTraceLogLevel(rl.LogInfo)
 	rl.SetConfigFlags(0)
-	rl.InitWindow(760, 300, "GoShip 2000 - Preparing assets")
+	const operation = "One-time asset preparation"
+	navy := color.RGBA{R: 14, G: 35, B: 86, A: 255}
+	rl.InitWindow(760, 300, branding.ProductTitle+" - "+operation)
 	if !rl.IsWindowReady() {
 		return <-done
 	}
 	// This small startup window ends with preparation. The game creates its
 	// own window using configured dimensions and fullscreen preferences.
 	defer rl.CloseWindow()
+	releaseExport := bindScreenshotOutput(saves)
+	defer releaseExport()
+	shots := windowScreenshots{saves: saves}
+	defer shots.close()
+	var message string
+	var until time.Time
+	endFrame := func() {
+		if message != "" && time.Now().Before(until) {
+			rl.DrawText(message, 20, 270, 12, rl.White)
+		}
+		if r := shots.startup(); r != "" {
+			message, until = r, time.Now().Add(3*time.Second)
+		}
+		endGameDrawing(rl.LogInfo)
+	}
 	rl.SetTargetFPS(30)
 	rl.SetExitKey(rl.KeyNull)
-	finished := false
-	var failure error
-	scroll := 0
 	for {
 		select {
 		case current = <-updates:
 		default:
 		}
 		select {
-		case failure = <-done:
-			finished = true
-		default:
-		}
-		if finished && failure == nil {
-			// Present the final100% frame before closing this startup window.
+		case err := <-done:
+			if err != nil {
+				return err
+			}
 			rl.BeginDrawing()
-			rl.ClearBackground(rl.Blue)
-			rl.DrawRectangle(16, 60, 728, 225, rl.NewColor(128, 0, 0, 255))
+			rl.ClearBackground(navy)
+			rl.DrawRectangle(16, 60, 728, 225, rl.Maroon)
 			rl.DrawText("Prepared cache ready - 100%", 20, 75, 22, rl.Yellow)
 			rl.DrawRectangle(20, 145, 720, 28, rl.Yellow)
-			rl.EndDrawing()
+			endFrame()
 			return nil
+		default:
 		}
-		if finished && (rl.WindowShouldClose() || rl.IsKeyPressed(rl.KeyEnter) || rl.IsKeyPressed(rl.KeyEscape)) {
-			return failure
-		}
+		rl.WindowShouldClose() // Keep the queue serviced while the worker owns publication.
 		rl.BeginDrawing()
-		rl.ClearBackground(rl.NewColor(0, 0, 255, 255))
-		rl.DrawText("Preparing GoShip 2000 assets", 20, 20, 24, rl.Yellow)
-		if finished {
-			scrollStartupText(failure.Error(), 65, 180, &scroll)
-			rl.DrawText("Up/Down or wheel to scroll - Enter to close", 20, 260, 18, rl.Yellow)
+		rl.ClearBackground(navy)
+		rl.DrawText(branding.ProductTitle+" - "+operation, 20, 20, 24, rl.Yellow)
+		rl.DrawRectangle(16, 60, 728, 225, rl.Maroon)
+		rl.DrawRectangleLines(16, 60, 728, 225, rl.Yellow)
+		drawStartupText(current.Stage, 20, 75, 720, 22, rl.Yellow)
+		rl.DrawRectangle(20, 145, 720, 28, navy)
+		if current.OverallTotal > 0 {
+			rl.DrawRectangle(22, 147, int32(716*current.Fraction()), 24, rl.Yellow)
+			rl.DrawText(fmt.Sprintf("Overall %.0f%% · stage %d / %d", current.Fraction()*100, current.Completed, current.Total), 20, 190, 20, rl.Yellow)
 		} else {
-			rl.DrawRectangle(16, 60, 728, 225, rl.NewColor(128, 0, 0, 255))
-			rl.DrawRectangleLines(16, 60, 728, 225, rl.Yellow)
-			drawStartupText(current.Stage, 20, 75, 720, 22, rl.Yellow)
-			rl.DrawRectangle(20, 145, 720, 28, rl.Blue)
-			if current.OverallTotal > 0 {
-				rl.DrawRectangle(22, 147, int32(716*current.Fraction()), 24, rl.Yellow)
-				rl.DrawText(fmt.Sprintf("Overall %.0f%% · stage %d / %d", current.Fraction()*100, current.Completed, current.Total), 20, 190, 20, rl.Yellow)
-			} else {
-				rl.DrawText("Working...", 20, 190, 20, rl.Yellow)
-			}
-			rl.DrawText("Previous assets are preserved until validation succeeds.", 20, 250, 16, rl.Yellow)
+			rl.DrawText("Preparing original resources...", 20, 190, 20, rl.Yellow)
 		}
-		rl.EndDrawing()
+		rl.DrawText("Previous assets are preserved until validation succeeds.", 20, 250, 16, rl.Yellow)
+		endFrame()
 	}
 }

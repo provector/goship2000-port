@@ -255,11 +255,9 @@ func (c *FrontEnd) Tick() error {
 			return c.openMission()
 		}
 		key := c.transitionNext
-		if err := c.Office.ComposeGroup(key, 0, 0); err != nil {
+		if err := c.drawNextFolderGroup(); err != nil {
 			return err
 		}
-		c.TransitionGroups = append(c.TransitionGroups, key)
-		c.transitionNext++
 		// Modern elapsed ticks retain ordering and the special group17 pause. These
 		// holds are presentation approximations, not recovered DOS wait durations.
 		c.transitionHold = 3
@@ -278,6 +276,16 @@ func (c *FrontEnd) syncOfficeView() error {
 	if c.Screen == ScreenOffice && c.viewRevision != c.Store.State().Revision {
 		return c.RefreshOffice()
 	}
+	return nil
+}
+
+func (c *FrontEnd) drawNextFolderGroup() error {
+	key := c.transitionNext
+	if err := c.Office.ComposeGroup(key, 0, 0); err != nil {
+		return err
+	}
+	c.TransitionGroups = append(c.TransitionGroups, key)
+	c.transitionNext++
 	return nil
 }
 
@@ -542,6 +550,16 @@ func (c *FrontEnd) Handle(a Actions) error {
 		}
 	}
 	switch c.Screen {
+	case ScreenFolder:
+		if a.Selector1 {
+			for c.transitionNext < 32 {
+				if err := c.drawNextFolderGroup(); err != nil {
+					return err
+				}
+			}
+			c.transitionHold = 0
+			return c.openMission()
+		}
 	case ScreenOffice:
 		if !a.Selector1 {
 			return nil

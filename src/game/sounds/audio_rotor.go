@@ -91,18 +91,26 @@ type flightSoundCommand struct {
 }
 
 func newRotorStream(data []byte) (*RotorStream, error) {
+	return openRotorStream(data, 1)
+}
+
+func openRotorStream(data []byte, pitch uint16) (*RotorStream, error) {
 	q, err := rotorSequence(data)
 	if err != nil {
 		return nil, err
 	}
-	if err = q.rotorCommand(1); err != nil {
-		return nil, err
+	var commands uint64
+	if pitch != 0 {
+		if err = q.rotorCommand(pitch); err != nil {
+			return nil, err
+		}
+		commands = 1
 	}
 	chip, err := audioopl.OpenStream(audioFMRate)
 	if err != nil {
 		return nil, err
 	}
-	r := &RotorStream{chip: chip, commands: make(chan flightSoundCommand, 64), pcm: make(chan []float32, 1), quit: make(chan struct{}), done: make(chan struct{}), status: RotorStatus{Policy: RotorPolicy, Commands: 1}}
+	r := &RotorStream{chip: chip, commands: make(chan flightSoundCommand, 64), pcm: make(chan []float32, 1), quit: make(chan struct{}), done: make(chan struct{}), status: RotorStatus{Policy: RotorPolicy, Commands: commands}}
 	go r.run(q)
 	return r, nil
 }

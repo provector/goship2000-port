@@ -112,7 +112,7 @@ func (p *RenderingPreview) calculateParkedDisplay() map[string]parkedDisplayOffs
 	occupied := []parkedFootprint{}
 	for row := 0; row < 5 && row < len(m.Entities) && row < len(rows); row++ {
 		e := m.Entities[row]
-		if e.ID == "" {
+		if e.ID == "" || p.carrierBerths[row].Present() {
 			continue
 		}
 		home, err := navigation.ResolveHome(rows, e.ControlRaw, row)

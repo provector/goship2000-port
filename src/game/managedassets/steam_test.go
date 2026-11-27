@@ -73,13 +73,13 @@ func TestConfiguredNestedInstallPrecedesSteam(t *testing.T) {
 			t.Fatal(e)
 		}
 	}
-	if matched, _ := probeConfiguredSource(root); !matched {
+	if got := gogDataDirectory(root); got != nested {
 		t.Fatal("configured installation would be bypassed")
 	}
 	if e := os.Remove(filepath.Join(nested, "MBUILDER.CAT")); e != nil {
 		t.Fatal(e)
 	}
-	if matched, _ := probeConfiguredSource(root); matched || supportedSteamData(nested) {
+	if gogDataDirectory(root) != "" || supportedSteamData(nested) {
 		t.Fatal("incomplete signature admitted")
 	}
 }

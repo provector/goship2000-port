@@ -29,7 +29,7 @@ func TestStartupRetainsUnsupportedProfileCause(t *testing.T) {
 		return m, e
 	}
 	_, e := ensureOfficeAssets(p, false, io.Discard, s)
-	if e == nil || !strings.Contains(e.Error(), "unsupported source profile: office metadata: GS.GS2 unsupported identity supplied-sha256") || !strings.Contains(e.Error(), "previous assets unchanged") {
+	if e == nil || !strings.Contains(e.Error(), "office metadata: GS.GS2 unsupported identity supplied-sha256") || !strings.Contains(e.Error(), "required current office metadata missing") || !strings.Contains(e.Error(), p.Assets) {
 		t.Fatal(e)
 	}
 	b, e := os.ReadFile(marker)

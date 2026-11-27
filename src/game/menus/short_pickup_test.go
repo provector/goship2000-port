@@ -122,7 +122,7 @@ func TestShortPickupUIHasLegalMeasuredSourceRange(t *testing.T) {
 		if err := os.Mkdir(dir, 0700); err != nil {
 			t.Fatal(err)
 		}
-		saved := filepath.Join(c.Files.Store.Directory, d.ID+".g2m")
+		saved := savedMissionPath(t, c.Files.Store.Directory, d.ID)
 		raw, err := os.ReadFile(saved)
 		if err != nil {
 			t.Fatal(err)

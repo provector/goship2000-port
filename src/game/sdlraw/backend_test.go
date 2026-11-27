@@ -3,6 +3,7 @@ package sdlraw
 import (
 	"github.com/ebitengine/purego"
 	"gunship2000-assets/game/controllers"
+	"gunship2000-assets/internal/sdlruntime"
 	"runtime"
 	"testing"
 )
@@ -21,7 +22,7 @@ func TestSDLRawVirtualLifecycleWithoutVideo(t *testing.T) {
 	var setButton func(uintptr, int32, uint8) int32
 	var setHat func(uintptr, int32, uint8) int32
 	reg := func(f any, n string) {
-		p, e := symbol(b.lib, n)
+		p, e := sdlruntime.Symbol(b.lib, n)
 		if e != nil {
 			t.Fatal(e)
 		}
@@ -124,7 +125,7 @@ func TestSDLVirtualFeedsReadOnlyGameSession(t *testing.T) {
 	var setAxis func(uintptr, int32, int16) int32
 	var setButton func(uintptr, int32, uint8) int32
 	reg := func(f any, n string) {
-		p, e := symbol(b.lib, n)
+		p, e := sdlruntime.Symbol(b.lib, n)
 		if e != nil {
 			t.Fatal(e)
 		}

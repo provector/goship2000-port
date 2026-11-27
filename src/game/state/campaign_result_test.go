@@ -387,3 +387,42 @@ func TestCampaignConclusionBeforeQualificationAndRetirement(t *testing.T) {
 		t.Fatal("proposal/resolve changed original pilot")
 	}
 }
+
+func TestMissionLimitWaitsForCampaignConclusion(t *testing.T) {
+	for _, tc := range []struct {
+		name         string
+		start        int32
+		previousWins int
+		expected     int32
+		retired      bool
+	}{
+		{"ongoing at fifty", 49, 0, 50, false},
+		{"campaign count alone", 4900, 4, 5001, false},
+		{"concluding fiftieth mission", 49, 4, 150, true},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			p := nResultPilot(RankCaptain)
+			p.MissionType = MissionCampaign
+			p.Statistics.MissionCampaignCounter = tc.start
+			f := contextFacts()
+			f.MissionType, f.SourceFlags = MissionCampaign, 0x83
+			f.LaunchSwitches |= 0x8000
+			in := campaignInput(t)
+			in.LaunchDraft.ResultCounters = [2]int{tc.previousWins, 0}
+			f.ResultContext.Campaign = &in
+			f.ResultContext.RetireByMissions = true
+			p.Campaign = in.LaunchDraft
+			if e := FinalizeSortieFacts(&f); e != nil {
+				t.Fatal(e)
+			}
+			proposal, e := ProposeSortie(p, f, nResultTables())
+			if e != nil {
+				t.Fatal(e)
+			}
+			pilot := proposal.AcceptedPilot
+			if pilot.Statistics.MissionCampaignCounter != tc.expected || (pilot.Status == StatusRetired) != tc.retired {
+				t.Fatal(pilot.Statistics.MissionCampaignCounter, pilot.Status)
+			}
+		})
+	}
+}

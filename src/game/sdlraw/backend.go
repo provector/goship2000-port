@@ -9,8 +9,8 @@ import (
 	"fmt"
 	"github.com/ebitengine/purego"
 	"gunship2000-assets/game/controllers"
-	"os"
-	"path/filepath"
+	"gunship2000-assets/internal/sdlruntime"
+
 	"runtime"
 	"unsafe"
 )
@@ -60,30 +60,20 @@ func cstr(p uintptr) string {
 }
 func Open() (_ *Backend, err error) {
 	b := &Backend{devices: map[int32]device{}}
-	exe, _ := os.Executable()
-	dir := filepath.Dir(exe)
-	names := libraryNames(dir)
-	var loadErrors []string
-	for _, n := range names {
-		b.lib, err = load(n)
-		if err == nil {
-			break
-		}
-		loadErrors = append(loadErrors, err.Error())
-	}
-	if b.lib == 0 {
-		return nil, fmt.Errorf("SDL2 controller backend unavailable: %v", loadErrors)
+	b.lib, err = sdlruntime.Open()
+	if err != nil {
+		return nil, err
 	}
 	defer func() {
 		if v := recover(); v != nil {
 			err = fmt.Errorf("SDL2 API unavailable: %v", v)
 		}
 		if err != nil {
-			err = errors.Join(err, unload(b.lib))
+			err = errors.Join(err, sdlruntime.Close(b.lib))
 		}
 	}()
 	reg := func(fn any, name string) {
-		p, e := symbol(b.lib, name)
+		p, e := sdlruntime.Symbol(b.lib, name)
 		if e != nil {
 			panic(e)
 		}
@@ -195,6 +185,6 @@ func (b *Backend) Close() {
 	b.quit(0x200)
 	// All polling and device handles belong to the caller on this thread.
 	// Release our OS loader reference only after quitting the subsystem.
-	_ = unload(b.lib)
+	_ = sdlruntime.Close(b.lib)
 	*b = Backend{}
 }

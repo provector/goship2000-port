@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"gunship2000-assets/internal/playerfile"
 	"os"
 	"path/filepath"
 	"sort"
@@ -72,6 +73,9 @@ func (s Store) List() ([]Entry, error) {
 		p := filepath.Join(s.Root, n.Name())
 		m, e := metadataAt(p)
 		if e != nil {
+			if errors.Is(e, errLegacyRecording) || os.IsNotExist(e) {
+				continue
+			}
 			r := Entry{Title: "Unreadable film", Error: e.Error()}
 			if id := strings.TrimSuffix(n.Name(), ".g2r"); ValidID(id) {
 				r.ID = id
@@ -160,7 +164,7 @@ func (s Store) write(f *Film, pub publication) error {
 	if e != nil {
 		return e
 	}
-	if e = moveFilmNew(name, p); e != nil {
+	if e = playerfile.MoveNew(name, p); e != nil {
 		return e
 	}
 	return syncFilmDirectory(filepath.Dir(p))
@@ -338,7 +342,7 @@ func (s Store) RenameEntry(entry Entry, title string) error {
 	if e != nil {
 		return e
 	}
-	final := namesIn(entries).choose(title, filepath.Base(p))
+	final := playerfile.NamesIn(entries).Choose(title, filepath.Base(p), ".g2r")
 	if final == "Last Mission" && id != last && display != final {
 		return fmt.Errorf("Last Mission is reserved for the current rolling film")
 	}

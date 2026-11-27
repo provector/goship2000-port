@@ -182,7 +182,7 @@ func TestHatAllDirectionsNeutralSwitchUnplugAndBands(t *testing.T) {
 	u := controllerUIForController(t)
 	c := u.controllers
 	u.openControllerEditor(false)
-	positions := map[uint8][2]int{1: {43, 4}, 2: {46, 6}, 4: {43, 8}, 8: {40, 6}, 3: {45, 5}, 6: {45, 7}, 9: {41, 5}, 12: {41, 7}}
+	positions := map[uint8][2]int{1: {43, 6}, 2: {46, 8}, 4: {43, 10}, 8: {40, 8}, 3: {45, 7}, 6: {45, 9}, 9: {41, 7}, 12: {41, 9}}
 	for dir, at := range positions {
 		ss := c.snapshot
 		ss.States[0].Hats[0] = dir
@@ -205,7 +205,7 @@ func TestHatAllDirectionsNeutralSwitchUnplugAndBands(t *testing.T) {
 	ss.States[0].Hats[0] = 0
 	u.applyControllerSnapshot(ss)
 	s := frame(t, u, 76, 24)
-	ch, _, _, _ := s.GetContent(43, 6)
+	ch, _, _, _ := s.GetContent(43, 8)
 	if ch != '●' {
 		t.Fatal("neutral hat missing")
 	}
@@ -235,7 +235,7 @@ func TestHatAllDirectionsNeutralSwitchUnplugAndBands(t *testing.T) {
 	s.Fini()
 	u.applyControllerSnapshot(controllers.Snapshot{})
 	s = frame(t, u, 76, 24)
-	ch, _, _, _ = s.GetContent(42, 3)
+	ch, _, _, _ = s.GetContent(42, 5)
 	if ch == 'H' {
 		t.Fatal("hat remains after unplug")
 	}
@@ -246,7 +246,7 @@ func TestHatAllDirectionsNeutralSwitchUnplugAndBands(t *testing.T) {
 	u.applyControllerSnapshot(ss)
 	u.selectDevice(d, "")
 	s = frame(t, u, 80, 25)
-	ch, _, _, _ = s.GetContent(42, 3)
+	ch, _, _, _ = s.GetContent(42, 5)
 	if ch == 'H' {
 		t.Fatal("digital axis became hat")
 	}

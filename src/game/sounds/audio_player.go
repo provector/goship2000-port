@@ -118,7 +118,7 @@ type AudioPlayer struct {
 	rotorFailureLogged                        string
 	rotorFallback                             bool
 	rotorScratch                              [rotorBlockFrames]float32
-	openRotor                                 func([]byte) (rotorPlayback, error)
+	openRotor                                 func([]byte, uint16) (rotorPlayback, error)
 }
 
 func NewAudioPlayer(assets *assetdata.AudioAssets, prefs AudioPreferences) (*AudioPlayer, error) {
@@ -135,7 +135,7 @@ func NewAudioPlayer(assets *assetdata.AudioAssets, prefs AudioPreferences) (*Aud
 			break
 		}
 	}
-	return &AudioPlayer{music: reader, assets: assets, prefs: prefs, effectsEnabled: true, musicEnabled: true, now: time.Now, openRotor: func(data []byte) (rotorPlayback, error) { return newRotorStream(data) }}, nil
+	return &AudioPlayer{music: reader, assets: assets, prefs: prefs, effectsEnabled: true, musicEnabled: true, now: time.Now, openRotor: func(data []byte, pitch uint16) (rotorPlayback, error) { return openRotorStream(data, pitch) }}, nil
 }
 
 // SetEffectsPaused preserves the PCM cursor across the GPS40/41 boundary.
@@ -278,6 +278,17 @@ func (p *AudioPlayer) PlayCue(event uint16) {
 // PlayInitializationStart is a GS2-family effect, not a GS4 command alias or a
 // music owner. Muting consumes this one-shot action without replay on unmute.
 func (p *AudioPlayer) PlayInitializationStart() {
+	p.startFlightDriver(1, true)
+}
+
+// RestoreFlightEffects discards the abandoned branch's effect voices. The new
+// driver starts at the restored pitch or stays silent until the next engagement.
+func (p *AudioPlayer) RestoreFlightEffects(pitch uint16) {
+	p.StopEffects()
+	p.startFlightDriver(pitch, false)
+}
+
+func (p *AudioPlayer) startFlightDriver(pitch uint16, initialize bool) {
 	p.mu.Lock()
 	p.combatFallback = false
 	if p.closed {
@@ -291,13 +302,15 @@ func (p *AudioPlayer) PlayInitializationStart() {
 	if len(p.assets.ASoundGS2Data) != 0 {
 		if p.deviceKnownUnavailable {
 			p.effect, p.effectFrames, p.effectLoop = nil, 0, false
-			if p.effectsEnabled {
+			if initialize && p.effectsEnabled {
 				p.effect = p.assets.Clips[InitializationStartClip]
 			}
-			p.initializationCommands++
-			p.effectCommands++
+			if initialize {
+				p.initializationCommands++
+				p.effectCommands++
+			}
 			p.rotorFallback = true
-			p.rotorFailure = "continuous flight sound unavailable: audio output device is unavailable; bounded initialization clip retained, flight sound silent"
+			p.rotorFailure = "continuous flight sound unavailable: audio output device is unavailable"
 			message := p.rotorFailure
 			log := p.rotorFailureLogged != message
 			p.rotorFailureLogged = message
@@ -314,7 +327,7 @@ func (p *AudioPlayer) PlayInitializationStart() {
 		if old != nil {
 			old.Close()
 		}
-		rotor, err := p.openRotor(data)
+		rotor, err := p.openRotor(data, pitch)
 		p.mu.Lock()
 		if p.closed {
 			p.mu.Unlock()
@@ -327,19 +340,21 @@ func (p *AudioPlayer) PlayInitializationStart() {
 		p.rotorFailure = ""
 		p.rotorFailureLogged = ""
 		p.effect, p.effectFrames, p.effectLoop = nil, 0, false
-		p.initializationCommands++
-		p.effectCommands++
+		if initialize {
+			p.initializationCommands++
+			p.effectCommands++
+		}
 		if err == nil {
 			p.rotor = rotor
 			rotor.SetPaused(p.effectsPaused)
 			p.mu.Unlock()
 			return
 		}
-		p.rotorFailure = fmt.Sprintf("continuous flight sound unavailable; using bounded initialization clip: %v", err)
+		p.rotorFailure = fmt.Sprintf("continuous flight sound unavailable: %v", err)
 		message := p.rotorFailure
 		p.rotorFailureLogged = message
 		p.rotorFallback = true
-		if p.effectsEnabled {
+		if initialize && p.effectsEnabled {
 			p.effect = p.assets.Clips[InitializationStartClip]
 		}
 		p.mu.Unlock()
@@ -347,7 +362,7 @@ func (p *AudioPlayer) PlayInitializationStart() {
 		return
 	}
 	defer p.mu.Unlock()
-	if !p.effectsEnabled {
+	if !initialize || !p.effectsEnabled {
 		return
 	}
 	clip := p.assets.Clips[InitializationStartClip]

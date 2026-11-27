@@ -305,7 +305,7 @@ func (c *FrontEnd) feedbackPresentation() (string, string) {
 		retirement = "loss"
 		if v.Pilot.Rank.Raw() == 11 {
 			retirement = "rank"
-		} else if v.Pilot.Statistics.MissionCampaignCounter/100 >= 50 {
+		} else if p.ServiceRetirement(v.Pilot) {
 			retirement = "service"
 		}
 	}
@@ -504,7 +504,20 @@ func (c *FrontEnd) debriefFrame() []byte {
 		if wings > 0 {
 			_ = a.Lori(frame, "JUMP.SCN", 7, 3*(wings-1)+wingPhase, 191, 67)
 		}
-		c.clippedText(frame, 3, assetdata.DebriefSurname(v.Pilot.Name), 185, 85, 15, [4]int{185, 85, 69, 6})
+		nameX, nameWidth := 185, 69
+		if medals[0] {
+			nameX, nameWidth = 209, 47
+		}
+		c.clippedText(frame, 3, assetdata.DebriefSurname(v.Pilot.Name), nameX, 85, 15, [4]int{nameX, 85, nameWidth, 6})
+		if medals[0] {
+			// The original JUMP callback restores the near ribbon over the
+			// breast pocket after drawing the rank, name and pilot wings.
+			for _, sprite := range scene.Sprites {
+				if sprite.Key == 2 {
+					_ = assetdata.OfficeBlit(a.Images["RANKS.PIC"], frame, sprite.Source, 178, 61, true)
+				}
+			}
+		}
 		text = strings.Join(a.JumpParagraphs(in), "\n")
 		if recovered := p.RecoveredPilot; recovered != nil {
 			// Source JUMP nonzero roster argument selects DS4d91, bypassing

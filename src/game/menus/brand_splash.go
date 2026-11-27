@@ -28,7 +28,7 @@ func brandTexture(png []byte) (rl.Texture2D, error) {
 
 // Use the main window's event pump and controller mapping before starting the
 // intro audio or its animation clock. Carry the physical edges into the intro.
-func presentBrand(options WindowOptions, gamepad *gameController, latch *windowInput, capture *mouseCapture, meter *presentationstats.Meter) (closed bool, err error) {
+func presentBrand(options WindowOptions, shots *windowScreenshots, gamepad *gameController, latch *windowInput, capture *mouseCapture, meter *presentationstats.Meter) (closed bool, err error) {
 	logo, err := brandTexture(branding.Splash)
 	if err != nil {
 		return false, err
@@ -62,7 +62,8 @@ func presentBrand(options WindowOptions, gamepad *gameController, latch *windowI
 		rl.ClearBackground(rl.Black)
 		drawBrand(view, logo, skid, elapsed)
 		drawPerformanceOverlay(meter)
-		rl.EndDrawing()
+		shots.startup()
+		endGameDrawing(shots.level)
 		meter.Presented()
 		if start.IsZero() {
 			start = time.Now()

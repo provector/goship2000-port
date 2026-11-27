@@ -27,7 +27,7 @@ func TestFullStoredBudget(t *testing.T) {
 	data := make([]byte, 1<<20)
 	rand.New(rand.NewSource(71)).Read(data)
 	payload, _ := json.Marshal(base64.StdEncoding.EncodeToString(data))
-	op := Operation{Kind: "step", Payload: payload, Checkpoint: map[string]string{"flight": "supplied"}}
+	op := Operation{Kind: "step", Payload: payload, Checkpoint: map[string]string{"flight": BytesDigest([]byte("supplied"))}}
 	for r.Bytes() < 1021<<20 {
 		if err := r.Append(op); err != nil {
 			t.Fatal(err)
@@ -72,7 +72,7 @@ func TestStoredLimitRetainsPrefixAndPriorLast(t *testing.T) {
 	data := make([]byte, 90<<10)
 	rand.New(rand.NewSource(71)).Read(data)
 	payload, _ := json.Marshal(base64.StdEncoding.EncodeToString(data))
-	op := Operation{Kind: "step", Payload: payload, Checkpoint: map[string]string{"flight": "supplied"}}
+	op := Operation{Kind: "step", Payload: payload, Checkpoint: map[string]string{"flight": BytesDigest([]byte("supplied"))}}
 	for i := 0; i < 25; i++ {
 		if e = r.Append(op); e != nil {
 			break

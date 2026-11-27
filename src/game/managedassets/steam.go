@@ -3,7 +3,6 @@ package managedassets
 import (
 	"fmt"
 	assetdata "gunship2000-assets/game/assets"
-	"gunship2000-assets/game/configuration"
 
 	"os"
 	"path/filepath"
@@ -115,61 +114,16 @@ func supportedSteamData(dir string) bool {
 	return true
 }
 
-// A partly installed game keeps precedence so the preparer can identify the
-// missing or conflicting input, without borrowing it from a second installation.
-func probeConfiguredSource(root string) (bool, bool) {
-	dir, err := assetdata.OriginalDirectory(root)
-	if err != nil {
-		// Keep an ambiguous or inaccessible configured installation selected so its
-		// diagnosis reaches the user instead of silently discovering another copy.
-		return false, !os.IsNotExist(err)
-	}
-	entries, err := os.ReadDir(dir)
-	if err != nil {
-		return false, false
-	}
-	if supportedSteamData(dir) {
-		return true, false
-	}
-	for _, d := range entries {
-		if strings.EqualFold(d.Name(), "GS.GS2") || strings.EqualFold(d.Name(), "GS2000.CAT") {
-			return false, true
-		}
-	}
-	return false, false
-}
-
-func discoverSteam() string { return steamInstallation(steamRoots(), supportedSteamData) }
-
-// OriginalForSetup resolves the draft once on entry. Keep configured relative
-// names portable. Steam supplies the absolute install it actually validated.
-func OriginalForSetup(directory, configured string) string {
-	selected, _ := selectOriginal(directory, configured, discoverSteam)
-	return selected
-}
-
-func selectOriginal(directory, configured string, discover func() string) (string, bool) {
-	path := configuration.Relative(directory, configured)
-	if matched, incomplete := probeConfiguredSource(path); matched || incomplete {
-		return configured, true
-	}
-	local := configuration.DefaultOriginal
-	if filepath.Clean(path) != filepath.Join(directory, local) {
-		if matched, _ := probeConfiguredSource(filepath.Join(directory, local)); matched {
-			return local, true
-		}
-	}
-	if candidate := discover(); candidate != "" {
-		return candidate, true
-	}
-	if filepath.Clean(configured) == filepath.Join("..", local) {
-		return local, false
-	}
-	// Leave an unavailable custom location visible for correction or remount.
-	return configured, false
-}
-
 func steamInstallation(roots []string, valid func(string) bool) string {
+	results := steamInstallations(roots, valid)
+	if len(results) > 0 {
+		return results[0]
+	}
+	return ""
+}
+
+func steamInstallations(roots []string, valid func(string) bool) []string {
+	var results []string
 	seen := map[string]bool{}
 	for _, root := range roots {
 		if !filepath.IsAbs(root) {
@@ -214,9 +168,12 @@ func steamInstallation(roots []string, valid func(string) bool) string {
 			}
 			candidate := filepath.Join(lib, "steamapps", "common", name, "GD", "Gunship2000", "MPS", "GS2000CD")
 			if valid(candidate) {
-				return candidate
+				results = append(results, candidate)
+				if len(results) >= 32 {
+					return results
+				}
 			}
 		}
 	}
-	return ""
+	return results
 }

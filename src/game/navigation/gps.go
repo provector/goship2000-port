@@ -53,6 +53,7 @@ type GPS struct {
 	overviewKeyRemainder    [2]int
 
 	confirmPartialRoutes       bool
+	ClearConfirmedEmpty        bool
 	keepUnfinishedWingmanRoute bool
 	separateDraft              bool
 	draft                      *Route
@@ -208,6 +209,31 @@ func (g *GPS) FinishEdit() {
 	}
 	r := g.displayedRoute(g.Selected)
 	if g.draft != nil {
+		if g.ClearConfirmedEmpty && r.Index() == 0 && g.backup.Index() != 0 {
+			current := g.Routes[g.Selected] == g.backup
+			if g.Selected != 0 && current {
+				owner, ok := g.routeOwner(g.Selected)
+				current = ok && owner == g.draftOwner
+			}
+			if current {
+				if g.Selected != 0 {
+					r.Raw[1], r.Raw[2] = 2, 0
+				}
+				// Clear each cached position, retaining the auxiliary waypoint words.
+				for at := 40; at <= 60; at += 10 {
+					clear(r.Raw[at : at+8])
+				}
+				g.Routes[g.Selected] = *r
+				if g.Selected != 0 && g.routeFinished != nil {
+					g.routeFinished(g.Selected)
+				}
+			}
+			g.draft = nil
+			g.draftOwner = 0
+			g.Moving = 0
+			g.Editing = false
+			return
+		}
 		if !g.commitDraft() {
 			g.Editing = false
 			g.Moving = 0

@@ -12,6 +12,11 @@ https://github.com/gen2brain/raylib-go/raylib  |  github.com/gen2brain/raylib-go
 Pinned Go module; package and platform linkage varies (go.mod / go version -m).
 Notice e4495dd6b57af370
 
+github.com/jezek/xgb v1.3.1  [BSD-3-Clause]
+https://github.com/jezek/xgb  |  github.com/jezek/xgb@v1.3.1/LICENSE
+Used by the Linux game for X11 window management.
+Notice 2566d7f8d69e655b
+
 github.com/rivo/tview v0.42.0  [MIT]
 https://github.com/rivo/tview  |  github.com/rivo/tview@v0.42.0/LICENSE.txt
 Pinned Go module; package and platform linkage varies (go.mod / go version -m).

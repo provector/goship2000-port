@@ -83,6 +83,7 @@ type PoseFraction struct {
 }
 
 type Scene struct {
+	DeckCrew          [5]string               `json:"-"` // Aircraft whose models can occupy the carrier BSP.
 	FloatingGeometry  bool                    `json:"-"`
 	CameraFraction    PoseFraction            `json:"-"`
 	InstanceFractions map[string]PoseFraction `json:"-"`

@@ -8,7 +8,7 @@ import (
 )
 
 func TestMainWindowTitleStableAcrossScenes(t *testing.T) {
-	want := "GoShip 2000 " + branding.Version + " by _provector '26 / Alt+Enter (Toggle Fullscreen) / Ctrl+F10 (Release Mouse)"
+	want := "GoShip 2000 " + branding.Version + " by _provector '26 / F11 (Borderless) / Alt+F11 (Fullscreen) / F12 (Screenshot) / Alt+L (Mission Save/Load) / Ctrl+F10 (Release Mouse)"
 	if MainWindowTitle != want {
 		t.Fatal(MainWindowTitle)
 	}

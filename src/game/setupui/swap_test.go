@@ -15,7 +15,7 @@ func TestSwapUnderCollectiveDraftSaveAndCancel(t *testing.T) {
 	}
 	u.openControllerEditor(false)
 	c := u.controllers
-	if c.table.GetCell(6, 0).Text != "Collective" || c.table.GetCell(7, 0).Text != "Swap Yaw/Roll Axis" || c.table.GetCell(7, 1).Text != "On" || c.table.GetCell(8, 0).Text != "Yaw" {
+	if c.table.GetCell(6, 0).Text != "Collective" || c.table.GetCell(7, 0).Text != "Swap Yaw/Rotor and Roll/Bank" || c.table.GetCell(7, 1).Text != "On" || c.table.GetCell(8, 0).Text != "Yaw/Rotor" {
 		t.Fatal("placement")
 	}
 	c.table.Select(7, 0)
@@ -60,7 +60,7 @@ func TestPreviewUsesSwappedChannelsWithoutChangingAssignments(t *testing.T) {
 	screen := frame(t, u, 76, 24)
 	defer screen.Fini()
 	for _, x := range []int{8, 33} {
-		ch, _, _, _ := screen.GetContent(x, 6)
+		ch, _, _, _ := screen.GetContent(x, 8)
 		if ch != '█' {
 			t.Fatal("swapped cross marker", x, ch)
 		}

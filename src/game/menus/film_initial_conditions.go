@@ -161,6 +161,7 @@ func (c *FrontEnd) ApplyFilmInitialAdjustment(a FilmInitialAdjustment) error {
 	launch.Adjustment = &a
 	launch.Initial = p.FilmCheckpoint()
 	f.Film.Launch = filmJSON(launch)
+	f.launchCheckpoint = launch.Initial
 	f.Film.Operations = nil
 	f.Pending = nil
 	f.Events = nil

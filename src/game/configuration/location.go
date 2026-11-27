@@ -14,11 +14,16 @@ type Location struct {
 }
 
 func SavePath(install, data, name string) string {
+	base := install
 	if filepath.IsLocal(name) {
-		return Relative(data, name)
+		base = data
 	}
-	// Preserve existing external relative paths, including ../careers.
-	return Relative(install, name)
+	path := Relative(base, name)
+	// Use the same parent as the ownership claims even through a directory alias.
+	if real, err := ResolvedNewPath(path); err == nil {
+		return real
+	}
+	return path
 }
 func DataChoice(install, appOverride string) (string, error) {
 	if path := os.Getenv("GOSHIP2000_DATA_DIR"); path != "" {

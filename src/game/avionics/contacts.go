@@ -60,6 +60,8 @@ type Input struct {
 	DisableAutonomy        bool // Native R1 policy: preserve sensing and shared following targets, skip independent decisions.
 	SetControlTarget       func(actor int, target int8) error
 	ContactOrder           func(actor, target int) error
+
+	CanAcquireFollowerTarget func(actor, row int, distance uint16) (bool, error)
 }
 type State struct {
 	playerSighted             [EntityCapacity]bool // GPS memory, reconstructed by playback; never used for target selection.

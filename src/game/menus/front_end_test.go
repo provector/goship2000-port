@@ -410,3 +410,26 @@ func TestFrontEndPreparedPreviewExportWhenRequested(t *testing.T) {
 	act(t, c, Actions{Quit: true})
 	capture("quit-confirmation")
 }
+
+func TestFolderHandoverSkipMatchesCompletion(t *testing.T) {
+	normal := sourceFrontEnd(t, true)
+	officeClick(t, normal, 100, 170)
+	finishFolder(t, normal)
+	want := normal.Frame(false)
+	for _, group := range []int{1, 16, 30} {
+		c := sourceFrontEnd(t, true)
+		officeClick(t, c, 100, 170)
+		if c.Screen != ScreenFolder {
+			t.Fatal("initiating press skipped folder", c.Screen)
+		}
+		for c.transitionNext < group {
+			if err := c.Tick(); err != nil {
+				t.Fatal(err)
+			}
+		}
+		act(t, c, Actions{Selector1: true})
+		if c.Screen != ScreenMission || !reflect.DeepEqual(want, c.Frame(false)) {
+			t.Fatal("different completed page", group, c.Screen)
+		}
+	}
+}

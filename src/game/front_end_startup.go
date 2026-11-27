@@ -51,25 +51,31 @@ func newRuntimeFrontEnd(assets *assetdata.OfficeAssets, store *gamestate.SaveSto
 	return c, nil
 }
 
-func startFrontEnd(paths ApplicationPaths, rebuild bool, missionSeed *int64, brandSplash bool) int {
+func startFrontEnd(paths ApplicationPaths, rebuild bool, missionSeed *int64, brandSplash bool) (code int) {
+	started := false
+
 	if err := validateSaveSeparation(paths); err != nil {
-		return startupError(err)
+		return showGameStartup("", err)
+	}
+	if err := gamestate.PrepareExistingCareer(paths.Saves, paths.Directory); err != nil {
+		return showGameStartup(paths.Saves, err)
 	}
 	logging := paths.Config.Logging
 	session, sessionErr := diagnostics.StartSession(paths.Saves, menuui.DiagnosticBuildIdentity(), fmt.Sprintf("resolution %s, presentation %s, recording budget %d MiB, log level %s", paths.Config.Runtime.SimulationResolution, paths.Config.Runtime.PresentationMode, int64(paths.RecordingLimit.Effective())>>20, logging.Level))
 	if sessionErr != nil {
 		fmt.Fprintln(os.Stderr, "Crash diagnostics unavailable:", sessionErr)
 	}
-	if session != nil {
-		// On panic the runtime writes its fatal trace after stack unwinding. Leave the
-		// unfinished marker and crash FD in place until process death.
-		defer func() {
-			if v := recover(); v != nil {
+	defer func() {
+		if v := recover(); v != nil {
+			if started {
 				panic(v)
 			}
+			code = showGameStartup(paths.Saves, fmt.Errorf("startup panic: %v", v))
+		}
+		if session != nil {
 			session.Close()
-		}()
-	}
+		}
+	}()
 	var logs *diagnostics.Runtime
 	if logging.ShowLog || logging.WriteLog {
 		opts := diagnostics.Destinations(logging, os.Stdout, os.Stderr, logview.Open)
@@ -84,49 +90,34 @@ func startFrontEnd(paths ApplicationPaths, rebuild bool, missionSeed *int64, bra
 	fmt.Printf("User data: %s\n", paths.Directory)
 	fmt.Printf("Assets: %s\n", paths.Assets)
 	var assets *assetdata.OfficeAssets
-	err := menuui.PreparationWindow(func(progress func(assetdata.PreparationProgress)) error {
+	err := menuui.PreparationWindow(paths.Saves, func(progress func(assetdata.PreparationProgress)) error {
 		var e error
 		stage := "Locate original installation"
 		services := managedassets.FrontEndServices(func(p assetdata.PreparationProgress) { stage = p.Stage; progress(p) })
-		services.SourceSelected = func(path string) error {
-			d, err := configuration.LoadAt(filepath.Join(paths.Directory, configuration.Filename), paths.install())
-			if err != nil {
-				return err
-			}
-			if d.Config.Original != paths.Config.Original {
-				return configuration.ErrChanged
-			}
-			d.Config.Original = path
-			if err = d.Save(); err != nil {
-				return err
-			}
-			paths.Config.Original = path
-			paths.Original = configuration.Relative(paths.install(), path)
-			return nil
-		}
+		services.SourceUsed = func(path string) { paths.Original = path }
 		assets, e = managedassets.Ensure(sharedPaths(paths), rebuild, os.Stdout, services)
 		if e != nil {
-			return diagnostics.StartupFailure(stage, fmt.Errorf("%s (original %s, destination %s): %w", stage, paths.Original, paths.Assets, e))
+			return fmt.Errorf("%s (original %s, destination %s): %w", stage, paths.Original, paths.Assets, e)
 		}
 		return nil
 	})
 	if err != nil {
-		return startupError(err)
+		return showGameStartup(paths.Saves, err)
 	}
 	store, err := gamestate.OpenManagedCareerAt(paths.Saves, paths.Original, paths.Directory, paths.install(), true)
 	if err != nil {
-		return startupError(err)
+		return showGameStartup(paths.Saves, err)
 	}
 	defer store.Close()
 	if err = store.RelocateLibraries(paths.Directory); err != nil {
-		return startupError(err)
+		return showGameStartup(paths.Saves, err)
 	}
 	if err := (replay.Store{Root: filepath.Join(paths.Saves, "replays")}).MigrateCompanions(); err != nil {
 		diagnostics.Warn("films", "Recording migration left individual files unchanged", "reason", err)
 	}
 	controller, err := newRuntimeFrontEnd(assets, store, missionSeed)
 	if err != nil {
-		return startupError(err)
+		return showGameStartup(paths.Saves, err)
 	}
 	controller.RecordingLimit = paths.RecordingLimit.Effective()
 	fmt.Printf("New recording limit: %d MiB (compressed file, including index and ending)\n", int64(controller.RecordingLimit)/(1024*1024))
@@ -135,17 +126,21 @@ func startFrontEnd(paths ApplicationPaths, rebuild bool, missionSeed *int64, bra
 	controller.SummaryDirectory = paths.Saves
 	controller.FadeMilliseconds = paths.Config.FadeMilliseconds
 	if err = controller.BeginStartup(assets.Startup); err != nil {
-		return startupError(err)
+		return showGameStartup(paths.Saves, err)
 	}
-	fmt.Printf("Player packs: %s\n", paths.Saves)
+	fmt.Printf("Player packs: %s\n", store.PackDirectory())
+	fmt.Printf("Recordings: %s\n", controller.FilmDirectory)
 	if p := store.State().SelectedPilot(); p != nil {
 		fmt.Printf("Selected pilot: %s (%s)\n", p.Name, p.Rank)
 	}
 	controller.SimplifiedFields = paths.Config.SimplifiedFields
 	controller.ConfigurePreflightGPS(paths.Config.LegacyCopyProtection, paths.Directory)
 	controller.Runtime = paths.Config.Runtime
-	err = menuui.RunOfficeWindow(controller.Office, menuui.WindowOptions{BrandSplash: brandSplash, InstallDirectory: paths.install(), AppDirectory: paths.Directory, Runtime: paths.Config.Runtime, DrawFPSCPU: paths.Config.DrawFPSCPU, FrontEnd: controller, AudioPreferences: paths.Config.audioPreferences(), SoundEffectsEnabled: &paths.Config.SoundEffectsEnabled, MusicEnabled: &paths.Config.MusicEnabled, Fullscreen: paths.Config.Fullscreen, Width: paths.Config.WindowWidth, Height: paths.Config.WindowHeight, SquarePixels: paths.Config.SquarePixels, DrawPointer: true, TickRate: menuui.NominalOfficeTickRate})
+	err = menuui.RunOfficeWindow(controller.Office, menuui.WindowOptions{OnStarted: func() { started = true }, BrandSplash: brandSplash, InstallDirectory: paths.install(), AppDirectory: paths.Directory, Runtime: paths.Config.Runtime, DrawFPSCPU: paths.Config.DrawFPSCPU, FrontEnd: controller, AudioPreferences: paths.Config.audioPreferences(), SoundEffectsEnabled: &paths.Config.SoundEffectsEnabled, MusicEnabled: &paths.Config.MusicEnabled, WindowMode: configuration.Config(paths.Config).WindowMode(), SavesDirectory: paths.Saves, Width: paths.Config.WindowWidth, Height: paths.Config.WindowHeight, SquarePixels: paths.Config.SquarePixels, DrawPointer: true, TickRate: menuui.NominalOfficeTickRate})
 	if err != nil {
+		if !started {
+			return showGameStartup(paths.Saves, err)
+		}
 		diagnostics.Report("window", err.Error(), "The game window could not continue.")
 		return startupError(err)
 	}

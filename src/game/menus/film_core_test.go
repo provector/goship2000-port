@@ -207,7 +207,7 @@ func endFilm(t *testing.T, c *FrontEnd) {
 	}
 }
 func TestTerminalActualDamageFilm(t *testing.T) {
-	c := developmentScenarioController(t, "o-terminal")
+	c := historicalCriticalFuelScenario(t, "o-terminal")
 	p := c.Rendering
 	if e := c.Handle(Actions{Cancel: true}); e != nil {
 		t.Fatal(e)
@@ -226,6 +226,9 @@ func TestTerminalActualDamageFilm(t *testing.T) {
 		if o.Kind == "terminal" {
 			found = true
 		}
+	}
+	if f.Header.Simulation != replay.V45Compatibility {
+		t.Fatalf("wrong recorded fuel policy: %s", f.Header.Simulation)
 	}
 	if !found {
 		t.Fatal("critical accepted damage did not execute terminal iterations")

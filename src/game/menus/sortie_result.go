@@ -133,7 +133,7 @@ func (c *FrontEnd) beginSortieResult(final *FinalPreflightConfiguration) error {
 	if p.r5Mechanics {
 		policy = gamestate.SafeGameplayPolicy
 	}
-	start, err := c.Store.BeginSortie(gamestate.SortieStart{SourceProfile: assetdata.IslandIce469085.Name, MissionDigest: missionHash, LaunchDigest: launchHash, ClockPolicy: flight.NativeClockPolicy, GameplayPolicy: policy})
+	start, err := c.Store.BeginSortie(gamestate.SortieStart{RetireByMissions: p.independentManeuvers, SourceProfile: assetdata.IslandIce469085.Name, MissionDigest: missionHash, LaunchDigest: launchHash, ClockPolicy: flight.NativeClockPolicy, GameplayPolicy: policy})
 	if err != nil {
 		return err
 	}

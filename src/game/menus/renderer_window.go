@@ -47,25 +47,35 @@ func RunOfficeWindow(o *Office, options WindowOptions) error {
 		}
 		options.CaptureDirectory = directory
 	}
-	rl.SetTraceLogLevel(rl.LogWarning)
+	level := rl.LogWarning
 	if branding.DeveloperTools && options.Development && options.SceneSmoke {
-		rl.SetTraceLogLevel(rl.LogInfo)
+		level = rl.LogInfo
 	}
+	rl.SetTraceLogLevel(level)
 	rl.SetConfigFlags(rl.FlagWindowResizable)
+	preferPositionableGameWindow()
 	rl.InitWindow(int32(options.Width), int32(options.Height), "goship2000")
 	if !rl.IsWindowReady() {
+		if runtime.GOOS == "linux" && runtime.GOARCH == "arm64" {
+			return fmt.Errorf("could not open the game graphics window. The Linux ARM64 package needs an active X11 or XWayland display and a working EGL/OpenGL ES driver")
+		}
 		return fmt.Errorf("raylib could not create a window / graphics context")
 	}
 	defer rl.CloseWindow()
+	releaseExport := bindScreenshotOutput(options.SavesDirectory)
+	defer releaseExport()
+	shots := windowScreenshots{saves: options.SavesDirectory, level: level}
+	defer shots.close()
 	if options.FrontEnd != nil && options.FrontEnd.Startup != nil {
 		defer options.FrontEnd.releaseStartup()
 	}
 	rl.SetWindowTitle(MainWindowTitle)
 	branding.SetGameIcon()
-	if options.Fullscreen {
-		rl.SetWindowSize(options.Width, options.Height)
-		rl.ToggleFullscreen()
-	}
+	graphics := graphicsWindow{desktop: openDesktopFullscreen(), nativeWayland: nativeWaylandGameWindow()}
+	defer graphics.desktop.close()
+	initial := graphics.currentWindow()
+	initial.mode = options.WindowMode
+	graphics.setDisplayWindow(initial)
 	defer rl.EnableCursor()
 	if options.FrontEnd != nil {
 		rl.SetExitKey(rl.KeyNull)
@@ -79,7 +89,7 @@ func RunOfficeWindow(o *Office, options WindowOptions) error {
 	capture := mouseCapture{}
 	latch := windowInput{}
 	if options.BrandSplash && options.FrontEnd != nil && options.FrontEnd.Screen == ScreenStartup {
-		closed, err := presentBrand(options, gamepad, &latch, &capture, meter)
+		closed, err := presentBrand(options, &shots, gamepad, &latch, &capture, meter)
 		if closed || err != nil {
 			return err
 		}
@@ -169,7 +179,8 @@ func RunOfficeWindow(o *Office, options WindowOptions) error {
 	probeSequence := 0
 	lastScreenKey, stableScreenFrames := "", 0
 	shortcuts := windowShortcuts{}
-	graphics := graphicsWindow{windowed: displayWindow{options.Width, options.Height, false}}
+	var point pointWindow
+
 	keyMakes := make([]int32, 0, 16)
 	logNotice := ""
 	noticeInk := rl.White
@@ -182,25 +193,57 @@ func RunOfficeWindow(o *Office, options WindowOptions) error {
 			}
 		}
 		keyMakes = keyMakes[:0]
-		enterMake, altMake := false, false
+		f11Makes, altMake := 0, false
+		screenshotCount := 0
 		for key := rl.GetKeyPressed(); key != 0; key = rl.GetKeyPressed() {
 			if graphics.consumed[key] {
 				continue
 			}
+			switch key {
+			case rl.KeyF11:
+				f11Makes++
+				continue
+			case rl.KeyF12:
+				screenshotCount++
+				continue
+			}
 			keyMakes = append(keyMakes, key)
-			enterMake = enterMake || key == rl.KeyEnter || key == rl.KeyKpEnter
 			altMake = altMake || key == rl.KeyLeftAlt || key == rl.KeyRightAlt
 		}
-		altHeld := rl.IsKeyDown(rl.KeyLeftAlt) || rl.IsKeyDown(rl.KeyRightAlt)
-		toggleFullscreen, suppressEnter := shortcuts.Read(rl.IsWindowFocused(), altHeld || enterMake && altMake, graphics.keyDown(rl.KeyEnter) || graphics.keyDown(rl.KeyKpEnter), enterMake)
-		for toggle := 0; graphics.menu == nil && !graphics.consumed[rl.KeyEnter] && !graphics.consumed[rl.KeyKpEnter] && toggle < toggleFullscreen; toggle++ {
-			rl.ToggleFullscreen()
-			if diagnostics.Enabled(slog.LevelInfo) {
-				diagnostics.Info("window", "Alt+Enter toggled fullscreen", "fullscreen", rl.IsWindowFullscreen(), "width", rl.GetScreenWidth(), "height", rl.GetScreenHeight(), "preference_unchanged", true, "activation", "chord released")
+		altHeld := graphics.keyDown(rl.KeyLeftAlt) || graphics.keyDown(rl.KeyRightAlt)
+		allowed := !point.open && !point.fadeIn && graphics.menu == nil && rl.IsWindowFocused()
+		otherModifier := rl.IsKeyDown(rl.KeyLeftShift) || rl.IsKeyDown(rl.KeyRightShift) || rl.IsKeyDown(rl.KeyLeftControl) || rl.IsKeyDown(rl.KeyRightControl) || rl.IsKeyDown(rl.KeyLeftSuper) || rl.IsKeyDown(rl.KeyRightSuper)
+		// The target of an unfinished compositor handoff is the logical mode
+		// for another shortcut pressed before its acknowledgement.
+		mode := graphics.mode
+		if graphics.handoff != nil {
+			mode = graphics.handoff.mode
+		}
+		if target, toggle := shortcuts.read(allowed, altHeld || altMake, otherModifier, rl.IsKeyDown(rl.KeyF11), f11Makes, mode); toggle {
+			w := graphics.currentWindow()
+			w.mode = target
+			graphics.setDisplayWindow(w)
+		}
+		suppressEnter := altHeld || altMake
+		if suppressEnter {
+			for _, k := range [...]int32{rl.KeyEnter, rl.KeyKpEnter} {
+				if rl.IsKeyDown(k) {
+					if graphics.consumed == nil {
+						graphics.consumed = make(map[int32]bool)
+					}
+					graphics.consumed[k] = true
+				}
 			}
 		}
 		closeRequested := rl.WindowShouldClose()
-		blocked, notice := graphics.input(&options, keyMakes, altHeld || altMake, closeRequested, &meter)
+		keyMakes, pointChord := graphics.takePointShortcut(keyMakes, (altHeld || altMake) && !otherModifier)
+		blocked, notice := point.input(options.FrontEnd, keyMakes, pointChord, closeRequested, &graphics)
+		if point.restored {
+			point.syncRestoredAudio(audio, options.FrontEnd.Rendering.collectiveRotorPitch())
+		}
+		if !blocked {
+			blocked, notice = graphics.input(&options, keyMakes, altHeld || altMake, closeRequested, &meter)
+		}
 		inputTime, elapsed := inputClock.frame(elapsed, blocked)
 		if blocked {
 			for rl.GetCharPressed() != 0 {
@@ -247,10 +290,10 @@ func RunOfficeWindow(o *Office, options WindowOptions) error {
 		if options.FrontEnd != nil {
 			captureEpoch = string(options.FrontEnd.Screen)
 		}
-		ctrlHeld := rl.IsKeyDown(rl.KeyLeftControl) || rl.IsKeyDown(rl.KeyRightControl)
+		ctrlHeld := graphics.keyDown(rl.KeyLeftControl) || graphics.keyDown(rl.KeyRightControl)
 		pointer := capture.Read(mouseCaptureSample{
 			LogicalHeight: logicalHeight, Enabled: options.Runtime.Effective().MouseCapture == "click", Focused: rl.IsWindowFocused(), Minimized: rl.IsWindowMinimized(), Client: client,
-			Left: rl.IsMouseButtonDown(rl.MouseButtonLeft), Right: rl.IsMouseButtonDown(rl.MouseButtonRight), CtrlF10: ctrlHeld && rl.IsKeyDown(rl.KeyF10), F10: rl.IsKeyDown(rl.KeyF10),
+			Left: rl.IsMouseButtonDown(rl.MouseButtonLeft), Right: rl.IsMouseButtonDown(rl.MouseButtonRight), CtrlF10: ctrlHeld && graphics.keyDown(rl.KeyF10), F10: graphics.keyDown(rl.KeyF10),
 			AbsoluteX: x, AbsoluteY: y, AbsoluteInside: active, DeltaX: float64(motion.X), DeltaY: float64(motion.Y), Viewport: viewport, Epoch: captureEpoch,
 		})
 		if pointer.Acquire {
@@ -294,18 +337,18 @@ func RunOfficeWindow(o *Office, options WindowOptions) error {
 				}
 			}
 			for key := range heldKeys {
-				if !rl.IsKeyDown(key) || !windowResponseMake(key, suppressEnter) {
+				if !graphics.keyDown(key) || !windowResponseMake(key, suppressEnter) {
 					delete(heldKeys, key)
 				}
 			}
 			for key := range responseKeys {
-				if !rl.IsKeyDown(key) {
+				if !graphics.keyDown(key) {
 					delete(responseKeys, key)
 				}
 			}
 			text := []rune{}
 			for key := rl.GetCharPressed(); key != 0; key = rl.GetCharPressed() {
-				if graphics.consumed[rl.KeyO] && (key == 'o' || key == 'O') {
+				if graphics.consumed[rl.KeyO] && (key == 'o' || key == 'O') || graphics.consumed[rl.KeyL] && (key == 'l' || key == 'L') {
 					continue
 				}
 				if !suppressEnter || key != '\r' && key != '\n' {
@@ -313,32 +356,32 @@ func RunOfficeWindow(o *Office, options WindowOptions) error {
 				}
 			}
 			var functionKeys [9]bool
-			alt := rl.IsKeyDown(rl.KeyLeftAlt) || rl.IsKeyDown(rl.KeyRightAlt)
+			alt := graphics.keyDown(rl.KeyLeftAlt) || graphics.keyDown(rl.KeyRightAlt)
 			ctrl := ctrlHeld
 			var flightKeys [11]bool
 			flightCodes := [11]int32{rl.KeyEqual, rl.KeyMinus, rl.KeyNine, rl.KeyZero, rl.KeyC, rl.KeyV, rl.KeyZ, rl.KeyX, rl.KeyThree, rl.KeyEight, rl.KeyFive}
 			if !alt && !ctrl && rl.IsWindowFocused() {
 				for i, key := range flightCodes {
-					flightKeys[i] = rl.IsKeyDown(key)
+					flightKeys[i] = graphics.keyDown(key)
 				}
 			}
 			if !alt && !ctrl {
 				for i := range functionKeys {
-					functionKeys[i] = rl.IsKeyDown(rl.KeyF1 + int32(i))
+					functionKeys[i] = graphics.keyDown(rl.KeyF1 + int32(i))
 				}
 			}
 			gpsKey := ""
 			wingmanOrder := ""
 			if ctrl && !alt && rl.IsWindowFocused() {
-				wingmanOrder = sampleWingmanOrderKey(rl.IsKeyPressed)
+				wingmanOrder = sampleWingmanOrderKey(graphics.keyPressed)
 			}
-			shiftHeld := rl.IsKeyDown(rl.KeyLeftShift) || rl.IsKeyDown(rl.KeyRightShift)
+			shiftHeld := graphics.keyDown(rl.KeyLeftShift) || graphics.keyDown(rl.KeyRightShift)
 			if !alt && !ctrl && !shiftHeld {
-				gpsKey = sampleGPSCommandKey(rl.IsKeyPressed)
+				gpsKey = sampleGPSCommandKey(graphics.keyPressed)
 			}
 			flightModifiers := !alt && !ctrl && rl.IsWindowFocused()
 			inputContext, _ := controllerContext(c)
-			lastMessage, jettison := utilityKeys.sample(rl.IsWindowFocused(), inputContext == "flight", alt, ctrl, shiftHeld, rl.IsKeyDown(rl.KeyM), rl.IsKeyDown(rl.KeySpace))
+			lastMessage, jettison := utilityKeys.sample(rl.IsWindowFocused(), inputContext == "flight", alt, ctrl, shiftHeld, graphics.keyDown(rl.KeyM), graphics.keyDown(rl.KeySpace))
 			if options.FrontEnd.Rendering != nil && options.FrontEnd.Rendering.Flight != nil {
 				options.FrontEnd.Rendering.Flight.RequireTerminalAck = true
 			}
@@ -347,7 +390,7 @@ func RunOfficeWindow(o *Office, options WindowOptions) error {
 					p.Flight.RequireTerminalAck = true
 				}
 			}
-			b := Buttons{LastMessage: lastMessage, Jettison: jettison, ReplayMap: alt && rl.IsKeyDown(rl.KeyM), ReplayResume: alt && rl.IsKeyDown(rl.KeyX), ReplayDemo: alt && rl.IsKeyDown(rl.KeyY), CompressionIncrease: flightModifiers && !shiftHeld && rl.IsKeyDown(rl.KeyRightBracket), CompressionReset: flightModifiers && !shiftHeld && rl.IsKeyDown(rl.KeyLeftBracket), WeaponTriggerPressed: !suppressEnter && flightModifiers && !shiftHeld && triggerPressed, WeaponTrigger: flightModifiers && !shiftHeld && ((!pointer.SuppressButtons && rl.IsMouseButtonDown(rl.MouseButtonLeft)) || !suppressEnter && (graphics.keyDown(rl.KeyEnter) || graphics.keyDown(rl.KeyKpEnter))), RocketSalvoKeys: [3]bool{flightModifiers && !shiftHeld && rl.IsKeyDown(rl.KeyOne), flightModifiers && !shiftHeld && rl.IsKeyDown(rl.KeyTwo), flightModifiers && !shiftHeld && rl.IsKeyDown(rl.KeyFour)}, OrdnanceNext: flightModifiers && !shiftHeld && !utilityKeys.spaceConsumed && rl.IsKeyDown(rl.KeySpace), GPSOpen: !pointer.SuppressF10 && flightModifiers && !shiftHeld && rl.IsKeyDown(rl.KeyF10), GPSKey: gpsKey, WingmanOrder: wingmanOrder, DefenseKeys: [4]bool{flightModifiers && !shiftHeld && !utilityKeys.mConsumed && rl.IsKeyDown(rl.KeyM), flightModifiers && !shiftHeld && rl.IsKeyDown(rl.KeySlash), flightModifiers && !shiftHeld && rl.IsKeyDown(rl.KeyN), flightModifiers && !shiftHeld && rl.IsKeyDown(rl.KeyPeriod)}, WaypointKeys: [2]bool{flightModifiers && !shiftHeld && rl.IsKeyDown(rl.KeySix), flightModifiers && !shiftHeld && rl.IsKeyDown(rl.KeySeven)}, InputTime: inputTime, PointerRelative: pointer.Relative, PointerDX: pointer.DX, PointerDY: pointer.DY, PointerEpoch: pointer.Reset, AltC: alt && rl.IsKeyDown(rl.KeyC), AltT: alt && rl.IsKeyDown(rl.KeyT), FlightKeys: flightKeys, FlightPause: pauseChord(rl.IsKeyDown(rl.KeyP), alt, ctrl, shiftHeld), FlightFocusLost: !rl.IsWindowFocused() || rl.IsWindowMinimized(), MenuHome: !alt && !ctrl && rl.IsKeyDown(rl.KeyHome), MenuEnd: !alt && !ctrl && rl.IsKeyDown(rl.KeyEnd), MenuTab: !alt && !ctrl && rl.IsKeyDown(rl.KeyTab) && !(rl.IsKeyDown(rl.KeyLeftShift) || rl.IsKeyDown(rl.KeyRightShift)), MenuBackTab: !alt && !ctrl && rl.IsKeyDown(rl.KeyTab) && (rl.IsKeyDown(rl.KeyLeftShift) || rl.IsKeyDown(rl.KeyRightShift)), PageUp: !alt && !ctrl && rl.IsKeyDown(rl.KeyPageUp), PageDown: !alt && !ctrl && rl.IsKeyDown(rl.KeyPageDown), SceneDirections: [4]bool{graphics.keyDown(rl.KeyLeft) || rl.IsKeyDown(rl.KeyKp4), graphics.keyDown(rl.KeyRight) || rl.IsKeyDown(rl.KeyKp6), graphics.keyDown(rl.KeyUp) || rl.IsKeyDown(rl.KeyKp8), graphics.keyDown(rl.KeyDown) || rl.IsKeyDown(rl.KeyKp2)}, FunctionKeys: functionKeys, ViewShift: rl.IsKeyDown(rl.KeyLeftShift) || rl.IsKeyDown(rl.KeyRightShift), AltS: alt && rl.IsKeyDown(rl.KeyS), X: x, Y: y, Inside: active, LeftMouse: !pointer.SuppressButtons && rl.IsMouseButtonDown(rl.MouseButtonLeft), RightMouse: !pointer.SuppressButtons && rl.IsMouseButtonDown(rl.MouseButtonRight), Space: !utilityKeys.spaceConsumed && rl.IsKeyDown(rl.KeySpace), Enter: !suppressEnter && (graphics.keyDown(rl.KeyEnter) || graphics.keyDown(rl.KeyKpEnter)), Escape: graphics.keyDown(rl.KeyEscape), AltQ: (rl.IsKeyDown(rl.KeyLeftAlt) || rl.IsKeyDown(rl.KeyRightAlt)) && rl.IsKeyDown(rl.KeyQ), AltE: (rl.IsKeyDown(rl.KeyLeftAlt) || rl.IsKeyDown(rl.KeyRightAlt)) && rl.IsKeyDown(rl.KeyE), Left: graphics.keyDown(rl.KeyLeft), Right: graphics.keyDown(rl.KeyRight), Up: graphics.keyDown(rl.KeyUp), Down: graphics.keyDown(rl.KeyDown), Backspace: rl.IsKeyDown(rl.KeyBackspace), Delete: rl.IsKeyDown(rl.KeyDelete), Close: closeRequested, ConfirmQuit: rl.IsKeyDown(rl.KeyY), Text: text, AnyKeyPressed: anyKey, AnyKeyDown: len(responseKeys) > 0}
+			b := Buttons{LastMessage: lastMessage, Jettison: jettison, ReplayMap: alt && graphics.keyDown(rl.KeyM), ReplayResume: alt && graphics.keyDown(rl.KeyX), ReplayDemo: alt && graphics.keyDown(rl.KeyY), CompressionIncrease: flightModifiers && !shiftHeld && graphics.keyDown(rl.KeyRightBracket), CompressionReset: flightModifiers && !shiftHeld && graphics.keyDown(rl.KeyLeftBracket), WeaponTriggerPressed: !suppressEnter && flightModifiers && !shiftHeld && triggerPressed, WeaponTrigger: flightModifiers && !shiftHeld && ((!pointer.SuppressButtons && rl.IsMouseButtonDown(rl.MouseButtonLeft)) || !suppressEnter && (graphics.keyDown(rl.KeyEnter) || graphics.keyDown(rl.KeyKpEnter))), RocketSalvoKeys: [3]bool{flightModifiers && !shiftHeld && graphics.keyDown(rl.KeyOne), flightModifiers && !shiftHeld && graphics.keyDown(rl.KeyTwo), flightModifiers && !shiftHeld && graphics.keyDown(rl.KeyFour)}, OrdnanceNext: flightModifiers && !shiftHeld && !utilityKeys.spaceConsumed && graphics.keyDown(rl.KeySpace), GPSOpen: !pointer.SuppressF10 && flightModifiers && !shiftHeld && graphics.keyDown(rl.KeyF10), GPSKey: gpsKey, WingmanOrder: wingmanOrder, DefenseKeys: [4]bool{flightModifiers && !shiftHeld && !utilityKeys.mConsumed && graphics.keyDown(rl.KeyM), flightModifiers && !shiftHeld && graphics.keyDown(rl.KeySlash), flightModifiers && !shiftHeld && graphics.keyDown(rl.KeyN), flightModifiers && !shiftHeld && graphics.keyDown(rl.KeyPeriod)}, WaypointKeys: [2]bool{flightModifiers && !shiftHeld && graphics.keyDown(rl.KeySix), flightModifiers && !shiftHeld && graphics.keyDown(rl.KeySeven)}, InputTime: inputTime, PointerRelative: pointer.Relative, PointerDX: pointer.DX, PointerDY: pointer.DY, PointerEpoch: pointer.Reset, AltC: alt && graphics.keyDown(rl.KeyC), AltT: alt && graphics.keyDown(rl.KeyT), FlightKeys: flightKeys, FlightPause: pauseChord(graphics.keyDown(rl.KeyP), alt, ctrl, shiftHeld), FlightFocusLost: !rl.IsWindowFocused() || rl.IsWindowMinimized(), MenuHome: !alt && !ctrl && graphics.keyDown(rl.KeyHome), MenuEnd: !alt && !ctrl && graphics.keyDown(rl.KeyEnd), MenuTab: !alt && !ctrl && graphics.keyDown(rl.KeyTab) && !(graphics.keyDown(rl.KeyLeftShift) || graphics.keyDown(rl.KeyRightShift)), MenuBackTab: !alt && !ctrl && graphics.keyDown(rl.KeyTab) && (graphics.keyDown(rl.KeyLeftShift) || graphics.keyDown(rl.KeyRightShift)), PageUp: !alt && !ctrl && graphics.keyDown(rl.KeyPageUp), PageDown: !alt && !ctrl && graphics.keyDown(rl.KeyPageDown), SceneDirections: [4]bool{graphics.keyDown(rl.KeyLeft) || graphics.keyDown(rl.KeyKp4), graphics.keyDown(rl.KeyRight) || graphics.keyDown(rl.KeyKp6), graphics.keyDown(rl.KeyUp) || graphics.keyDown(rl.KeyKp8), graphics.keyDown(rl.KeyDown) || graphics.keyDown(rl.KeyKp2)}, FunctionKeys: functionKeys, ViewShift: graphics.keyDown(rl.KeyLeftShift) || graphics.keyDown(rl.KeyRightShift), AltS: alt && graphics.keyDown(rl.KeyS), X: x, Y: y, Inside: active, LeftMouse: !pointer.SuppressButtons && rl.IsMouseButtonDown(rl.MouseButtonLeft), RightMouse: !pointer.SuppressButtons && rl.IsMouseButtonDown(rl.MouseButtonRight), Space: !utilityKeys.spaceConsumed && graphics.keyDown(rl.KeySpace), Enter: !suppressEnter && (graphics.keyDown(rl.KeyEnter) || graphics.keyDown(rl.KeyKpEnter)), Escape: graphics.keyDown(rl.KeyEscape), AltQ: (graphics.keyDown(rl.KeyLeftAlt) || graphics.keyDown(rl.KeyRightAlt)) && graphics.keyDown(rl.KeyQ), AltE: (graphics.keyDown(rl.KeyLeftAlt) || graphics.keyDown(rl.KeyRightAlt)) && graphics.keyDown(rl.KeyE), Left: graphics.keyDown(rl.KeyLeft), Right: graphics.keyDown(rl.KeyRight), Up: graphics.keyDown(rl.KeyUp), Down: graphics.keyDown(rl.KeyDown), Backspace: graphics.keyDown(rl.KeyBackspace), Delete: graphics.keyDown(rl.KeyDelete), Close: closeRequested, ConfirmQuit: graphics.keyDown(rl.KeyY), Text: text, AnyKeyPressed: anyKey, AnyKeyDown: len(responseKeys) > 0}
 			mdx, mdy := float64(pointer.DX), float64(pointer.DY)
 			if !pointer.Relative {
 				mdx = float64(motion.X) * 320 / viewport.Width
@@ -357,7 +400,7 @@ func RunOfficeWindow(o *Office, options WindowOptions) error {
 				if r >= 'a' && r <= 'z' {
 					r -= 32
 				}
-				return rl.IsKeyDown(int32(r))
+				return graphics.keyDown(int32(r))
 			})
 			previousButtons := latch.previous
 			a := latch.ReadViewport(b, viewport)
@@ -409,7 +452,7 @@ func RunOfficeWindow(o *Office, options WindowOptions) error {
 				// Assignment commands are key edges, not text-editor auto-repeat.
 				a.Text = nil
 				for _, key := range []int32{rl.KeyP, rl.KeyH, rl.KeyD, rl.KeyL} {
-					if rl.IsKeyPressed(key) {
+					if graphics.keyPressed(key) {
 						a.Text = append(a.Text, rune(key))
 					}
 				}
@@ -486,10 +529,10 @@ func RunOfficeWindow(o *Office, options WindowOptions) error {
 				}
 				axis := func(positive, negative int32) float64 {
 					var n float64
-					if rl.IsKeyDown(positive) {
+					if graphics.keyDown(positive) {
 						n++
 					}
-					if rl.IsKeyDown(negative) {
+					if graphics.keyDown(negative) {
 						n--
 					}
 					return n
@@ -586,7 +629,11 @@ func RunOfficeWindow(o *Office, options WindowOptions) error {
 			sceneRedrawn = options.FrontEnd != nil && options.FrontEnd.Screen == ScreenScene && options.FrontEnd.Rendering.Dirty
 			compositionStart = time.Now()
 		}
-		if graphics.menu != nil {
+		if point.fadeIn && point.before != nil {
+			rgba = point.before
+		} else if point.open {
+			rgba, err = point.compose(options.FrontEnd)
+		} else if graphics.menu != nil {
 			rgba, err = graphics.menu.compose(options.FrontEnd)
 		} else if options.FrontEnd != nil {
 			showPointer := actualPointerActive || options.FrontEnd.keyboardHotspot == options.FrontEnd.Screen
@@ -633,6 +680,9 @@ func RunOfficeWindow(o *Office, options WindowOptions) error {
 			srcRect.Height = float32(layout.PictureHeight)
 		}
 		rl.DrawTexturePro(texture, srcRect, rl.Rectangle{X: float32(viewport.X), Y: float32(viewport.Y), Width: float32(viewport.Width), Height: float32(viewport.Height)}, rl.Vector2{}, 0, rl.White)
+		if alpha := point.alpha(); alpha > 0 {
+			rl.DrawRectangle(0, 0, int32(rl.GetScreenWidth()), int32(rl.GetScreenHeight()), rl.NewColor(0, 0, 0, alpha))
+		}
 		if notice := diagnostics.TakeNotice(); notice != "" {
 			noticeInk = rl.NewColor(255, 92, 92, 255)
 			logNotice = notice
@@ -644,7 +694,15 @@ func RunOfficeWindow(o *Office, options WindowOptions) error {
 			drawStartupText(logNotice, 10, y+4, rl.GetScreenWidth()-20, 14, noticeInk)
 		}
 		drawPerformanceOverlay(meter)
-		rl.EndDrawing()
+		if result := shots.capture(screenshotCount); result != "" {
+			logNotice, noticeInk, logNoticeUntil = result, rl.White, time.Now().Add(3*time.Second)
+		}
+		endGameDrawing(level)
+		if options.OnStarted != nil {
+			options.OnStarted()
+			options.OnStarted = nil
+		}
+		point.markPresented()
 		meter.Presented()
 		if branding.DeveloperTools && options.FrontEnd != nil && options.Development && options.CaptureDirectory != "" {
 			probe := options.FrontEnd.windowProbe()

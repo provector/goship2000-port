@@ -329,7 +329,7 @@ func TestVCRPreparedPanelSurroundsSourceViewport(t *testing.T) {
 }
 
 func TestVCRTerminalFastHonorsEveryPresentationTransaction(t *testing.T) {
-	c := developmentScenarioController(t, "o-terminal")
+	c := historicalCriticalFuelScenario(t, "o-terminal")
 	c.Handle(Actions{Cancel: true})
 	for i := 0; i < 1000 && c.Rendering != nil; i++ {
 		if e := c.AdvanceRendering(.12); e != nil {
@@ -345,45 +345,52 @@ func TestVCRTerminalFastHonorsEveryPresentationTransaction(t *testing.T) {
 	}
 	for _, scale := range []int{1, 2} {
 		for _, mode := range []string{"smooth", "stepped"} {
-			c.Runtime.SimulationRenderScale = scale
-			c.Runtime.PresentationMode = mode
-			openViewer(t, c, f)
-			v := c.Viewer
-			p := v.Playback.Preview()
-			r := p.Flight
-			r.RequireTerminalAck = true
-			c.activateReplayControl(4)
-			delivered := 0
-			for host := 0; c.Screen == ScreenReplay && host < 1000; host++ {
-				if e := c.AdvanceReplay(.25); e != nil {
-					t.Fatal(e)
+			for _, hz := range []int{4, 10, 60} {
+				c.Runtime.SimulationRenderScale = scale
+				c.Runtime.PresentationMode = mode
+				openViewer(t, c, f)
+				v := c.Viewer
+				p := v.Playback.Preview()
+				r := p.Flight
+				r.RequireTerminalAck = true
+				if e = c.activateReplayControl(4); e != nil || !v.Fast || v.Next {
+					t.Fatal("fast continuous control", e)
 				}
-				if c.Screen != ScreenReplay {
-					break
-				}
-				if r.terminalAwaitingAck {
-					delivered++
-					cursor := v.Playback.Cursor
-					before := p.FilmCheckpoint()
-					if e := c.AdvanceReplay(3); e != nil {
+				delivered := 0
+				for host := 0; c.Screen == ScreenReplay && host < 1000; host++ {
+					if e := c.AdvanceReplay(1 / float64(hz)); e != nil {
 						t.Fatal(e)
 					}
-					if v.Playback.Cursor != cursor || !reflect.DeepEqual(before, p.FilmCheckpoint()) {
-						t.Fatal("undelivered transaction advanced")
+					if c.Screen != ScreenReplay {
+						break
 					}
-					c.replayFrame(false)
-					c.replayFrame(false)
-					if !reflect.DeepEqual(before, p.FilmCheckpoint()) {
-						t.Fatal("terminal drawing advanced logical source")
+					if r.terminalAwaitingAck {
+						delivered++
+						cursor := v.Playback.Cursor
+						before := p.FilmCheckpoint()
+						if e := c.AdvanceReplay(3); e != nil {
+							t.Fatal(e)
+						}
+						if v.Playback.Cursor != cursor || !reflect.DeepEqual(before, p.FilmCheckpoint()) {
+							t.Fatal("undelivered transaction advanced")
+						}
+						frame := bytes.Clone(c.replayFrame(false))
+						if len(frame) == 0 || !bytes.Equal(frame, c.replayFrame(false)) || r.TerminalPresentation.Frames != uint64(delivered) {
+							t.Fatalf("unstable or missing terminal frame %d at %dHz, scale=%d mode=%s", delivered, hz, scale, mode)
+						}
+						if !reflect.DeepEqual(before, p.FilmCheckpoint()) {
+							t.Fatal("terminal drawing advanced logical source")
+						}
+						if v.Fast || v.Next {
+							t.Fatal("terminal kept accelerated debt")
+						}
+						c.MarkScenePresented()
 					}
-					if v.Fast || v.Next {
-						t.Fatal("terminal kept accelerated debt")
-					}
-					c.MarkScenePresented()
 				}
-			}
-			if !v.Playback.Done || v.Playback.Divergence != "" || delivered != 3 || r.TerminalPresentation.Frames != 4 || r.TerminalPresentation.Fade {
-				t.Fatal("terminal nonfinal/final ordering", scale, mode, delivered, r.TerminalPresentation, v.Playback.Divergence)
+				t.Logf("scale=%d mode=%s hostHz=%d delivered=%d terminalIterations=%d", scale, mode, hz, delivered, r.TerminalPresentation.Frames)
+				if !v.Playback.Done || v.Playback.Divergence != "" || delivered != 3 || r.TerminalPresentation.Frames != 4 || r.TerminalPresentation.Fade {
+					t.Fatal("terminal nonfinal/final ordering", scale, mode, delivered, r.TerminalPresentation, v.Playback.Divergence)
+				}
 			}
 		}
 	}

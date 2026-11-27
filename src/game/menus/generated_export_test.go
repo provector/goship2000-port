@@ -179,7 +179,7 @@ func TestGeneratedFilmLibraryEditRestartBegin(t *testing.T) {
 				t.Fatal(err)
 			}
 		}
-		raw, err := os.ReadFile(filepath.Join(store.Directory, doc.ID+".g2m"))
+		raw, err := os.ReadFile(savedMissionPath(t, store.Directory, doc.ID))
 		if err != nil {
 			t.Fatal(err)
 		}

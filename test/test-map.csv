@@ -1,6 +1,6 @@
 baseline_path,baseline_symbol,staging_path,staging_symbol,disposition
 port/cmd/setup/main_test.go,TestQ1SetupExplicitInitializeAndCheckNoAssets,src/cmd/setup/main_test.go,TestSetupExplicitInitializeAndCheckNoAssets,renamed
-port/cmd/setup/terminal_linux_test.go,TestQ14TerminalArgvAndMissingFallback,src/cmd/setup/terminal_linux_test.go,TestTerminalArgvAndMissingFallback,renamed
+port/cmd/setup/terminal_linux_test.go,TestQ14TerminalArgvAndMissingFallback,,,retired with external terminal launcher
 port/internal/audioopl/audioopl_test.go,TestBundledHelperIdentityAndSilence,src/internal/audioopl/audioopl_test.go,TestBundledHelperIdentityAndSilence,retained
 port/internal/audioopl/audioopl_test.go,TestTimelineBounds,src/internal/audioopl/audioopl_test.go,TestTimelineBounds,retained
 port/internal/audioopl/audioopl_test.go,TestPCMMatchesQualifiedStep27Reference,src/internal/audioopl/audioopl_test.go,TestPCMMatchesQualifiedOPLReference,renamed

@@ -10,10 +10,30 @@ import (
 )
 
 func TestActualCatalogueEditorPlacementConsumers(t *testing.T) {
+	for _, inputs := range []struct {
+		name, key string
+		phil3     int
+	}{
+		{"retained-R23-preparation", "GS2000_TEST_R221_ASSETS", 95},
+		{"repaired-map", "GS2000_TEST_MISSIONS", 95},
+	} {
+		t.Run(inputs.name, func(t *testing.T) {
+			root := os.Getenv(inputs.key)
+			if root == "" {
+				t.Fatalf("supply retained preparation via %s", inputs.key)
+			}
+			t.Setenv("GS2000_TEST_MISSIONS", root)
+			verifyCataloguePlacements(t, inputs.phil3)
+		})
+	}
+}
+func verifyCataloguePlacements(t *testing.T, expectedPhil3 int) {
+	t.Helper()
 	c := authoredUIController(t)
 	data := c.editorData()
 	records := []map[string]any{}
 	placed, guarded, limited := 0, 0, 0
+	phil3Placements := 0
 	for _, w := range data.Worlds {
 		if m, ok := c.editorAssets().Maps[editorMapKey(w.WorldName)]; !ok {
 			continue
@@ -110,6 +130,9 @@ func TestActualCatalogueEditorPlacementConsumers(t *testing.T) {
 						t.Fatal("source footprint changed", row, rows, e)
 					}
 					placed++
+					if editorMapKey(w.WorldName) == "PHIL3" {
+						phil3Placements++
+					}
 					row["result"] = "actual-selector-consumer-placed"
 					row["components"] = rows
 					row["x"], row["y"] = p.X, p.Y
@@ -122,8 +145,9 @@ func TestActualCatalogueEditorPlacementConsumers(t *testing.T) {
 	// same supported-installation denominator and source list limit; do not
 	// require a deliberately unsupported choice merely to satisfy this test.
 	// Historical v3 rejection remains independently exercised by the P5 tests.
-	if placed != 1883 || guarded != 0 || limited != 39 {
-		t.Fatal("R23 catalogue coverage changed from original1883/list-limit39", placed, guarded, limited)
+	// The P7 source catalogue lists 95 PHIL3 choices excluded only by map readiness.
+	if phil3Placements != expectedPhil3 || placed-phil3Placements != 1883 || guarded != 0 || limited != 39 {
+		t.Fatal("expected PHIL3 count, actual, total placements, guarded, capped", expectedPhil3, phil3Placements, placed, guarded, limited)
 	}
 	t.Logf("actual ready-map catalogue: supported placed%d; unavailable%d; total UI-exposed%d; source-list-limit excluded%d; descriptor candidates%d; map exclusions%d. Guards are not supported placement passes", placed, guarded, placed+guarded, limited, placed+guarded+limited, len(records)-placed-guarded-limited)
 	if dir := os.Getenv("GS2000_P7_EDITOR_MATRIX_DIR"); dir != "" {

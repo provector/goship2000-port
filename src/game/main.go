@@ -7,29 +7,21 @@ import (
 	"gunship2000-assets/game/configuration"
 	"gunship2000-assets/game/diagnostics"
 	"gunship2000-assets/game/logview"
-	"gunship2000-assets/game/menus"
 	"gunship2000-assets/game/replay"
 	"gunship2000-assets/game/state"
 	"gunship2000-assets/internal/branding"
+	"gunship2000-assets/internal/instancealert"
+	"gunship2000-assets/internal/storeowner"
 	"log/slog"
 	"os"
 	"path/filepath"
-	"strings"
 )
-
-var configurationWarning = menus.ConfigurationWarning
 
 func main() { os.Exit(run(os.Args[1:])) }
 
 func run(args []string) int {
 	if len(args) > 0 {
 		switch args[0] {
-		case "__setup-warning":
-			if err := menus.ConfigurationWarning(strings.Join(args[1:], "\n")); err != nil {
-				fmt.Fprintln(os.Stderr, err)
-				return 1
-			}
-			return 0
 		case "__log-console":
 			if err := logview.Run(); err != nil {
 				fmt.Fprintln(os.Stderr, err)
@@ -94,7 +86,18 @@ func run(args []string) int {
 
 func runNormal(args []string) int { return runGame(args, false) }
 
-func runGame(args []string, brandSplash bool) int {
+func runGame(args []string, brandSplash bool) (code int) {
+	var saves string
+	handedOff := false
+	defer func() {
+		if handedOff {
+			return
+		}
+		if v := recover(); v != nil {
+			code = showGameStartup(saves, fmt.Errorf("startup panic: %v", v))
+		}
+	}()
+
 	flags := flag.NewFlagSet("gs2000", flag.ContinueOnError)
 	app := flags.String("app-dir", "", "application directory (config.g2pak, original/, assets/)")
 	assets := flags.String("assets", "", "optional prepared directory; relative to application directory")
@@ -124,19 +127,18 @@ func runGame(args []string, brandSplash bool) int {
 	}
 	owner, ownerErr := configuration.OpenLocation(*app, applicationMode, *assets, *rebuild)
 	if ownerErr != nil {
-		return startupError(ownerErr)
+		return showGameStartup("", ownerErr)
 	}
 	defer owner.Close()
+	saves = filepath.Join(owner.Data, "saves")
 	paths, err := loadApplicationAt(owner.Install, owner.Data, *assets)
 	if err != nil {
+		showGameStartup(saves, err)
 		var missing *configuration.MissingError
 		if errors.As(err, &missing) {
-			_ = configurationWarning(err.Error())
-			fmt.Fprintln(os.Stderr, err)
 			return 2
 		}
-		_ = configurationWarning(err.Error())
-		return startupError(err)
+		return 1
 	}
 	if *replayMiB != "" {
 		limit, e := configuration.ParseRecordingLimit(*replayMiB)
@@ -145,8 +147,19 @@ func runGame(args []string, brandSplash bool) int {
 		}
 		paths.RecordingLimit = limit
 	}
+	handedOff = true
 	return startFrontEnd(paths, *rebuild, nil, brandSplash)
 
+}
+
+func showGameStartup(saves string, err error) int {
+	if errors.Is(err, storeowner.ErrInUse) {
+		instancealert.Show(err)
+		return startupError(err)
+	}
+	reported := diagnostics.StartupError("Game", saves, err)
+	instancealert.Startup("Game", reported.Error()+"\n\nCheck Original Installation and the paths in SETUP, then try again.")
+	return startupError(reported)
 }
 
 func startupError(err error) int {

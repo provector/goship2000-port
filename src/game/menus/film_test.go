@@ -51,7 +51,7 @@ func TestGPSConsumedTicksAndModalCheckpoint(t *testing.T) {
 	}
 	endFilm(t, c)
 	f := verifyFilm(t, c)
-	if f.Header.InputSchema != replay.R1InputCompatibility || f.Operations[n].Checkpoint["modal"] == "" {
+	if f.Header.InputSchema != replay.RouteConfirmationInput || f.Operations[n].Checkpoint["modal"] == "" {
 		t.Fatal("new typed modal profile missing")
 	}
 }

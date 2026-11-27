@@ -19,8 +19,14 @@ const titleSlotSize = 96
 const pubTailSize = 44 + 2*titleSlotSize
 const maxPublicationBytes = MaxRecoveryBytes + 10*1024
 
-var publicPrefix = []byte("GS2FILM\x00\x03\x00\x00\x00")
-var privatePrefix = []byte("GS2FILM\x00\x03\x00\x01\x00")
+var errLegacyRecording = errors.New("legacy recording requires manual conversion in SETUP")
+var publicPrefix = []byte("GS2FILM\x00\x04\x00\x04\x00")
+var privatePrefix = []byte("GS2FILM\x00\x04\x00\x01\x00")
+
+func publishedPrefix(b []byte) bool { return bytes.Equal(b, publicPrefix) }
+func currentFormat() ImportFormat {
+	return ImportFormat{string(blockPrefix), string(publicPrefix), protoS2, decodeProtoRows}
+}
 
 type publication struct {
 	Revision, Title string
@@ -56,6 +62,9 @@ func encodeSlot(binding [32]byte, seq uint64, title string) []byte {
 	return b
 }
 func readContainer(r io.ReaderAt, size int64) (manifest, int64, string, *portableInfo, error) {
+	return readContainerFormat(r, size, currentFormat())
+}
+func readContainerFormat(r io.ReaderAt, size int64, format ImportFormat) (manifest, int64, string, *portableInfo, error) {
 	var b [12]byte
 	var zero manifest
 	if _, e := r.ReadAt(b[:], 0); e != nil {
@@ -64,8 +73,17 @@ func readContainer(r io.ReaderAt, size int64) (manifest, int64, string, *portabl
 	if bytes.Equal(b[:], privatePrefix) {
 		return zero, 0, "", nil, fmt.Errorf("private recording; no completed publication")
 	}
-	if !bytes.Equal(b[:], publicPrefix) {
-		m, at, rev, e := readManifest(r, size)
+	if string(b[:]) != format.Published {
+		if string(b[:]) != format.Core {
+			if bytes.Equal(b[:8], magic[:]) && (order.Uint16(b[8:10]) == 2 || order.Uint16(b[8:10]) == 3) {
+				return zero, 0, "", nil, errLegacyRecording
+			}
+			return zero, 0, "", nil, fmt.Errorf("unsupported G2R storage version or encoding (header %x)", b[:])
+		}
+		m, at, rev, e := readManifest(originalPrefixReader{r}, size)
+		if e == nil && m.Codec != format.Codec {
+			e = invalidBlock
+		}
 		return m, at, rev, nil, e
 	}
 	if size < 12+pubTailSize || size > MaxBytes {
@@ -91,6 +109,9 @@ func readContainer(r io.ReaderAt, size int64) (manifest, int64, string, *portabl
 	m, at, rev, e := readManifest(originalPrefixReader{r}, core)
 	if e != nil {
 		return zero, 0, "", nil, e
+	}
+	if format.Codec != m.Codec {
+		return zero, 0, "", nil, invalidBlock
 	}
 	if p.pub.Revision != rev || !m.Header.Complete || !ValidTitle(p.pub.Title) {
 		return zero, 0, "", nil, invalidBlock

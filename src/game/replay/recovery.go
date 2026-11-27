@@ -93,7 +93,7 @@ func (r *RecoveryReceipt) Validate() error {
 }
 func (r *RecoveryReceipt) Matches(data []byte, f *Film) error {
 	digest := BytesDigest(data)
-	if bytes.HasPrefix(data, publicPrefix) {
+	if len(data) >= 12 && publishedPrefix(data[:12]) {
 		_, _, _, p, e := readContainer(bytes.NewReader(data), int64(len(data)))
 		if e != nil {
 			return e

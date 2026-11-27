@@ -138,3 +138,66 @@ func TestUnknownAssignedTargetRemainsGuarded(t *testing.T) {
 		}
 	}
 }
+
+func TestFlyToSecondContact(t *testing.T) {
+	// Four rows along one sight line. Negative heights put a target below the
+	// flat surface. The farther eligible row stays visible in the blocked case.
+	for _, tc := range []struct {
+		name                           string
+		first, second                  byte
+		h1, h2                         int16
+		kind, order, weapons, previous byte
+		disabled                       bool
+		want                           int8
+	}{
+		{"bridge and second scenery", 0x17, 0x17, 128, 128, 0x23, 3, 1, 0, false, 13},
+		{"pickup contact", 0x15, 0x17, 128, 128, 0x23, 3, 1, 0, false, 13},
+		{"rescue contact", 0x1b, 0x17, 128, 128, 0x23, 3, 1, 0, false, 13},
+		{"blocked first hostile", 4, 0x17, -1000, 128, 0x23, 3, 1, 0, false, 13},
+		{"blocked alternative stops search", 0x17, 4, 128, -1000, 0x23, 3, 1, 0, false, 0},
+		{"preserve previous", 0x17, 0x17, 128, 128, 0x23, 3, 1, 14, false, 14},
+		{"weapons standby", 0x17, 0x17, 128, 128, 0x23, 3, 0, 0, false, 0},
+		{"formation", 0x17, 0x17, 128, 128, 0x21, 1, 1, 0, false, 0},
+		{"hold", 0x17, 0x17, 128, 128, 0x23, 2, 1, 0, false, 0},
+		{"disengage", 0x17, 0x17, 128, 128, 0x25, 5, 1, 0, false, 0},
+		{"return", 0x17, 0x17, 128, 128, 0x22, 8, 1, 0, false, 0},
+		{"disabled", 0x17, 0x17, 128, 128, 0x23, 3, 1, 0, true, 0},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			s, in, out := tailFixture(t)
+			in.Entities[2].Object[10] = 0
+			e := &in.Entities[1]
+			e.Kind = tc.kind
+			e.Control[0] = 1
+			e.Control[1] = tc.order
+			e.Control[3] = tc.previous
+			e.Control[4] = tc.weapons
+			in.DisableAutonomy = tc.disabled
+			for i, distance := range []uint32{2048, 3072, 4096, 4096} {
+				row := i + 10
+				in.Entities[row] = Entity{Present: true, Row: row, Kind: 4, Participation: 1, FlightSlot: -1, Pose: in.Player}
+				in.Entities[row].Pose.H1 += distance
+				s.Contacts[row] = Contact{Flags: 1}
+			}
+			in.Entities[10].Kind, in.Entities[10].Pose.Height = tc.first, tc.h1
+			in.Entities[11].Kind, in.Entities[11].Pose.Height = tc.second, tc.h2
+			in.CanAcquireFollowerTarget = func(_, row int, _ uint16) (bool, error) { return in.Entities[row].Kind == 4, nil }
+			reported := -1
+			in.ContactOrder = func(_, row int) error { reported = row; return nil }
+			if err := s.advanceActorTail(in); err != nil {
+				t.Fatal(err)
+			}
+			if out[1] != tc.want {
+				t.Fatalf("got assignment %d, want %d", out[1], tc.want)
+			}
+			if tc.order == 3 && tc.first&0x10 != 0 && !tc.disabled && (reported != 10 || s.Contacts[10].Flags != 14) {
+				t.Fatal("first report lost", reported, s.Contacts[10])
+			}
+			for _, row := range []int{11, 12, 13} {
+				if s.Contacts[row] != (Contact{Flags: 1}) {
+					t.Fatal("alternative sight changed shared contact", row)
+				}
+			}
+		})
+	}
+}

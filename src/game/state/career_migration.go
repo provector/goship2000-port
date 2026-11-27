@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
+	"gunship2000-assets/internal/playerdirs"
 	"io"
 	"os"
 	"path/filepath"
@@ -154,18 +155,22 @@ func captureLegacy(root string) error {
 }
 func (s *SaveStore) openPacked(app, install, original string, startup bool) error {
 	cfg := filepath.Join(app, userpack.ConfigName)
-	p := &careerPacks{dir: s.Directory, cfg: cfg}
-	if raw, e := ReadRegularSave(filepath.Join(p.dir, packIntent)); e == nil {
-		var j packJournal
-		if e = json.Unmarshal(raw, &j); e != nil {
-			return e
-		}
-		if e = userpack.Locked(cfg, func() error { return p.rollForward(j) }); e != nil {
-			return e
-		}
-	} else if !os.IsNotExist(e) {
+	p, e := preparePackLocation(s.Directory, cfg)
+	if e != nil {
 		return e
 	}
+	playerdirs.Archive(s.Directory, "imports", false)
+	if p != nil {
+		s.packed = p
+		if e = s.loadWithSessions(startup); e != nil {
+			return e
+		}
+		if e = retireLoose(s.Directory); e != nil {
+			return e
+		}
+		return p.cleanCareerBackup()
+	}
+	p = &careerPacks{dir: s.Directory, root: s.Directory, cfg: cfg}
 	if !existingPacks(p.dir) {
 		fresh := true
 		for _, n := range []string{saveFilename, oldSaveFilename, saveJournal, "technical-last-good.json", "backups", "pilots", "sorties", careerBackup} {
@@ -196,8 +201,9 @@ func (s *SaveStore) openPacked(app, install, original string, startup bool) erro
 				return e
 			}
 			if state.Legacy != nil {
+				p.importRoster = state.Legacy.RawRoster
 				if e = preserveLegacyImport(p.dir, *state.Legacy); e != nil {
-					return e
+					diagnostics.StartupWarning("Original roster archive could not be written. Verified roster bytes retained in the career.", e.Error())
 				}
 			}
 			files, e := stateFiles(state)
@@ -320,10 +326,8 @@ func (s *SaveStore) openPacked(app, install, original string, startup bool) erro
 	if e := p.cleanCareerBackup(); e != nil {
 		return e
 	}
-	if e := plainDir(filepath.Join(p.dir, "pilots")); e != nil {
-		return e
-	}
-	return nil
+	s.packed, e = preparePackLocation(s.Directory, cfg)
+	return e
 }
 func retireLoose(dir string) error {
 	backup := filepath.Join(dir, careerBackup)
@@ -379,7 +383,7 @@ func retireLoose(dir string) error {
 }
 
 func (p *careerPacks) cleanCareerBackup() error {
-	dir := filepath.Join(p.dir, careerBackup)
+	dir := filepath.Join(p.root, careerBackup)
 	st, e := os.Lstat(dir)
 	if os.IsNotExist(e) {
 		return nil

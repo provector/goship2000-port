@@ -186,7 +186,11 @@ func (a *DebriefAssets) DrawJumpInsignia(dst []byte, rank, wings, phase, patch i
 	if rank >= 7 {
 		key, sel = 6, 3*(rank-7)+phase
 	}
-	if e := draw(key, sel, 186, 92); e != nil {
+	rankX := 186
+	if medals[0] {
+		rankX = 202
+	}
+	if e := draw(key, sel, rankX, 92); e != nil {
 		return e
 	}
 	if wings > 0 {

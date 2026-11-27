@@ -190,9 +190,14 @@ func (c *FrontEnd) openGPS() error {
 		g.Mission = &mission
 	}
 	g.SetR11Presentation(p.r11Mechanics)
+	g.ClearConfirmedEmpty = p.independentManeuvers
 	g.SetFollowerOrders(p.r1Mechanics, func(slot int) {
 		var effects [5]navigation.OrderEffects
-		effects[slot] = navigation.OrderEffects{Kind: 0x23, ChangeKind: true, ResetPhase: true}
+		kind := byte(0x23)
+		if g.Routes[slot].Index() == 0 {
+			kind = 0x20
+		}
+		effects[slot] = navigation.OrderEffects{Kind: kind, ChangeKind: true, ResetPhase: true}
 		p.publishFollowerOrders(effects)
 	})
 	p.GPS = g

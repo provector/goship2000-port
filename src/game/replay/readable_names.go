@@ -4,61 +4,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"gunship2000-assets/internal/playerfile"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
 )
-
-// Portable titles already have a 20-byte printable ASCII limit. Restrict only
-// filesystem spellings, using the same rules on all supported platforms.
-func basenameTitle(title string) string {
-	title = strings.Map(func(r rune) rune {
-		if strings.ContainsRune(`<>:"/\|?*`, r) {
-			return '_'
-		}
-		return r
-	}, title)
-	title = strings.Trim(title, " .")
-	if title == "" {
-		return "Mission"
-	}
-	stem, _, _ := strings.Cut(strings.ToUpper(title), ".")
-	stem = strings.TrimRight(stem, " ")
-	switch stem {
-	case "CON", "PRN", "AUX", "NUL", "CONIN$", "CONOUT$", "CLOCK$":
-		title = "_" + title
-	default:
-		if len(stem) == 4 && (stem[:3] == "LPT" || stem[:3] == "COM") && stem[3] >= '0' && stem[3] <= '9' {
-			title = "_" + title
-		}
-	}
-	return strings.TrimRight(title[:min(20, len(title))], " .")
-}
-
-type filmNames map[string]int
-
-func namesIn(entries []os.DirEntry) filmNames {
-	n := filmNames{}
-	for _, e := range entries {
-		n[strings.ToLower(e.Name())]++
-	}
-	return n
-}
-func (n filmNames) choose(title, source string) string {
-	base := basenameTitle(title)
-	for i := 1; ; i++ {
-		t := base
-		if i > 1 {
-			suffix := " (" + strconv.Itoa(i) + ")"
-			t = strings.TrimRight(base[:min(len(base), 20-len(suffix))], " .") + suffix
-		}
-		key := strings.ToLower(t + ".g2r")
-		if n[key] == 0 || n[key] == 1 && strings.EqualFold(source, key) {
-			return t
-		}
-	}
-}
 
 const editJournal = ".film-name-edit.json"
 
@@ -80,7 +31,7 @@ func (s Store) forgetEdit() error {
 // and title generation may finish this intent after a process interruption.
 func (s Store) finishNameEdit(x nameEdit, path string, m filmMetadata) error {
 	if m.portable == nil || x.ID != m.Header.ID || fmt.Sprintf("%x", m.portable.binding) != x.Binding ||
-		filepath.Base(x.From) != x.From || !strings.EqualFold(filepath.Ext(x.From), ".g2r") || !ValidTitle(x.Title) || basenameTitle(x.Title) != x.Title || !ValidTitle(x.Previous) {
+		filepath.Base(x.From) != x.From || !strings.EqualFold(filepath.Ext(x.From), ".g2r") || !ValidTitle(x.Title) || playerfile.Basename(x.Title) != x.Title || !ValidTitle(x.Previous) {
 		return fmt.Errorf("recording name transaction does not match publication")
 	}
 	before := m.portable.generation == x.Generation && m.Header.Title == x.Previous
@@ -94,7 +45,7 @@ func (s Store) finishNameEdit(x nameEdit, path string, m filmMetadata) error {
 			return fmt.Errorf("recording moved during name transaction")
 		}
 		dest := filepath.Join(filepath.Dir(path), name)
-		if err := moveFilmNew(path, dest); err != nil {
+		if err := playerfile.MoveNew(path, dest); err != nil {
 			return &os.LinkError{Op: "rename recording", Old: path, New: dest, Err: err}
 		}
 		path = dest
@@ -113,7 +64,7 @@ func (s Store) finishNameEdit(x nameEdit, path string, m filmMetadata) error {
 				return err
 			}
 			if filepath.Base(path) != x.From {
-				if undo := moveFilmNew(path, filepath.Join(filepath.Dir(path), x.From)); undo != nil {
+				if undo := playerfile.MoveNew(path, filepath.Join(filepath.Dir(path), x.From)); undo != nil {
 					return errors.Join(err, fmt.Errorf("restoring original film name: %w", undo))
 				}
 			}
@@ -180,7 +131,7 @@ func (s Store) applyName(path string, m filmMetadata, title string, changeTitle,
 		if dest == path {
 			return nil
 		}
-		if err := moveFilmNew(path, dest); err != nil {
+		if err := playerfile.MoveNew(path, dest); err != nil {
 			return err
 		}
 		return syncFilmDirectory(s.Root)
@@ -231,7 +182,7 @@ func (s Store) ReconcileNames() error {
 	if err != nil {
 		return err
 	}
-	names := namesIn(entries)
+	names := playerfile.NamesIn(entries)
 	ids := map[string]int{}
 	var films []namedFilm
 	var issues []error
@@ -242,6 +193,9 @@ func (s Store) ReconcileNames() error {
 		p := filepath.Join(s.Root, d.Name())
 		m, err := metadataAt(p)
 		if err != nil {
+			if errors.Is(err, errLegacyRecording) || os.IsNotExist(err) {
+				continue
+			}
 			issues = append(issues, fmt.Errorf("preserved %q: %w", d.Name(), err))
 			continue
 		}
@@ -269,7 +223,7 @@ func (s Store) ReconcileNames() error {
 			continue
 		}
 		display := m.displayTitle(last)
-		title := names.choose(display, name)
+		title := names.Choose(display, name, ".g2r")
 		if title+".g2r" == name && title == display {
 			continue
 		}
@@ -327,7 +281,7 @@ func (s Store) namePublished(f *Film) error {
 		return err
 	}
 	title := m.displayTitle(last)
-	final := namesIn(entries).choose(title, filepath.Base(path))
+	final := playerfile.NamesIn(entries).Choose(title, filepath.Base(path), ".g2r")
 	if err = s.applyName(path, m, final, final != title, false); err != nil {
 		return err
 	}

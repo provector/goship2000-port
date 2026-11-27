@@ -230,7 +230,7 @@ func TestDirectionPreviewDoesNotOverwriteIndependentAnalog(t *testing.T) {
 		}
 	}
 	s := frame(t, u, 76, 24)
-	ch, _, _, _ := s.GetContent(6, 6)
+	ch, _, _, _ := s.GetContent(6, 8)
 	s.Fini()
 	if ch != '█' {
 		t.Fatal("focused direction not previewed")
@@ -241,7 +241,7 @@ func TestDirectionPreviewDoesNotOverwriteIndependentAnalog(t *testing.T) {
 	u.finishControllerEditor(true)
 	u.openControllerEditor(false)
 	s = frame(t, u, 76, 24)
-	ch, _, _, _ = s.GetContent(14, 6)
+	ch, _, _, _ = s.GetContent(14, 8)
 	s.Fini()
 	if ch != '█' {
 		t.Fatal("Basic no longer previews dedicated analog")

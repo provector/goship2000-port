@@ -5,6 +5,8 @@ import (
 	"gunship2000-assets/game/controllers"
 	"gunship2000-assets/game/flightcontrol"
 	"gunship2000-assets/game/replay"
+	gamestate "gunship2000-assets/game/state"
+	"math"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -582,5 +584,153 @@ func TestFocusLossReleasesHoldsWithoutRestoringOldMouseCoordinates(t *testing.T)
 	v = g.Merge(c, Buttons{X: 5, Y: 6, Inside: true}, .1, 0, 0, false, nil)
 	if v.X != 130 || v.Y != 90 {
 		t.Fatal("stationary mouse snapped after focus", v)
+	}
+}
+
+func TestLiveCollectiveFollowsFlightModel(t *testing.T) {
+	for _, configured := range []string{"relative_height", "relative", "absolute"} {
+		for _, source := range []string{"centered", "slider"} {
+			for _, invert := range []bool{false, true} {
+				c := &FrontEnd{Screen: ScreenScene, Office: &Office{}, Rendering: &RenderingPreview{Initialized: &gamestate.InitializedMission{}}}
+				g, b := controllerDevice(c)
+				p := g.live.Config.Profiles["p"]
+				p.CollectiveMode, p.CollectiveSource = configured, source
+				bind := p.Bindings["flight.collective"]
+				bind.Invert = invert
+				p.Bindings["flight.collective"] = bind
+				g.live.Config.Profiles["p"] = p
+				for _, realistic := range []bool{false, true, false} {
+					c.Rendering.Initialized.Switches = 0
+					want := configured
+					if realistic {
+						c.Rendering.Initialized.Switches = 4
+						want = "absolute"
+					}
+					for _, axis := range []float64{0, -1, 0, 1} {
+						b.s.States[9].Axes[2] = axis
+						in := g.Merge(c, Buttons{}, .016, 0, 0, false, nil).Live
+						if in.Mode != want || in.Absolute != (want == "absolute") || in.Slider != (source == "slider") || !in.Bound[2] {
+							t.Fatalf("%s / %s realistic=%t raw=%v: %+v", configured, source, realistic, axis, in)
+						}
+						if want == "absolute" {
+							value := axis
+							if invert {
+								value = -axis
+							}
+							expected := uint16(math.Round((value + 1) * 32767.5))
+							if in.Lever != expected {
+								t.Fatalf("lever %d want %d", in.Lever, expected)
+							}
+						}
+					}
+				}
+				if g.live.Config.Profiles["p"].CollectiveMode != configured {
+					t.Fatal("profile rewritten")
+				}
+			}
+		}
+	}
+}
+
+func TestRealisticControllerContinuationAfterMissionPoint(t *testing.T) {
+	c := renderingController(t)
+	c.simulationProfile = ""
+	c.Mission.Settings.FlightModel = 1
+	startRendering(t, c)
+	jFinishFade(t, c)
+	if c.Rendering.Initialized.Switches&4 == 0 {
+		t.Fatal("fixture requires realistic flight")
+	}
+	g, b := controllerDevice(c)
+	profile := g.live.Config.Profiles["p"]
+	profile.CollectiveMode = "relative_height"
+	g.live.Config.Profiles["p"] = profile
+	if err := c.Handle(Actions{FlightCommands: []int{2}}); err != nil {
+		t.Fatal(err)
+	}
+	step := func(axis float64) {
+		t.Helper()
+		b.s.States[9].Axes[2] = axis
+		in := g.Merge(c, Buttons{}, .1, 0, 0, false, nil).Live
+		if in.Mode != "absolute" || !in.Absolute {
+			t.Fatal("realistic input mode", in)
+		}
+		if err := c.Handle(Actions{Live: in}); err != nil {
+			t.Fatal(err)
+		}
+		if err := c.AdvanceRendering(.1); err != nil {
+			t.Fatal(err)
+		}
+	}
+	step(0)
+	useComparedMissionPoint(t, c)
+	step(.5)
+	useComparedMissionPoint(t, c)
+	step(-.5)
+	step(.75)
+	endFilm(t, c)
+	verifyFilm(t, c)
+}
+
+func TestHoverCollectiveContinuationThroughMissionPoint(t *testing.T) {
+	for _, tc := range []struct {
+		name, mode string
+		realistic  bool
+	}{
+		{"easy_height", "relative_height", false}, {"easy_absolute", "absolute", false}, {"easy_relative", "relative", false}, {"realistic_absolute", "absolute", true},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			c := renderingController(t)
+			c.simulationProfile = ""
+			if tc.realistic {
+				c.Mission.Settings.FlightModel = 1
+			} else {
+				c.Mission.Settings.FlightModel = 0
+			}
+			startRendering(t, c)
+			jFinishFade(t, c)
+			f := c.Rendering.Flight.State
+			initial := FilmApproach{H0: f.Pose.H0, H1: f.Pose.H1, AboveSupport: 800, Rotor: 1, Stage: 128, Hover: 1, HeightControl: 1}
+			if e := c.ApplyFilmInitialAdjustment(FilmInitialAdjustment{Label: "Hover control handover", Approach: &initial}); e != nil {
+				t.Fatal(e)
+			}
+			input := flightcontrol.LiveInput{Mode: tc.mode, Epoch: 1, Bound: [4]bool{false, false, true, true}, Absolute: tc.mode == "absolute"}
+			tick := func(command []int) {
+				t.Helper()
+				if e := c.Handle(Actions{Live: &input, FlightCommands: command}); e != nil {
+					t.Fatal(e)
+				}
+				if e := c.AdvanceRendering(.12); e != nil {
+					t.Fatal(e)
+				}
+			}
+			tick(nil)
+			useComparedMissionPoint(t, c)
+			for i := 0; i < 4; i++ {
+				tick([]int{0})
+			}
+			useComparedMissionPoint(t, c)
+			s := c.Rendering.Flight.State
+			tick(nil) // Admit the first post-restore input clock boundary.
+			heading := s.Pose.Angles[1]
+			tick([]int{0})
+			for wait := 0; wait < 4 && s.HeightControl != 0; wait++ {
+				tick(nil)
+			}
+			if s.Hover != 1 || s.HeightControl != 0 {
+				t.Fatal("keyboard collective", s.Hover, s.HeightControl, s.Collective, c.Rendering.independentManeuvers, c.Rendering.Flight.Steps, c.Screen, c.fade != nil)
+			}
+			input.Axes[3] = 54
+			for _, value := range []int16{0, 0, 24, 64, 90, 90, 90} {
+				input.Axes[2] = value
+				input.Lever = uint16(32768 + int(value)*200)
+				tick(nil)
+			}
+			if s.Hover != 1 || s.Pose.Angles[1] == heading || s.Forward != 0 {
+				t.Fatal("controller handover", s.Hover, s.Forward, s.Pose.Angles, heading)
+			}
+			endFilm(t, c)
+			verifyFilm(t, c)
+		})
 	}
 }

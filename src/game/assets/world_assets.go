@@ -117,7 +117,7 @@ func exportWorldAssetsProgress(writer *OutputWriter, alloc *pathAllocator, m *Ma
 
 	geometries, e := worlddata.ParseModels(obj.Payload, types.Payload)
 	if e != nil {
-		return fmt.Errorf("OBJFILE / OBJTYPES.DAT model conversion: %w", e)
+		return sourceFailure(fmt.Errorf("OBJFILE / OBJTYPES.DAT model conversion: %w", e))
 	}
 	for _, g := range geometries {
 		b.Models = append(b.Models, g.ID)
@@ -126,7 +126,7 @@ func exportWorldAssetsProgress(writer *OutputWriter, alloc *pathAllocator, m *Ma
 	for worldIndex, name := range p.WorldLayout.WorldNames {
 		r, atlas := res[name], res[name+"BMP.GS2"]
 		if r == nil || atlas == nil {
-			return fmt.Errorf("world preparation requires %s and %sBMP.GS2", name, name)
+			return sourceFailure(fmt.Errorf("world preparation requires %s and %sBMP.GS2", name, name))
 		}
 		if maps != nil {
 			maps(worldIndex, len(p.WorldLayout.WorldNames))
@@ -137,15 +137,15 @@ func exportWorldAssetsProgress(writer *OutputWriter, alloc *pathAllocator, m *Ma
 		}
 		w, gs, e := worlddata.ParseWorld(name, r.Payload, atlasPayload)
 		if e != nil {
-			return fmt.Errorf("%s:%w", name, e)
+			return sourceFailure(fmt.Errorf("%s:%w", name, e))
 		}
 		overview := res[name+"SMP.GS2"]
 		if overview == nil {
-			return fmt.Errorf("world preparation requires%sSMP.GS2", name)
+			return sourceFailure(fmt.Errorf("world preparation requires%sSMP.GS2", name))
 		}
 		w.Overview, e = DecodeOverview(overview.Payload)
 		if e != nil {
-			return fmt.Errorf("%sSMP.GS2:%w", name, e)
+			return sourceFailure(fmt.Errorf("%sSMP.GS2:%w", name, e))
 		}
 		w.OverviewSourceHash = overview.Source.PayloadSHA256
 		b.Worlds[name] = w
@@ -164,11 +164,11 @@ func exportWorldAssetsProgress(writer *OutputWriter, alloc *pathAllocator, m *Ma
 			name := prefix + kind + ".PAL"
 			r := res[name]
 			if r == nil || len(r.Payload) != 768 {
-				return fmt.Errorf("world palette%s missing/invalid", name)
+				return sourceFailure(fmt.Errorf("world palette%s missing/invalid", name))
 			}
 			for _, c := range r.Payload {
 				if c > 63 {
-					return fmt.Errorf("world palette%s component >63", name)
+					return sourceFailure(fmt.Errorf("world palette%s component >63", name))
 				}
 			}
 			b.Palettes[prefix+kind] = worlddata.Palette{ID: prefix + kind, RGB6: append([]byte(nil), r.Payload...)}

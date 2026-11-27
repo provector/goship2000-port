@@ -1,60 +1,50 @@
 package menus
 
-import "testing"
+import (
+	"gunship2000-assets/game/configuration"
+	"testing"
+)
 
-func TestAltEnterEdgesHoldAndRelease(t *testing.T) {
-	var w windowShortcuts
-	if n, s := w.Read(true, true, true, true); n != 0 || !s {
-		t.Fatal(n, s)
-	}
-	for i := 0; i < 100; i++ {
-		if n, s := w.Read(true, true, true, i%2 == 0); n != 0 || !s {
-			t.Fatal("held repeated/leaked", n, s)
+func TestFullscreenShortcutEdges(t *testing.T) {
+	for _, alt := range []bool{false, true} {
+		style := configuration.Borderless
+		other := configuration.FullScreen
+		if alt {
+			style, other = other, style
 		}
-	}
-	if n, s := w.Read(true, false, true, false); n != 0 || !s {
-		t.Fatal("Alt released first leaked Enter", n, s)
-	}
-	if n, s := w.Read(true, false, false, false); n != 1 || !s {
-		t.Fatal("one completed press must toggle once", n, s)
-	}
-	if n, s := w.Read(true, false, false, false); n != 0 || s {
-		t.Fatal("idle", n, s)
-	}
-	// Reverse direction, releasing Enter before Alt.
-	w.Read(true, true, true, true)
-	if n, s := w.Read(true, true, false, false); n != 0 || !s {
-		t.Fatal(n, s)
-	}
-	if n, s := w.Read(true, false, false, false); n != 1 || !s {
-		t.Fatal(n, s)
-	}
-	if n, s := w.Read(true, false, true, true); n != 0 || s {
-		t.Fatal("ordinary Enter consumed", n, s)
-	}
-	w.Read(true, false, false, false)
-	// Two Enter presses while keeping Alt held retain two distinct intents.
-	w.Read(true, true, true, true)
-	w.Read(true, true, false, false)
-	w.Read(true, true, true, true)
-	w.Read(true, true, false, false)
-	if n, s := w.Read(true, false, false, false); n != 2 || !s {
-		t.Fatal(n, s)
-	}
-	// A focus change cancels the pending gesture; held keys cannot resume it.
-	w.Read(true, true, true, true)
-	w.Read(false, true, true, false)
-	if n, s := w.Read(true, true, true, false); n != 0 || !s {
-		t.Fatal("focus held leaked", n, s)
-	}
-	if n, _ := w.Read(true, false, false, false); n != 0 {
-		t.Fatal("unfocused intent applied")
-	}
-	// A queued make that was already released still consumes exactly one chord.
-	if n, s := w.Read(true, true, false, true); n != 0 || !s {
-		t.Fatal(n, s)
-	}
-	if n, s := w.Read(true, false, false, false); n != 1 || !s {
-		t.Fatal(n, s)
+		for _, current := range []configuration.WindowMode{configuration.Windowed, style, other} {
+			var w windowShortcuts
+			if _, ok := w.read(true, alt, false, true, 1, current); ok {
+				t.Fatal("early transition")
+			}
+			for range 99 {
+				if _, ok := w.read(true, !alt, false, true, 0, current); ok {
+					t.Fatal("held key repeated")
+				}
+			}
+			got, ok := w.read(true, !alt, false, false, 0, current)
+			want := style
+			if current == style {
+				want = configuration.Windowed
+			}
+			if !ok || got != want {
+				t.Fatalf("from %v alt %t got %v", current, alt, got)
+			}
+			if _, ok = w.read(true, alt, false, false, 0, got); ok {
+				t.Fatal("repeated release")
+			}
+		}
+		var w windowShortcuts
+		if _, ok := w.read(true, alt, false, false, 2, configuration.Windowed); ok {
+			t.Fatal("two quick taps left fullscreen active")
+		}
+		w.read(true, alt, false, true, 1, configuration.Windowed)
+		w.read(false, alt, false, true, 0, configuration.Windowed)
+		if _, ok := w.read(true, alt, false, false, 0, configuration.Windowed); ok {
+			t.Fatal("modal/focus leakage")
+		}
+		if _, ok := w.read(true, alt, true, false, 1, configuration.Windowed); ok {
+			t.Fatal("other modifier")
+		}
 	}
 }

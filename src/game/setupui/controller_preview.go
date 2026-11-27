@@ -46,10 +46,10 @@ func (h *helpPanel) drawControls(s tcell.Screen, x, y, w int) {
 	for n, ids := range [][2]string{{"flight.roll", "flight.pitch"}, {"flight.yaw", "flight.collective"}} {
 		cx, cy := x+9+19*n, y+3
 		vertical := "Pitch"
-		horizontal := "Roll"
+		horizontal := "Roll/Bank"
 		if n == 1 {
 			vertical = "Collective"
-			horizontal = "Yaw"
+			horizontal = "Yaw/Rotor"
 		}
 		tview.Print(s, vertical, cx-len(vertical)/2, y, 14, tview.AlignLeft, white)
 		for dy := -2; dy <= 2; dy++ {
@@ -58,7 +58,7 @@ func (h *helpPanel) drawControls(s tcell.Screen, x, y, w int) {
 		for dx := -4; dx <= 4; dx++ {
 			s.SetContent(cx+dx, cy, '░', nil, tcell.StyleDefault.Foreground(white).Background(blue))
 		}
-		tview.Print(s, horizontal, cx-9, cy, 5, tview.AlignLeft, white)
+		tview.Print(s, horizontal, cx-len(horizontal)/2, y+6, 16, tview.AlignLeft, white)
 		vx, vy := value(ids[0]), value(ids[1])
 		px := cx + int(math.Round(vx*4))
 		py := cy + int(math.Round(vy*2))

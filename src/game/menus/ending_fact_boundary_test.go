@@ -48,7 +48,7 @@ func TestEndingMissingFuelRecoversEquivalentCampaignFacts(t *testing.T) {
 		t.Fatal("restart", err)
 	}
 	session.Close()
-	names, err := filepath.Glob(filepath.Join(c.Store.Directory, "reports", "session-*", "incident-*", "error_report.zip"))
+	names, err := filepath.Glob(filepath.Join(filepath.Dir(c.Store.Directory), "reports", "session-*", "incident-*", "error_report.zip"))
 	if err != nil || len(names) != 1 {
 		t.Fatal("report", names, err)
 	}
@@ -70,7 +70,7 @@ func TestEndingMissingFuelRecoversEquivalentCampaignFacts(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if film.Header.Simulation != replay.W31Compatibility {
+	if film.Header.Simulation != replay.RouteAcquisitionCompatibility {
 		t.Fatal(film.Header.Simulation)
 	}
 	q, err := NewFilmPlayback(c.Office.Assets, film, c.Runtime)

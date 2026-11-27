@@ -93,26 +93,27 @@ func TestOriginalInstallationDiscoveryAndSave(t *testing.T) {
 				u.Menu.InputHandler()(tcell.NewEventKey(tcell.KeyEnter, 0, 0), func(p tview.Primitive) { u.App.SetFocus(p) })
 			}
 			u := open()
-			display(u, source)
-			for _, m := range []string{"graphics", "sound", "controls", "debug", "advanced", "logging"} {
-				for _, s := range Catalogue(m) {
-					if s.ID == "original" {
-						t.Fatal("duplicate in", m)
-					}
-				}
+			display(u, "Choose Steam, GOG or Custom")
+			u.activate(1)
+			press := func(k tcell.Key) {
+				u.App.GetFocus().InputHandler()(tcell.NewEventKey(k, 0, 0), func(p tview.Primitive) { u.App.SetFocus(p) })
 			}
-			if err := os.Remove(manifest); err != nil {
-				t.Fatal(err)
+			if list, ok := u.App.GetFocus().(*tview.List); !ok || list.GetItemCount() != 2 {
+				t.Fatal("expected Steam and Custom choices")
 			}
-			u.open("settings")
-			display(u, source)
-			action(u, "discard")
-			if !bytes.Equal(before, read()) {
-				t.Fatal("discard wrote config")
+			press(tcell.KeyEnter)
+			press(tcell.KeyRight)
+			press(tcell.KeyEnter) // Cancel
+			if u.popup || u.Doc.Config.OriginalSource != configuration.OriginalUnselected || !bytes.Equal(before, read()) {
+				t.Fatal("cancel changed preference")
 			}
-			display(open(), "original") // stale manifest
-			write(manifest, metadata)
-			u = open()
+			u.activate(1)
+			press(tcell.KeyEnter)
+			press(tcell.KeyEnter) // Apply, including focus on the default Steam choice
+			if u.popup {
+				t.Fatal("did not apply")
+			}
+			display(u, "Steam — "+source)
 			action(u, "save")
 			if !u.Saved {
 				t.Fatal("Save & Exit failed")
@@ -120,36 +121,18 @@ func TestOriginalInstallationDiscoveryAndSave(t *testing.T) {
 			if err := os.Remove(manifest); err != nil {
 				t.Fatal(err)
 			}
-			display(open(), source)
-			game, err := configuration.LoadApplication(app, "")
-			if err != nil || game.Original != source {
-				t.Fatal(game.Original, err)
+			display(open(), "Steam — "+source)
+			g, err := configuration.LoadApplication(app, "")
+			if err != nil || g.Original != source || g.Config.OriginalSource != configuration.OriginalSteam {
+				t.Fatal(g.Config.Original, err)
 			}
-			// A valid parent-relative choice keeps its spelling and takes priority
-			// even when the Steam installation is simultaneously available.
-			if err := os.Symlink(source, filepath.Join(home, "original")); err != nil {
-				t.Fatal(err)
-			}
-			doc, err = configuration.Load(config)
-			if err != nil {
-				t.Fatal(err)
-			}
-			doc.Config.Original = "../original"
-			if err = doc.Save(); err != nil {
-				t.Fatal(err)
-			}
-			write(manifest, metadata)
-			display(open(), "../original")
-			if err := os.Remove(filepath.Join(home, "original")); err != nil {
-				t.Fatal(err)
-			}
-			if err := os.Symlink(source, filepath.Join(app, "original")); err != nil {
-				t.Fatal(err)
-			}
-			display(open(), "original")
-			game, err = configuration.LoadApplication(app, "")
-			if err != nil || game.Original != filepath.Join(app, "original") {
-				t.Fatal(game.Original, err)
+			u = open()
+			u.Doc.Config.Original = "../missing custom"
+			u.Doc.Config.OriginalSource = configuration.OriginalCustom
+			action(u, "save")
+			u = open()
+			if got := u.Doc.Config.Original; got != "../missing custom" {
+				t.Fatal(got)
 			}
 		})
 	}

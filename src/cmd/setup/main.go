@@ -1,33 +1,50 @@
 package main
 
 import (
-	"bufio"
+	"errors"
 	"flag"
 	"fmt"
-	"golang.org/x/term"
 	"gunship2000-assets/game/configuration"
+	"gunship2000-assets/game/diagnostics"
 	"gunship2000-assets/game/setupui"
+	"gunship2000-assets/game/state"
+	"gunship2000-assets/internal/instancealert"
+	"gunship2000-assets/internal/playerdirs"
+	"gunship2000-assets/internal/storeowner"
 	"os"
 	"path/filepath"
 )
 
 var applicationMode = "auto"
 
-var terminalChild bool
+func main() { os.Exit(run()) }
 
-func main() {
-	code := run()
-	if code != 0 && terminalChild && term.IsTerminal(int(os.Stdin.Fd())) {
-		fmt.Fprintln(os.Stderr, "SETUP failed. Press Enter to close this terminal.")
-		_, _ = bufio.NewReader(os.Stdin).ReadString('\n')
+func setupStartupError(saves string, err error) int {
+	fmt.Fprintln(os.Stderr, err)
+	if errors.Is(err, storeowner.ErrInUse) {
+		instancealert.Show(err)
+		return 1
 	}
-	os.Exit(code)
+	reported := diagnostics.StartupError("SETUP", saves, err)
+	instancealert.Startup("SETUP", reported.Error())
+	return 1
 }
-func run() int {
+
+func run() (code int) {
+	var saves string
+	defer func() {
+		if v := recover(); v != nil {
+			code = setupStartupError(saves, fmt.Errorf("unexpected SETUP failure: %v", v))
+		}
+	}()
+	// Resolve console output before flag parsing (including -help).
+	if len(os.Args) > 1 {
+		attachCLI()
+	}
 	f := flag.NewFlagSet("setup", flag.ContinueOnError)
 	debug := f.Bool("debug", false, "show the DEBUG menu for this SETUP session")
 	child := f.Bool("terminal-child", false, "internal terminal relaunch guard")
-	ready := f.String("terminal-ready", "", "internal terminal readiness file")
+	f.String("terminal-ready", "", "internal terminal readiness file")
 	list := f.Bool("list-controllers", false, "list raw joystick capabilities without a window, configuration write or game assets")
 	watch := f.Int("watch-controllers", 0, "print raw joystick samples for1..300seconds (explicit diagnostic)")
 	installRoot := f.String("terminal-install", "", "internal terminal launch directory")
@@ -47,8 +64,7 @@ func run() int {
 	}
 	dir, e := configuration.ResolveDirectory(resolvedApp, applicationMode)
 	if e != nil {
-		fmt.Fprintln(os.Stderr, e)
-		return 1
+		return setupStartupError("", e)
 	}
 	if *watch < 0 || *watch > 300 {
 		fmt.Fprintln(os.Stderr, "watch-controllers:1..300seconds or0 (off)")
@@ -56,15 +72,6 @@ func run() int {
 	}
 	if *list || *watch > 0 {
 		return controllerDiagnostics(*watch)
-	}
-	terminalChild = *child
-	if !*initOnly && !*check {
-		if handled, code := ensureTerminal(dir, os.Args[1:], *child, *ready); handled {
-			return code
-		}
-	}
-	if !*initOnly && !*check {
-		sizeOwnedTerminal(*child)
 	}
 	path := filepath.Join(dir, configuration.Filename)
 	var d *configuration.Document
@@ -80,19 +87,28 @@ func run() int {
 		var err error
 		owner, err = configuration.OpenLocationAt(dir, *app, "", false)
 		if err != nil {
-			terminalChild = false // a refused opener exits without waiting for another key
-			fmt.Fprintln(os.Stderr, err)
-			return 1
+			return setupStartupError("", err)
 		}
 		defer owner.Close()
+		saves = filepath.Join(owner.Data, "saves")
 		path = filepath.Join(owner.Data, configuration.Filename)
 		d, _, e = configuration.InitializeAt(path, dir)
 	}
 	if e != nil {
-		fmt.Fprintln(os.Stderr, e)
-		return 1
+		if *check {
+			fmt.Fprintln(os.Stderr, e)
+			return 1
+		}
+		return setupStartupError(saves, e)
 	}
 	fmt.Println("Configuration:", path)
+	if !*check {
+		saves = configuration.SavePath(dir, owner.Data, d.Config.Saves)
+		playerdirs.Archive(saves, "reports", false)
+		if err := state.PrepareExistingCareer(saves, owner.Data); err != nil {
+			return setupStartupError(saves, err)
+		}
+	}
 	if *initOnly || *check {
 		return 0
 	}
@@ -106,9 +122,8 @@ func run() int {
 	if *debug {
 		ui.RevealDebug()
 	}
-	if e = ui.Run(); e != nil {
-		fmt.Fprintln(os.Stderr, "SETUP terminal:", e, "\nRun setup from a terminal (80x25 or larger).")
-		return 1
+	if e = ui.RunWindow(); e != nil {
+		return setupStartupError(saves, fmt.Errorf("SETUP window: %w", e))
 	}
 	return 0
 }

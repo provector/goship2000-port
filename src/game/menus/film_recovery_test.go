@@ -37,6 +37,9 @@ func TestRecoveryRequiresUniqueEntireOverviewDomain(t *testing.T) {
 }
 func TestRecoverPreservedFullWitness(t *testing.T) {
 	path := os.Getenv("GS2000_TEST_RECOVERY_FILM")
+	if bound := os.Getenv("GS2000_TEST_PUBLISHED_RECOVERY_FILM"); bound != "" {
+		path = bound
+	}
 	if path == "" {
 		t.Skip("explicit preserved-film copy opt-in")
 	}
@@ -67,7 +70,11 @@ func TestRecoverPreservedFullWitness(t *testing.T) {
 	if r.Operation != 995 || r.CursorX != 31 || r.CursorY != 130 || r.Steps != 9974 || r.Events != 23 || r.Operations != 13505 {
 		t.Fatalf("wrong recovered witness %+v", r)
 	}
-	q, e := NewRecoveredFilmPlayback(a, data, r, opt)
+	digest := before
+	if existing := os.Getenv("GS2000_TEST_RECOVERY_RECEIPT"); existing != "" {
+		r, digest = portableRecoveryFixture(t, path, r)
+	}
+	q, e := NewRecoveredSource(a, f, digest, r, opt)
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -106,7 +113,7 @@ func TestRecoverPreservedFullWitness(t *testing.T) {
 	}
 	wrong := *r
 	wrong.FilmSHA256 = strings.Repeat("0", 64)
-	if _, e = NewRecoveredFilmPlayback(a, data, &wrong, opt); e == nil {
+	if _, e = NewRecoveredSource(a, f, digest, &wrong, opt); e == nil {
 		t.Fatal("wrong-hash receipt accepted")
 	}
 	raw, _ := json.Marshal(f)
@@ -129,9 +136,14 @@ func TestRecoverPreservedFullWitness(t *testing.T) {
 	if e = os.WriteFile(filepath.Join(s.Root, f.Header.ID+".g2r"), data, 0600); e != nil {
 		t.Fatal(e)
 	}
-	rp, _ := s.RecoveryPath(f.Header.ID)
-	if e = replay.WriteRecoveryNew(rp, r); e != nil {
-		t.Fatal(e)
+	if os.Getenv("GS2000_TEST_RECOVERY_RECEIPT") == "" {
+		rp, err := s.RecoveryPath(f.Header.ID)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err = replay.WriteRecoveryNew(rp, r); err != nil {
+			t.Fatal(err)
+		}
 	}
 	if _, e = LoadManagedFilmPlayback(a, s, f.Header.ID, opt); e != nil {
 		t.Fatal(e)

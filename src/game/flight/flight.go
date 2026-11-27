@@ -54,6 +54,7 @@ type Terminal struct {
 // Input belongs to one logical update, never one draw. The scheduler supplies
 // source DF elapsed clocks and the separate E0/DA stagger gate/counter.
 type Input struct {
+	IndependentHover   bool // Launch policy for separate yaw/collective and horizontal stabilization.
 	FuelSupplyFailed   bool
 	PoweredEngineCount byte // Zero preserves historical launch physics.
 
@@ -244,7 +245,9 @@ func (k *kernel) update(s *State, in Input) {
 		if in.AutoPilotDisturbance != 0 {
 			s.HeightControl = 0 // source28a4..28b5 before later in-block writers
 		}
-		if abs(in.X) > 32 || abs(in.Y) > 32 || abs(in.Yaw) > 32 {
+		horizontalHold := in.IndependentHover && s.Hover != 0
+		rollInput := abs(in.X) > 32 && (in.ControlFlags&2 != 0 || !horizontalHold)
+		if abs(in.Y) > 32 || rollInput || !horizontalHold && abs(in.Yaw) > 32 {
 			s.CompressionLimit = true
 			s.HeightControl = 0
 		}

@@ -62,50 +62,11 @@ func (s *State) advanceHealthyFollower(actor int, in Input) error {
 		s.syncDeath(e)
 		return nil
 	}
-	class := int(int8(target.Object.Raw[31]))
-	effectClass := class
-	if effectClass > 2 {
-		effectClass = 2
-	}
-	if effectClass < 0 {
-		return fmt.Errorf("follower target%d signed class%d lacks effect operand", assigned-1, class)
+	chosen, err := s.followerStation(actor, assigned-1, distance)
+	if err != nil {
+		return err
 	}
 	ship := &s.init.Stores.Ships[actor]
-	chosen := -1
-	var chosenEffect byte
-	for i := 0; i < 4; i++ {
-		st := &ship.Stations[i]
-		if i == 0 && s.init.Stores.Damage[actor][4] == 2 || distance < 64 || st.CompactID <= 1 || st.Ammunition == 0 {
-			continue
-		}
-		w, er := s.definition(st.CompactID)
-		if er != nil {
-			return er
-		}
-		if binary.LittleEndian.Uint16(w.Raw[9:]) < distance>>5 || w.Raw[4+effectClass] == 0 {
-			continue
-		}
-		effect := w.Raw[4+effectClass]
-		if chosen >= 0 && effect <= chosenEffect {
-			continue
-		}
-		accepted := false
-		if class >= 2 {
-			accepted = class == 2 && flags(w)&0x200 != 0 && flags(w)&0x11 == 0 || class == 3 && flags(w)&0x400 != 0
-		} else {
-			accepted = flags(w)&0x800 != 0
-		}
-		if !accepted {
-			continue
-		}
-		chosen, chosenEffect = i, effect
-		if chosen == 0 {
-			break
-		}
-		if flags(w)&0x1000 != 0 && chosenEffect > 5 {
-			break
-		}
-	}
 	if chosen < 0 {
 		e.ControlRaw[3] = byte(0xfd)
 		s.syncDeath(e)
@@ -208,4 +169,70 @@ func (s *State) advanceHealthyFollower(actor int, in Input) error {
 	s.Events = append(s.Events, Event{Kind: "notification", Actor: actor, Target: assigned - 1, Notification: 2, Source: "A7E6:AF3C fired"})
 	s.syncDeath(e)
 	return nil
+}
+
+// CanAcquireFollowerTarget is the read-only combat check for a second Fly To
+// contact. Never consult a firing roll or change the aircraft while searching.
+func (s *State) CanAcquireFollowerTarget(actor, row int, distance uint16) (bool, error) {
+	target, err := s.entity(row)
+	if err != nil {
+		return false, err
+	}
+	if s.init.Stores == nil || actor < 1 || actor >= 5 || actor >= len(s.init.Stores.Ships) || actor >= len(s.init.Stores.Damage) {
+		return false, fmt.Errorf("route contact actor%d lacks its aircraft stores", actor)
+	}
+	if target.Object.Raw[31] > 3 || target.Side != "enemy" || target.FlightSlot >= 0 || target.Kind > 0x0f || target.Participation != 1 || s.init.Stores.Damage[actor][9] != 0 {
+		return false, nil
+	}
+	station, err := s.followerStation(actor, row, distance)
+	return station >= 0, err
+}
+
+func (s *State) followerStation(actor, row int, distance uint16) (int, error) {
+	target := &s.init.Entities[row]
+	class := int(int8(target.Object.Raw[31]))
+	effectClass := class
+	if effectClass > 2 {
+		effectClass = 2
+	}
+	if effectClass < 0 {
+		return -1, fmt.Errorf("follower target%d signed class%d lacks effect operand", row, class)
+	}
+	ship := &s.init.Stores.Ships[actor]
+	chosen := -1
+	var chosenEffect byte
+	for i := 0; i < 4; i++ {
+		st := &ship.Stations[i]
+		if i == 0 && s.init.Stores.Damage[actor][4] == 2 || distance < 64 || st.CompactID <= 1 || st.Ammunition == 0 {
+			continue
+		}
+		w, er := s.definition(st.CompactID)
+		if er != nil {
+			return -1, er
+		}
+		if binary.LittleEndian.Uint16(w.Raw[9:]) < distance>>5 || w.Raw[4+effectClass] == 0 {
+			continue
+		}
+		effect := w.Raw[4+effectClass]
+		if chosen >= 0 && effect <= chosenEffect {
+			continue
+		}
+		accepted := false
+		if class >= 2 {
+			accepted = class == 2 && flags(w)&0x200 != 0 && flags(w)&0x11 == 0 || class == 3 && flags(w)&0x400 != 0
+		} else {
+			accepted = flags(w)&0x800 != 0
+		}
+		if !accepted {
+			continue
+		}
+		chosen, chosenEffect = i, effect
+		if chosen == 0 {
+			break
+		}
+		if flags(w)&0x1000 != 0 && chosenEffect > 5 {
+			break
+		}
+	}
+	return chosen, nil
 }

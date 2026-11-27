@@ -57,6 +57,7 @@ func TestCompactHelpAndMenuWalk(t *testing.T) {
 	defer screen.Fini()
 	screen.SetSize(80, 25)
 	checkHelp := func(id string) {
+		u.App.GetBeforeDrawFunc()(screen)
 		u.Main.SetRect(0, 0, 80, 25)
 		u.Main.Draw(screen)
 		_, _, w, h := u.Help.GetInnerRect()
@@ -74,6 +75,14 @@ func TestCompactHelpAndMenuWalk(t *testing.T) {
 			checkHelp(s.ID)
 			if s.Kind == "input" || s.Kind == "level" {
 				u.activate(r)
+				if s.ID == "original" { // The installation list initially owns focus.
+					list, ok := u.App.GetFocus().(*tview.List)
+					if !ok {
+						t.Fatal("missing installation selector")
+					}
+					list.SetCurrentItem(list.GetItemCount() - 1) // Custom has the editable path.
+					list.InputHandler()(tcell.NewEventKey(tcell.KeyTab, 0, 0), func(p tview.Primitive) { u.App.SetFocus(p) })
+				}
 				field, ok := u.App.GetFocus().(*tview.InputField)
 				if !ok {
 					t.Fatal(s.ID, "did not open editable field")
@@ -114,7 +123,7 @@ func TestCompactHelpAndMenuWalk(t *testing.T) {
 				u.closePopup()
 			}
 		}
-		if menu == "graphics" && !slices.Equal(ids, []string{"back", "render_scale", "fullscreen", "presentation", "floating", "initial_window", "draw_fps_cpu", "legacy_defaults", "modern_defaults"}) {
+		if menu == "graphics" && !slices.Equal(ids, []string{"back", "render_scale", "presentation", "floating", "game_window", "draw_fps_cpu", "legacy_defaults", "modern_defaults"}) {
 			t.Fatal(ids)
 		}
 		t.Log(menu, ids)
@@ -174,7 +183,16 @@ func TestSavedStockTextAndCustomEdits(t *testing.T) {
 		}
 		u = New(d)
 		u.open("graphics")
-		if u.Table.GetCell(3, 0).Text != "Framerate" || u.Table.GetCell(3, 1).Text != "60fps" || u.Doc.Config.Runtime.PresentationFPS != 37 || u.Doc.Config.UI["speech"].Tooltip != "My own speech help" || u.Doc.Config.Original != "/custom/example" {
+		row := -1
+		for k, v := range u.settings {
+			if v.ID == "presentation" {
+				if row != -1 {
+					t.Fatal("duplicate Framerate control")
+				}
+				row = k
+			}
+		}
+		if row < 0 || u.Table.GetCell(row, 0).Text != "Framerate" || u.Table.GetCell(row, 1).Text != "60fps" || u.Doc.Config.Runtime.PresentationFPS != 37 || u.Doc.Config.UI["speech"].Tooltip != "My own speech help" || u.Doc.Config.Original != "/custom/example" {
 			t.Fatal("lost setting or stale text", u.Doc.Config.UI["presentation"])
 		}
 		for _, s := range u.settings {

@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"runtime"
 	"strings"
 	"testing"
 )
@@ -198,7 +199,10 @@ func TestAuthoredCompilerStoreAndTamper(t *testing.T) {
 	if _, e = store.Save(d, "wrong"); e == nil {
 		t.Fatal("external revision ignored")
 	}
-	raw, _ := os.ReadFile(filepath.Join(store.Directory, d.ID+".g2m"))
+	raw, err := os.ReadFile(filepath.Join(store.Directory, d.Title+".g2m"))
+	if err != nil {
+		t.Fatal(err)
+	}
 	if strings.Contains(string(raw), "PilotID") {
 		t.Fatal("old pilot stored")
 	}
@@ -470,4 +474,115 @@ func TestAuthoredLockOwnership(t *testing.T) {
 	if _, e := os.Stat(path); e != nil {
 		t.Fatal("unknown lock lost")
 	}
+}
+
+func TestEditorSaveUsesTitleAndAdoptsPreviousFile(t *testing.T) {
+	data := authoredTestData(t)
+	d, in := authoredReady(t, data)
+	if _, err := CompileAuthoredMission(data, d, in); err != nil {
+		t.Fatal(err)
+	}
+	store := AuthoredStore{Directory: filepath.Join(t.TempDir(), "Łódź missions")}
+	title := func(s string) { d.Title = s; d.Compiled.Revision = AuthoredRevision(d) }
+	title("Arctic Fleet")
+	rev, err := store.Save(d, "")
+	if err != nil {
+		t.Fatal(err)
+	}
+	path := func(name string) string { return filepath.Join(store.Directory, name+".g2m") }
+	if err = os.Rename(path(d.Title), path(d.ID)); err != nil {
+		t.Fatal(err)
+	}
+	if _, _, err = store.Load(d.ID); err != nil {
+		t.Fatal(err)
+	}
+	save := func() {
+		t.Helper()
+		var e error
+		rev, e = store.Save(d, rev)
+		if e != nil {
+			t.Fatal(e)
+		}
+	}
+	save()
+	save()
+	if _, e := os.Stat(path(d.ID)); !os.IsNotExist(e) {
+		t.Fatal("opaque name survived", e)
+	}
+	other := []byte("unrelated")
+	if e := os.WriteFile(path("NORTH"), other, 0600); e != nil {
+		t.Fatal(e)
+	}
+	title("North")
+	save()
+	if _, e := os.Stat(path("North (2)")); e != nil {
+		t.Fatal(e)
+	}
+	if b, _ := os.ReadFile(path("NORTH")); string(b) != string(other) {
+		t.Fatal("overwrote other document")
+	}
+	title("CON")
+	save()
+	title("con")
+	save()
+	if _, e := os.Stat(path("_con")); e != nil {
+		t.Fatal(e)
+	}
+	title("Ground/Sea")
+	save()
+	if _, e := os.Stat(path("Ground_Sea")); e != nil {
+		t.Fatal(e)
+	}
+	for _, bad := range []string{"", "Łódź"} {
+		title(bad)
+		if _, e := store.Save(d, rev); e == nil {
+			t.Fatal("invalid portable title accepted", bad)
+		}
+	}
+	loaded, actualRev, e := store.Load(d.ID)
+	if e != nil || rev != actualRev || loaded.Title != "Ground/Sea" {
+		t.Fatal("lost last good mission", actualRev, e)
+	}
+	if _, e = CompileAuthoredMission(data, loaded, in); e != nil {
+		t.Fatal(e)
+	}
+	if runtime.GOOS == "windows" {
+		f, err := os.Open(path("Ground_Sea"))
+		if err != nil {
+			t.Fatal(err)
+		}
+		title("Renamed")
+		_, saveErr := store.Save(d, rev)
+		closeErr := f.Close()
+		if saveErr == nil || closeErr != nil {
+			t.Fatal("open-handle rename", saveErr, closeErr)
+		}
+		previous, unchanged, err := store.Load(d.ID)
+		if err != nil || unchanged != rev || previous.Title != "Ground/Sea" {
+			t.Fatal("open-handle failure lost previous generation", err)
+		}
+	}
+	// Save As gives the copy its own identity even when the title is unchanged.
+	duplicate, err := CloneAuthored(loaded)
+	if err != nil {
+		t.Fatal(err)
+	}
+	duplicate.ID, err = authoredID()
+	if err != nil {
+		t.Fatal(err)
+	}
+	duplicate.Compiled.Revision = AuthoredRevision(duplicate)
+	if _, err = store.Save(duplicate, ""); err != nil {
+		t.Fatal(err)
+	}
+	if _, err = os.Stat(path("Ground_Sea (2)")); err != nil {
+		t.Fatal(err)
+	}
+	for _, id := range []string{loaded.ID, duplicate.ID} {
+		doc, _, err := store.Load(id)
+		if err != nil || doc.Title != "Ground/Sea" {
+			t.Fatal(id, err)
+		}
+	}
+
 }

@@ -23,6 +23,8 @@ import (
 const DefaultPreviewVisualRate = configuration.PreviewVisualRate
 
 type RenderingPreview struct {
+	sessionPoint                 *missionPoint
+	replayHashes                 *replayHashCache
 	targetFrame                  []byte
 	r4Mechanics                  bool // R4 caller-written avoidance and logical recall/jettison.
 	r6Mechanics                  bool // R6 launch-frozen victim ammunition ownership.
@@ -32,6 +34,9 @@ type RenderingPreview struct {
 	lowCityClearance             bool
 	obstacleClearance            bool
 	corridorNavigation           bool
+	routeAcquisitionRetry        bool
+	independentManeuvers         bool
+	carrierBerths                [5]navigation.Point
 	admitExitWaypoint            bool
 	r8Mechanics                  bool // R8 launch-frozen critical read and target revalidation.
 	r5Mechanics                  bool // R5 explicit state policies; frozen before construction.
@@ -144,8 +149,8 @@ func (c *FrontEnd) constructSimulation(final *FinalPreflightConfiguration) error
 	wingmanDamage := fieldCorrections || c.simulationProfile == replay.R22Compatibility || c.simulationProfile == replay.R22AuthoredCompatibility
 	enemyMechanics := wingmanDamage || c.simulationProfile == replay.R21Compatibility || c.simulationProfile == replay.R21AuthoredCompatibility
 	engagementCompression := enemyMechanics || c.simulationProfile == replay.R12Compatibility || c.simulationProfile == replay.R12AuthoredCompatibility
-	navigation := engagementCompression || c.simulationProfile == replay.R11NavigationCompatibility || c.simulationProfile == replay.R11NavigationAuthoredCompatibility
-	waypointRelease := navigation || c.simulationProfile == replay.R11WaypointReleaseCompatibility || c.simulationProfile == replay.R11WaypointReleaseAuthoredCompatibility
+	navigationPolicy := engagementCompression || c.simulationProfile == replay.R11NavigationCompatibility || c.simulationProfile == replay.R11NavigationAuthoredCompatibility
+	waypointRelease := navigationPolicy || c.simulationProfile == replay.R11WaypointReleaseCompatibility || c.simulationProfile == replay.R11WaypointReleaseAuthoredCompatibility
 	avoidance := waypointRelease || c.simulationProfile == replay.R11AvoidanceCompatibility || c.simulationProfile == replay.R11AvoidanceAuthoredCompatibility
 	cameraContact := avoidance || c.simulationProfile == replay.R11CameraCompatibility || c.simulationProfile == replay.R11CameraAuthoredCompatibility
 	r11 := cameraContact || c.simulationProfile == replay.R11Compatibility || c.simulationProfile == replay.R11AuthoredCompatibility
@@ -223,7 +228,7 @@ func (c *FrontEnd) constructSimulation(final *FinalPreflightConfiguration) error
 	p.cameraContactMechanics = cameraContact
 	p.routeAvoidanceMechanics = avoidance
 	p.waypointReleaseMechanics = waypointRelease
-	p.navigationMechanics = navigation
+	p.navigationMechanics = navigationPolicy
 	p.wingmanEngagementCompression = engagementCompression
 	p.r1Mechanics = r1
 	p.enemyBehaviorMechanics = enemyBehavior
@@ -233,6 +238,23 @@ func (c *FrontEnd) constructSimulation(final *FinalPreflightConfiguration) error
 	p.r6Mechanics = c.r6Profile()
 	p.r8Mechanics = c.r8Profile()
 	p.corridorNavigation = c.r86Profile()
+	p.routeAcquisitionRetry = c.routeAcquisitionProfile()
+	p.independentManeuvers = c.maneuverProfile()
+	if p.independentManeuvers && initialized.Switches&0x1000 != 0 {
+		// The initializer places grounded carrier crews along the deck centreline.
+		// Retain those actual berths before flight moves the aircraft.
+		objects := initialized.ContactObjects()
+		for _, e := range initialized.Entities {
+			if e.FlightSlot < 0 || e.FlightSlot >= len(p.carrierBerths) || e.Pose.Height != 0x16a || !e.Visible {
+				continue
+			}
+			floor, ok := p.parkingFloor(e.Pose.H0, e.Pose.H1, objects)
+			if ok && floor == 0x168 {
+				p.Scene.DeckCrew[e.FlightSlot] = e.ID
+				p.carrierBerths[e.FlightSlot] = navigation.Point{H0: e.Pose.H0, H1: e.Pose.H1}
+			}
+		}
+	}
 	p.admitExitWaypoint = c.exitWaypointProfile()
 	p.correctiveFlight = c.correctiveFlightProfile()
 	p.enginePower = c.enginePowerProfile()
@@ -785,7 +807,7 @@ func (c *FrontEnd) ConfigureRenderingInspection(options RenderingInspection) err
 // populated private owners. These bits never enter a film or user preference.
 func launchSimulationPolicy(profile string) (formation, modern bool) {
 	switch profile {
-	case "", replay.W31Compatibility, replay.W31AuthoredCompatibility, replay.W3Compatibility, replay.W3AuthoredCompatibility, replay.V45Compatibility, replay.V45AuthoredCompatibility, replay.U26Compatibility, replay.U26AuthoredCompatibility, replay.U25Compatibility, replay.U25AuthoredCompatibility, replay.U24Compatibility, replay.U24AuthoredCompatibility, replay.T5Compatibility, replay.T5AuthoredCompatibility, replay.R86Compatibility, replay.R86AuthoredCompatibility, replay.R83Compatibility, replay.R83AuthoredCompatibility, replay.R8Compatibility, replay.R8AuthoredCompatibility, replay.R6Compatibility, replay.R6AuthoredCompatibility, replay.R5Compatibility, replay.R5AuthoredCompatibility, replay.R4Compatibility, replay.R4AuthoredCompatibility, replay.R3Compatibility, replay.R3AuthoredCompatibility, replay.R231Compatibility, replay.R231AuthoredCompatibility, replay.R23Compatibility, replay.R23AuthoredCompatibility, replay.R221Compatibility, replay.R221AuthoredCompatibility, replay.R22Compatibility, replay.R22AuthoredCompatibility, replay.R21Compatibility, replay.R21AuthoredCompatibility, replay.R12Compatibility, replay.R12AuthoredCompatibility, replay.R11WaypointReleaseCompatibility, replay.R11WaypointReleaseAuthoredCompatibility, replay.R11AvoidanceCompatibility, replay.R11AvoidanceAuthoredCompatibility, replay.R11CameraCompatibility, replay.R11CameraAuthoredCompatibility, replay.R11Compatibility, replay.R11AuthoredCompatibility, replay.R1Compatibility, replay.R1AuthoredCompatibility, replay.P7Compatibility, replay.P7AuthoredCompatibility, replay.P6Compatibility, replay.P6AuthoredCompatibility, replay.P5Compatibility, replay.P5AuthoredCompatibility, replay.P4Compatibility, replay.P4AuthoredCompatibility:
+	case "", replay.RouteAcquisitionCompatibility, replay.RouteAcquisitionAuthoredCompatibility, replay.ManeuverCompatibility, replay.ManeuverAuthoredCompatibility, replay.W31Compatibility, replay.W31AuthoredCompatibility, replay.W3Compatibility, replay.W3AuthoredCompatibility, replay.V45Compatibility, replay.V45AuthoredCompatibility, replay.U26Compatibility, replay.U26AuthoredCompatibility, replay.U25Compatibility, replay.U25AuthoredCompatibility, replay.U24Compatibility, replay.U24AuthoredCompatibility, replay.T5Compatibility, replay.T5AuthoredCompatibility, replay.R86Compatibility, replay.R86AuthoredCompatibility, replay.R83Compatibility, replay.R83AuthoredCompatibility, replay.R8Compatibility, replay.R8AuthoredCompatibility, replay.R6Compatibility, replay.R6AuthoredCompatibility, replay.R5Compatibility, replay.R5AuthoredCompatibility, replay.R4Compatibility, replay.R4AuthoredCompatibility, replay.R3Compatibility, replay.R3AuthoredCompatibility, replay.R231Compatibility, replay.R231AuthoredCompatibility, replay.R23Compatibility, replay.R23AuthoredCompatibility, replay.R221Compatibility, replay.R221AuthoredCompatibility, replay.R22Compatibility, replay.R22AuthoredCompatibility, replay.R21Compatibility, replay.R21AuthoredCompatibility, replay.R12Compatibility, replay.R12AuthoredCompatibility, replay.R11WaypointReleaseCompatibility, replay.R11WaypointReleaseAuthoredCompatibility, replay.R11AvoidanceCompatibility, replay.R11AvoidanceAuthoredCompatibility, replay.R11CameraCompatibility, replay.R11CameraAuthoredCompatibility, replay.R11Compatibility, replay.R11AuthoredCompatibility, replay.R1Compatibility, replay.R1AuthoredCompatibility, replay.P7Compatibility, replay.P7AuthoredCompatibility, replay.P6Compatibility, replay.P6AuthoredCompatibility, replay.P5Compatibility, replay.P5AuthoredCompatibility, replay.P4Compatibility, replay.P4AuthoredCompatibility:
 		return true, true
 	case replay.CurrentCompatibility, replay.CurrentAuthoredCompatibility:
 		return true, false

@@ -2,7 +2,7 @@ package setupui
 
 import (
 	"reflect"
-	"slices"
+
 	"testing"
 
 	"github.com/gdamore/tcell/v2"
@@ -29,13 +29,13 @@ func TestPresetMatchesManualSelections(t *testing.T) {
 		if modern {
 			choice, id = 1, "modern_defaults"
 		}
-		manual.activate(1)
+		manual.activate(settingRow(t, manual, "render_scale"))
 		list := manual.App.GetFocus().(*tview.List)
 		list.SetCurrentItem(choice)
 		list.InputHandler()(tcell.NewEventKey(tcell.KeyEnter, 0, 0), manual.focusForTest)
-		manual.activate(3)
-		manual.activate(4)
-		preset.activate(slices.IndexFunc(preset.settings, func(s Setting) bool { return s.ID == id }))
+		manual.activate(settingRow(t, manual, "presentation"))
+		manual.activate(settingRow(t, manual, "floating"))
+		preset.activate(settingRow(t, preset, id))
 		preset.App.GetFocus().InputHandler()(tcell.NewEventKey(tcell.KeyEnter, 0, 0), preset.focusForTest)
 		if !reflect.DeepEqual(manual.Doc.Config, preset.Doc.Config) {
 			t.Fatalf("modern=%t: manual %+v preset %+v", modern, manual.Doc.Config.Runtime, preset.Doc.Config.Runtime)

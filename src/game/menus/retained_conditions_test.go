@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	gamestate "gunship2000-assets/game/state"
 	"os"
-	"path/filepath"
 	"reflect"
 	"testing"
 )
@@ -93,7 +92,7 @@ func TestRetainedExportConditionSaveReopenBegin(t *testing.T) {
 	if !reflect.DeepEqual(career, c.Store.State()) {
 		t.Fatal("condition SAVE wrote career")
 	}
-	path := filepath.Join(c.Files.Store.Directory, saved.ID+".g2m")
+	path := savedMissionPath(t, c.Files.Store.Directory, saved.ID)
 	savedBytes, err := os.ReadFile(path)
 	if err != nil {
 		t.Fatal(err)

@@ -39,6 +39,8 @@ type Config struct {
 	Development          Development     `json:"development"`
 	FormatVersion        int             `json:"format_version"`
 	Original             string          `json:"original"`
+	OriginalSource       string          `json:"original_source"`
+	OriginalCustom       string          `json:"original_custom,omitempty"`
 	Assets               string          `json:"assets"`
 	Saves                string          `json:"saves"`
 	WindowWidth          int             `json:"window_width"`
@@ -47,6 +49,7 @@ type Config struct {
 	SimplifiedFields     bool            `json:"simplified_memory_pattern_rendering"`
 	SquarePixels         bool            `json:"square_pixels"`
 	Fullscreen           bool            `json:"fullscreen"`
+	BorderlessFullscreen bool            `json:"borderless_fullscreen"`
 	FadeMilliseconds     int             `json:"fade_milliseconds"`
 	Audio                AudioConfig     `json:"audio"`
 	SoundEffectsEnabled  bool            `json:"sound_effects_enabled"`
@@ -63,6 +66,13 @@ type Config struct {
 
 const DefaultOriginal = "original"
 
+const (
+	OriginalUnselected = "unselected"
+	OriginalCustom     = "custom"
+	OriginalSteam      = "steam"
+	OriginalGOG        = "gog"
+)
+
 const DefaultWindowWidth, DefaultWindowHeight = 1024, 768
 
 func DefaultConfig() Config {
@@ -70,11 +80,11 @@ func DefaultConfig() Config {
 	r.SimulationResolution = "640x480"
 	r.SimulationRenderScale = 2
 	r.FloatingGeometry = true
-	return Config{Logging: DefaultLogging(), FormatVersion: 1, Development: Development{Seed: 1, TickRate: 70, PreviewRate: 12, Arrangement: 0, CockpitAircraft: -1, Pointer: true, PointerX: 184, PointerY: 70}, Original: DefaultOriginal, Assets: "assets", Saves: "saves", WindowWidth: DefaultWindowWidth, WindowHeight: DefaultWindowHeight, SimplifiedFields: false, LegacyCopyProtection: false, FadeMilliseconds: 150, Audio: AudioConfig{MusicMode: MusicAll}, SoundEffectsEnabled: true, MusicEnabled: true, SpeechEnabled: true, MusicVolume: 100, SoundEffectsVolume: 100, LastMusicVolume: 100, LastEffectsVolume: 100, ReplayMaxMiB: 128, Runtime: r, UI: DefaultText()}
+	return Config{Logging: DefaultLogging(), FormatVersion: 1, Development: Development{Seed: 1, TickRate: 70, PreviewRate: 12, Arrangement: 0, CockpitAircraft: -1, Pointer: true, PointerX: 184, PointerY: 70}, Original: DefaultOriginal, OriginalSource: OriginalUnselected, Assets: "assets", Saves: "saves", WindowWidth: DefaultWindowWidth, WindowHeight: DefaultWindowHeight, SimplifiedFields: false, LegacyCopyProtection: false, FadeMilliseconds: 150, Audio: AudioConfig{MusicMode: MusicAll}, SoundEffectsEnabled: true, MusicEnabled: true, SpeechEnabled: true, MusicVolume: 100, SoundEffectsVolume: 100, LastMusicVolume: 100, LastEffectsVolume: 100, ReplayMaxMiB: 128, Runtime: r, UI: DefaultText()}
 }
 func DefaultText() map[string]Text {
 	return map[string]Text{
-		"swap_yaw_roll_axis": {Label: "Swap Yaw/Roll Axis", Tooltip: "Swap the controller inputs for banking and turning in flight. Menus use the original axes."},
+		"swap_yaw_roll_axis": {Label: "Swap Yaw/Rotor and Roll/Bank", Tooltip: "Swap the controller inputs for banking and turning in flight. Menus use the original axes."},
 		"terminal_target":    {Label: "Terminal Target", Tooltip: "With Show Log on, Custom opens a log window. System uses the console when available.", Choices: map[string]ChoiceText{"system": {Label: "System"}, "custom": {Label: "Custom"}}},
 		"logging":            {Label: "LOGGING", Tooltip: "Choose which game messages to display or keep in a log file."},
 		"show_log":           {Label: "Show Log", Tooltip: "Show game messages as they happen. You can close the log window and continue playing."},
@@ -91,6 +101,7 @@ func DefaultText() map[string]Text {
 		"settings":           {Label: "PORT SETTINGS", Tooltip: "Choose the original game folder, recording size and flight preferences."},
 		"debug":              {Label: "DEBUG", Tooltip: "Adjust advanced options, logging and the on-screen performance display."},
 		"render_scale":       {Label: "Sim Rendering Resolution", Tooltip: "Choose the detail of the 3D picture. Higher resolutions can draw more slowly.", Choices: map[string]ChoiceText{"1": {Label: "320x200 (Legacy)"}, "2": {Label: "640x480 (VGA High)"}, "800x600": {Label: "800x600 (SVGA)"}, "1024x768": {Label: "1024x768 (Experimental)"}, "1280x1024": {Label: "1280x1024 (Experimental)"}}},
+		"game_window":        {Label: "Window", Tooltip: "Choose the game window size or fullscreen style. Borderless F covers the current desktop. SETUP stays windowed."},
 		"initial_window":     {Label: "Initial Window Resolution", Tooltip: "Sets the game window size at startup. You can resize it later. The 3D rendering resolution stays the same."},
 		"fullscreen":         {Label: "Fullscreen", Tooltip: "Switch between a window and fullscreen. The 3D resolution stays the same."},
 		"presentation":       {Label: "Framerate", Tooltip: "Press Enter to switch between ten stepped poses per second and smooth motion. Flight speed stays the same.", Choices: map[string]ChoiceText{"stepped": {Label: "10fps (Legacy)"}, "smooth": {Label: "60fps"}}},
@@ -115,6 +126,7 @@ func DefaultText() map[string]Text {
 		"avoidance_policy":           {Label: "Avoidance", Tooltip: "Choose how your aircraft handles a sudden rise when collision avoidance is enabled.", Choices: map[string]ChoiceText{"legacy": {Label: "Legacy", Tooltip: "Uses the original avoidance response. A steep rise can still cause a collision."}, "corrected": {Label: "Corrected", Tooltip: "Can lift the aircraft abruptly to clear a steep edge."}}},
 		"mouse_capture":              {Label: "Mouse capture", Tooltip: "Click inside the game to capture the pointer. Ctrl+F10 releases it. Disabled keeps the pointer free.", Choices: map[string]ChoiceText{"click": {Label: "Click to capture"}, "disabled": {Label: "Disabled"}}},
 		"fade":                       {Label: "Scene fade (milliseconds)", Tooltip: "Set the duration of screen fades from 0 to 2000 milliseconds. Zero switches fades off."},
+		"convert_replays":            {Label: "Convert/Update Replays", Tooltip: "Convert old films in the saved recording location. Keep the originals in legacy-originals."},
 		"rebuild":                    {Label: "Rebuild Assets", Tooltip: "Prepare fresh graphics and audio from the original installation. Keep SETUP open until it finishes."},
 		"legacy_copy_protection":     {Label: "Legacy Copy Protection", Tooltip: "On requires the matching GPS code before you can open the APU cover. Off starts preflight with the radio locked on."},
 		"field_pattern":              {Label: "Simplified Mem-pattern rendering", Tooltip: "On draws brown European fields with a fine checker. Off draws short horizontal streaks."},
@@ -132,7 +144,7 @@ func DefaultText() map[string]Text {
 		"visual_paused":              {Label: "Preview visual pause", Tooltip: "Start the scene preview paused."},
 		"cli_commands":               {Label: "Diagnostic operations (CLI only)", Tooltip: "View command-line options for inspecting films, preparing assets and opening previews."},
 		"saves_location":             {Label: "Saves Location", Tooltip: "Folder for settings, pilots, missions, recordings and reports. Save & Exit to switch. An empty folder receives a verified copy."},
-		"original":                   {Label: "Original Installation", Tooltip: "Select the folder containing your original game files. SETUP can also find supported Steam installations."},
+		"original":                   {Label: "Original Installation", Tooltip: "Choose a detected Steam or GOG installation, or enter a Custom folder. Only a store choice can fall back to the other store."},
 		"assets":                     {Label: "Prepared assets", Tooltip: "Choose the prepared graphics and audio folder. Rebuild Assets replaces only the default assets folder."},
 		"saves":                      {Label: "Career saves", Tooltip: "Choose the folder for careers, films and editable missions. Relative paths start in the folder containing your settings."},
 		"square_pixels":              {Label: "Square pixel display", Tooltip: "Off shows the original picture in 4:3. On uses square pixels for a wider picture."},

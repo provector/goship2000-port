@@ -73,6 +73,9 @@ func (p *RenderingPreview) wingmanOrder(slot int, key string, gps bool) error {
 	if key == "b" {
 		var err error
 		home, err = navigation.ResolveHome(rows, p.Flight.Navigation[slot].Raw, slot)
+		if berth := p.carrierBerths[slot]; berth.Present() {
+			home = berth
+		}
 		if err != nil {
 			return err
 		}

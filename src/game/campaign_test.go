@@ -1,7 +1,7 @@
 package main
 
 import (
-	assetdata "gunship2000-assets/game/assets"
+	"bytes"
 	gamestate "gunship2000-assets/game/state"
 	"gunship2000-assets/internal/testfixture"
 	"os"
@@ -43,7 +43,7 @@ func TestCampaignImportMaintenanceCreatesSeparateSave(t *testing.T) {
 	if p == nil || p.Name != "Test" || p.Campaign == nil || p.Campaign.Phase != gamestate.CampaignSuspended {
 		t.Fatal("maintenance import did not preserve the selected supplied pilot")
 	}
-	raw, err := os.ReadFile(filepath.Join(output, store.State().Legacy.PreservedPath))
+	raw, err := os.ReadFile(filepath.Join(filepath.Dir(output), store.State().Legacy.PreservedPath))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -54,11 +54,16 @@ func TestCampaignImportMaintenanceCreatesSeparateSave(t *testing.T) {
 	if !reflect.DeepEqual(raw, want) {
 		t.Fatal("raw roster import changed")
 	}
-	before := assetdata.Hash(testSaveBytes(t, store.Directory, "roster.json"))
+	before := store.State()
+	beforeRoster := testSaveBytes(t, store.Directory, "roster.json")
 	if err = importCampaignSave(assets, paths["ROSTER.DAT"], paths["CAMPGN09.DAT"], nil, output, 1); err == nil {
 		t.Fatal("maintenance import overwrote existing save")
 	}
-	if assetdata.Hash(testSaveBytes(t, store.Directory, "roster.json")) != before {
+	reopened, err := gamestate.OpenSaveStore(output, "")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(reopened.State(), before) || !bytes.Equal(beforeRoster, testSaveBytes(t, store.Directory, "roster.json")) {
 		t.Fatal("failed repeat changed loaded save")
 	}
 }

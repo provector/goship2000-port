@@ -30,11 +30,12 @@ type SortieStart struct {
 	PilotSHA256   string `json:"pilot_before_sha256"`
 	BackupSHA256  string `json:"backup_sha256,omitempty"`
 	// Read schema1 ownership for migration only. Launch no longer owns Phoenix.
-	OwnBackup       bool                       `json:"owns_backup"`
-	PilotBefore     *Pilot                     `json:"pilot_before"`
-	ProposalVersion int                        `json:"proposal_version,omitempty"` // Absent in historical N/N.4 starts means1.
-	RecoveryRoster  []MissionRecoveryCandidate `json:"recovery_roster,omitempty"`
-	GameplayPolicy  string                     `json:"gameplay_policy,omitempty"`
+	OwnBackup        bool                       `json:"owns_backup"`
+	PilotBefore      *Pilot                     `json:"pilot_before"`
+	ProposalVersion  int                        `json:"proposal_version,omitempty"` // Absent in historical N/N.4 starts means1.
+	RecoveryRoster   []MissionRecoveryCandidate `json:"recovery_roster,omitempty"`
+	RetireByMissions bool                       `json:"retire_by_missions,omitempty"`
+	GameplayPolicy   string                     `json:"gameplay_policy,omitempty"`
 }
 
 type SortiePhase string
@@ -197,7 +198,7 @@ func validateSortieDocument(doc *sortieDocument) error {
 		if ctx := doc.Proposal.Facts.ResultContext; ctx != nil {
 			policy = ctx.GameplayPolicy
 		}
-		if policy != doc.Start.GameplayPolicy {
+		if policy != doc.Start.GameplayPolicy || doc.Start.RetireByMissions != (doc.Proposal.Facts.ResultContext != nil && doc.Proposal.Facts.ResultContext.RetireByMissions) {
 			return fmt.Errorf("result gameplay policy differs from accepted launch")
 		}
 		if context := doc.Proposal.Facts.ResultContext; context != nil && context.MissionRecovery != nil && !reflect.DeepEqual(context.MissionRecovery.Candidates, doc.Start.RecoveryRoster) {
@@ -417,7 +418,7 @@ func (s *SaveStore) BeginSortie(request SortieStart) (*SortieStart, error) {
 		return nil, err
 	}
 	if current != nil && (current.Phase == SortieActive || current.Phase == SortiePending) {
-		if current.Phase == SortieActive && current.Start.SourceProfile == request.SourceProfile && current.Start.ClockPolicy == request.ClockPolicy && current.Start.MissionDigest == request.MissionDigest && current.Start.LaunchDigest == request.LaunchDigest && current.Start.GameplayPolicy == request.GameplayPolicy {
+		if current.Phase == SortieActive && current.Start.SourceProfile == request.SourceProfile && current.Start.ClockPolicy == request.ClockPolicy && current.Start.MissionDigest == request.MissionDigest && current.Start.LaunchDigest == request.LaunchDigest && current.Start.GameplayPolicy == request.GameplayPolicy && current.Start.RetireByMissions == request.RetireByMissions {
 			return &current.Start, nil
 		}
 		return nil, fmt.Errorf("a pending sortie already owns this pilot; no new entry was created")
@@ -859,7 +860,7 @@ func (s *SaveStore) ArchiveRejectedSortie(id, reason string, evidence json.RawMe
 	worker := *s
 	worker.liveOwner = false // worker only publishes the staged career transaction
 	if s.packed != nil {
-		worker.packed = &careerPacks{dir: s.packed.dir, cfg: s.packed.cfg, id: s.packed.id}
+		worker.packed = &careerPacks{dir: s.packed.dir, cfg: s.packed.cfg, id: s.packed.id, root: s.Directory}
 	}
 	if len(evidence) != 0 {
 		if err := worker.PreserveUnresolvedSortie(id, evidence); err != nil {

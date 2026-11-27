@@ -93,6 +93,9 @@ func reopenScenarioSave(application string) (string, error) {
 	}
 	st, err := os.Lstat(filepath.Join(path, "player0.g2pak"))
 	if os.IsNotExist(err) {
+		st, err = os.Lstat(filepath.Join(path, "pilots", "player0.g2pak"))
+	}
+	if os.IsNotExist(err) {
 		st, err = os.Lstat(filepath.Join(path, "roster.json"))
 	}
 	if err != nil {

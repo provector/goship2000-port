@@ -173,6 +173,9 @@ func (s *State) advanceLogisticsFollowers(in Input, systems *flight.Systems) ([]
 			case 0x20:
 				err = s.advanceIdleFollower(row, in)
 			}
+			if err == nil && s.carrierIsland != nil {
+				s.clearCarrierContact(e, before)
+			}
 			if err != nil {
 				s.dispatcherScratchKnown = false
 				var order invalidFlightOrder

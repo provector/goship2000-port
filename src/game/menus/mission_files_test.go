@@ -2,6 +2,7 @@ package menus
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	gamestate "gunship2000-assets/game/state"
 	"os"
@@ -130,4 +131,24 @@ func TestMissionFilesTheatreFilterUsesDocumentIdentityForEveryAction(t *testing.
 	if _, err := os.Stat(badPath); err != nil {
 		t.Fatal("unknown/truncated file was removed")
 	}
+}
+
+func savedMissionPath(t *testing.T, dir, id string) string {
+	t.Helper()
+	paths, err := filepath.Glob(filepath.Join(dir, "*.g2m"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, path := range paths {
+		b, err := os.ReadFile(path)
+		if err != nil {
+			t.Fatal(err)
+		}
+		var header struct{ ID string }
+		if json.Unmarshal(b, &header) == nil && header.ID == id {
+			return path
+		}
+	}
+	t.Fatalf("no saved mission %q in %s", id, dir)
+	return ""
 }

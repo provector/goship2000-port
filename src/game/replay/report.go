@@ -131,7 +131,7 @@ func orphanReportPrefix(root, id string) (string, error) {
 		}
 		ok := false
 		var prefix [12]byte
-		if _, err := f.ReadAt(prefix[:], 0); err == nil && (bytes.Equal(prefix[:], publicPrefix) || bytes.Equal(prefix[:], blockPrefix)) {
+		if _, err := f.ReadAt(prefix[:], 0); err == nil && (publishedPrefix(prefix[:]) || bytes.Equal(prefix[:], blockPrefix)) {
 			first, err := readDescriptor(f, 12)
 			if err == nil && first.valid(true) {
 				raw, err := decodeFrame(f, frame{first, 12, 0})
@@ -186,7 +186,7 @@ func CopyReportFilm(z *zip.Writer, root, id string) (status string, operations i
 		if _, e = r.reader.ReadAt(r.prefix[:], 0); e != nil {
 			return "", 0, e
 		}
-		if bytes.Equal(r.prefix[:], publicPrefix) && info.Size() >= pubTailSize {
+		if publishedPrefix(r.prefix[:]) && info.Size() >= pubTailSize {
 			r.tailAt = info.Size() - pubTailSize
 			r.tail = make([]byte, pubTailSize)
 			if _, e = r.reader.ReadAt(r.tail, r.tailAt); e != nil {
@@ -194,7 +194,7 @@ func CopyReportFilm(z *zip.Writer, root, id string) (status string, operations i
 			}
 		}
 		private := bytes.Equal(r.prefix[:], privatePrefix)
-		if !private && !bytes.Equal(r.prefix[:], publicPrefix) {
+		if !private && !publishedPrefix(r.prefix[:]) {
 			if e = checkPrefix(r); e != nil {
 				return "", 0, e
 			}

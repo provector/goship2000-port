@@ -3,9 +3,7 @@ package setupui
 import (
 	"fmt"
 	"gunship2000-assets/game/configuration"
-	"slices"
 	"strconv"
-	"strings"
 )
 
 func integer(id string, p func(*configuration.Config) *int) Setting {
@@ -29,23 +27,10 @@ func toggle(id string, p func(*configuration.Config) *bool) Setting {
 func text(id string, p func(*configuration.Config) *string) Setting {
 	return Setting{ID: id, Kind: "input", Get: func(c *configuration.Config) string { return *p(c) }, Set: func(c *configuration.Config, v string) error { *p(c) = v; return nil }}
 }
-func initialWindowSetting() Setting {
-	choices := configuration.WindowResolutions()
-	for i := range choices {
-		choices[i] = strings.ReplaceAll(choices[i], "x", "×")
-	}
-	return Setting{ID: "initial_window", Kind: "choice", Choices: choices,
-		Get: func(c *configuration.Config) string {
-			return fmt.Sprintf("%d×%d", c.WindowWidth, c.WindowHeight)
-		},
-		Set: func(c *configuration.Config, choice string) error {
-			if !slices.Contains(choices, choice) {
-				return fmt.Errorf("unknown initial window size %q", choice)
-			}
-			_, err := fmt.Sscanf(choice, "%d×%d", &c.WindowWidth, &c.WindowHeight)
-			return err
-		},
-	}
+func windowSetting() Setting {
+	return Setting{ID: "game_window", Kind: "choice", Choices: configuration.WindowChoices(),
+		Get: func(c *configuration.Config) string { return c.WindowMode().Label(c.WindowWidth, c.WindowHeight) },
+		Set: (*configuration.Config).SetWindowChoice}
 }
 
 func Catalogue(menu string) []Setting {
@@ -74,7 +59,6 @@ func Catalogue(menu string) []Setting {
 				}
 				return c.Runtime.SetResolution(v)
 			}},
-			toggle("fullscreen", func(c *configuration.Config) *bool { return &c.Fullscreen }),
 			{ID: "presentation", Kind: "cycle", Choices: []string{"stepped", "smooth"}, Get: func(c *configuration.Config) string { return c.Runtime.PresentationMode }, Set: func(c *configuration.Config, v string) error {
 				c.Runtime.SetFramerate(v)
 				return nil
@@ -88,7 +72,7 @@ func Catalogue(menu string) []Setting {
 				c.Runtime.FloatingGeometry = value == "on"
 				return nil
 			}}}
-		a = append(a, initialWindowSetting(), Setting{ID: "draw_fps_cpu", Kind: "toggle", Get: func(c *configuration.Config) string {
+		a = append(a, windowSetting(), Setting{ID: "draw_fps_cpu", Kind: "toggle", Get: func(c *configuration.Config) string {
 			if c.DrawFPSCPU {
 				return "True"
 			}

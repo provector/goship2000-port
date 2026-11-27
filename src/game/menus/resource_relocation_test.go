@@ -143,7 +143,8 @@ func verifyFilmsAndDocumentsRelocate(t *testing.T, flat, nested, expectedProfile
 				}
 				var q *FilmPlayback
 				if i == 1 {
-					q, e = NewRecoveredFilmPlayback(a, originals[path], receipt, cfg)
+					bound, digest := portableRecoveryFixture(t, path, receipt)
+					q, e = NewRecoveredSource(a, f, digest, bound, cfg)
 				} else {
 					q, e = NewFilmPlayback(a, f, cfg)
 				}

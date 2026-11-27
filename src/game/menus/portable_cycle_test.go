@@ -100,7 +100,7 @@ func TestPortableSortieCycles(t *testing.T) {
 				if err = os.MkdirAll(out, 0700); err != nil {
 					t.Fatal(err)
 				}
-				for name, path := range map[string]string{"Cycle pickup.g2m": filepath.Join(missions.Directory, mission.ID+".g2m"), "Cycle film.g2r": publishedFilmPath(t, front, entry.ID)} {
+				for name, path := range map[string]string{"Cycle pickup.g2m": savedMissionPath(t, missions.Directory, mission.ID), "Cycle film.g2r": publishedFilmPath(t, front, entry.ID)} {
 					b, err := os.ReadFile(path)
 					if err != nil {
 						t.Fatal(err)

@@ -31,6 +31,7 @@ type SortieResultContext struct {
 	Campaign               *CampaignResultInput    `json:"campaign,omitempty"`
 	MissionRecovery        *MissionRecoveryContext `json:"mission_recovery,omitempty"`
 	ReservedRescues        []SortieReservedRescue  `json:"reserved_rescues,omitempty"`
+	RetireByMissions       bool                    `json:"retire_by_missions,omitempty"`
 	GameplayPolicy         string                  `json:"gameplay_policy,omitempty"`
 	RetainedCampaignSHA256 string                  `json:"retained_campaign_sha256,omitempty"`
 }

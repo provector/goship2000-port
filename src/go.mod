@@ -10,6 +10,8 @@ require (
 	github.com/rivo/tview v0.42.0
 )
 
+require google.golang.org/protobuf v1.36.6
+
 require (
 	github.com/icza/bitio v1.1.0 // indirect
 	github.com/mewkiz/flac v1.0.13
@@ -20,7 +22,8 @@ require (
 require (
 	github.com/ebitengine/purego v0.10.0
 	github.com/gdamore/encoding v1.0.1 // indirect
-	github.com/jupiterrider/ffi v0.7.0 // indirect
+	github.com/jezek/xgb v1.3.1
+	github.com/jupiterrider/ffi v0.7.0
 	github.com/klauspost/compress v1.20.2
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/mattn/go-runewidth v0.0.16 // indirect

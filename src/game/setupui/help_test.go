@@ -15,10 +15,11 @@ func TestAnchoredControlsAndTerminalTarget(t *testing.T) {
 	s.SetSize(80, 25)
 	for _, text := range []string{"Short help", strings.Repeat("Long wrapping help for a controller preview. ", 7)} {
 		u.Help.SetText(text)
+		u.App.GetBeforeDrawFunc()(s)
 		u.Main.SetRect(0, 0, 80, 25)
 		u.Main.Draw(s)
 		for _, x := range []int{10, 29} {
-			ch, _, _, _ := s.GetContent(x, 6)
+			ch, _, _, _ := s.GetContent(x, 8)
 			if ch != '█' {
 				t.Fatalf("center moved x=%d got=%q", x, ch)
 			}

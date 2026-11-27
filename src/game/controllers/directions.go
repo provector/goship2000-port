@@ -11,12 +11,12 @@ type AxisDirection struct {
 var AxisDirections = []AxisDirection{
 	{"flight.pitch_forward", "flight.pitch", "Pitch forward", "Up Arrow", "PC base printed26/PDF29 cyclic", false},
 	{"flight.pitch_back", "flight.pitch", "Pitch back", "Down Arrow", "PC base printed26/PDF29 cyclic", true},
-	{"flight.roll_left", "flight.roll", "Roll left", "Left Arrow", "PC base printed26/PDF29 cyclic", false},
-	{"flight.roll_right", "flight.roll", "Roll right", "Right Arrow", "PC base printed26/PDF29 cyclic", true},
+	{"flight.roll_left", "flight.roll", "Roll/Bank left", "Left Arrow", "PC base printed26/PDF29 cyclic", false},
+	{"flight.roll_right", "flight.roll", "Roll/Bank right", "Right Arrow", "PC base printed26/PDF29 cyclic", true},
 	{"flight.collective_raise", "flight.collective", "Collective raise", "+", "PC base printed26/PDF29 collective (= / Shift+=); + label requested Q2.2", true},
 	{"flight.collective_lower", "flight.collective", "Collective lower", "-", "PC base printed26/PDF29 collective", false},
-	{"flight.yaw_left", "flight.yaw", "Yaw left", "Alt+Left Arrow", "Port extension Q2.2; Q3 native flight dispatch; not a DOS default", false},
-	{"flight.yaw_right", "flight.yaw", "Yaw right", "Alt+Right Arrow", "Port extension Q2.2; Q3 native flight dispatch; not a DOS default", true},
+	{"flight.yaw_left", "flight.yaw", "Yaw/Rotor left", "Alt+Left Arrow", "Port extension Q2.2; Q3 native flight dispatch; not a DOS default", false},
+	{"flight.yaw_right", "flight.yaw", "Yaw/Rotor right", "Alt+Right Arrow", "Port extension Q2.2; Q3 native flight dispatch; not a DOS default", true},
 }
 
 func DirectionByID(id string) (AxisDirection, bool) {

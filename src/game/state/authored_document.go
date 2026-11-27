@@ -6,8 +6,10 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	assetdata "gunship2000-assets/game/assets"
+	"gunship2000-assets/internal/playerfile"
 	"io"
 	"os"
 	"path/filepath"
@@ -507,8 +509,34 @@ func (s AuthoredStore) saveLocked(d *AuthoredDocument, expected string) (string,
 	if e = f.Close(); e != nil {
 		return "", e
 	}
-	if e = os.Rename(tmp, p); e != nil {
+	entries, e := os.ReadDir(s.Directory)
+	if e != nil {
 		return "", e
+	}
+	source := ""
+	if expected != "" {
+		source = filepath.Base(p)
+	}
+	name := playerfile.NamesIn(entries).Choose(d.Title, source, ".g2m") + ".g2m"
+	dest := filepath.Join(s.Directory, name)
+	if expected == "" {
+		if e = playerfile.MoveNew(tmp, dest); e != nil {
+			return "", e
+		}
+	} else {
+		// Move the still-valid generation first. Its internal ID remains discoverable
+		// even if the process stops before the new document is published.
+		if dest != p {
+			if e = playerfile.MoveNew(p, dest); e != nil {
+				return "", e
+			}
+		}
+		if e = os.Rename(tmp, dest); e != nil {
+			if dest != p {
+				e = errors.Join(e, playerfile.MoveNew(dest, p))
+			}
+			return "", e
+		}
 	}
 	if dir, e := os.Open(s.Directory); e == nil {
 		_ = dir.Sync()

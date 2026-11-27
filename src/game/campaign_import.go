@@ -6,6 +6,7 @@ import (
 	assetdata "gunship2000-assets/game/assets"
 	"gunship2000-assets/game/configuration"
 	gamestate "gunship2000-assets/game/state"
+	"gunship2000-assets/internal/playerdirs"
 	"os"
 	"path/filepath"
 	"strings"
@@ -40,7 +41,7 @@ func runCampaignImport(args []string) int {
 		return 1
 	}
 
-	owner, ownerErr := configuration.OpenLocation(*app, applicationMode, *assets, false, *output)
+	owner, ownerErr := configuration.OpenLocation(*app, applicationMode, *assets, false, *output, playerdirs.Sibling(*output, "imports"))
 	if ownerErr != nil {
 		return startupError(ownerErr)
 	}
@@ -54,7 +55,7 @@ func runCampaignImport(args []string) int {
 		return startupError(e)
 	}
 	defer store.Close()
-	fmt.Printf("Campaign import saved to %s; source files preserved under imports/. Normal saves were not changed.\n", *output)
+	fmt.Printf("Campaign import saved to %s; source files preserved in %s. Normal saves were not changed.\n", *output, playerdirs.Archive(*output, "imports", false))
 	return 0
 }
 

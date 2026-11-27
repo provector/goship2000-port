@@ -184,7 +184,7 @@ func TestRecordedMissingNaturalCancelRemainsStrictlyGuarded(t *testing.T) {
 	if assetdata.Hash(raw) != "0b07d451acb067f97d3197cce7e1eb4df5ea61f14cf5c9c9e210c9a14c3eded5" {
 		t.Fatal("wrong connected failure fixture")
 	}
-	f, e := replay.Unmarshal(raw)
+	f, e := convertedHistoricalFilm(t, path)
 	if e != nil {
 		t.Fatal(e)
 	}

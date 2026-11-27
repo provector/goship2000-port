@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"gunship2000-assets/game/world"
+	"gunship2000-assets/internal/testfixture"
 	"os"
 	"path/filepath"
 	"testing"
@@ -11,7 +12,11 @@ import (
 
 func padScene(t *testing.T, r *Renderer) Scene {
 	t.Helper()
-	raw, e := os.ReadFile(filepath.Join(os.Getenv("GS2000_Q32_GROUND_SCENES"), "pad-scene.json"))
+	root := os.Getenv("GS2000_Q32_GROUND_SCENES")
+	if root == "" {
+		root = testfixture.Path("ground-scenes")
+	}
+	raw, e := os.ReadFile(filepath.Join(root, "pad-scene.json"))
 	if e != nil {
 		t.Fatal(e)
 	}

@@ -15,6 +15,7 @@ import (
 	"slices"
 	"sort"
 
+	"github.com/klauspost/compress/s2"
 	"github.com/klauspost/compress/zstd"
 )
 
@@ -25,7 +26,7 @@ const maxBlocks = MaxBytes / (2*descriptorSize + 1)
 const footerSize = 44
 const footerID = "G2R2DONE"
 
-var blockPrefix = []byte("GS2FILM\x00\x02\x00\x00\x00")
+var blockPrefix = []byte("GS2FILM\x00\x04\x00\x00\x00")
 var order = binary.LittleEndian
 var invalidBlock = errors.New("invalid or incomplete G2R block structure")
 var encoder, encoderErr = zstd.NewWriter(nil, zstd.WithEncoderLevel(zstd.EncoderLevelFromZstd(3)), zstd.WithEncoderConcurrency(1))
@@ -45,6 +46,7 @@ type recordedStart struct {
 	Launch json.RawMessage
 }
 type manifest struct {
+	Codec       string `json:",omitempty"`
 	Header      Header
 	End         End
 	IndexOffset int64
@@ -52,6 +54,7 @@ type manifest struct {
 	IndexDigest string
 }
 type blockSource struct {
+	readRows    func([]byte, uint32) ([]Operation, error)
 	managedFile os.FileInfo // published file selected by ID; a library rename preserves its inode
 	limit       int64       // selected stored-byte cap for a private, sealed publication
 	revision    string
@@ -103,6 +106,9 @@ func readDescriptor(r io.ReaderAt, at int64) (descriptor, error) {
 	return d, err
 }
 func decodeFrame(r io.ReaderAt, f frame) ([]byte, error) {
+	return decodeCodecFrame(r, f, "")
+}
+func decodeCodecFrame(r io.ReaderAt, f frame, codec string) ([]byte, error) {
 	d, e := readDescriptor(r, f.offset)
 	if e != nil {
 		return nil, e
@@ -116,6 +122,9 @@ func decodeFrame(r io.ReaderAt, f frame) ([]byte, error) {
 	}
 	if sha256.Sum256(stored) != d.Digest {
 		return nil, fmt.Errorf("film frame digest differs")
+	}
+	if codec == protoS2 {
+		return decodeS2(stored, int(d.Decoded))
 	}
 	if decoderErr != nil {
 		return nil, decoderErr
@@ -131,6 +140,9 @@ func decodeFrame(r io.ReaderAt, f frame) ([]byte, error) {
 }
 func writeFrame(w io.Writer, kind, count uint32, b []byte) (descriptor, error) {
 	var d descriptor
+	if kind == 2 {
+		return writeCompressedFrame(w, kind, count, len(b), s2.Encode(nil, b))
+	}
 	if encoderErr != nil {
 		return d, encoderErr
 	}
@@ -209,11 +221,15 @@ func readManifest(r io.ReaderAt, size int64) (manifest, int64, string, error) {
 	return m, at, fmt.Sprintf("%x", h), f.Validate()
 }
 func openBlocks(r io.ReaderAt, size int64, path string) (*Film, error) {
-	m, _, revision, pub, e := readContainer(r, size)
+	f, _, e := openFormat(r, size, path, currentFormat())
+	return f, e
+}
+func openFormat(r io.ReaderAt, size int64, path string, format ImportFormat) (*Film, *portableInfo, error) {
+	m, _, revision, pub, e := readContainerFormat(r, size, format)
 	if e != nil {
-		return nil, e
+		return nil, nil, e
 	}
-	s := &blockSource{limit: MaxBytes, path: path, revision: revision, cached: -1, page: -1, manifest: m}
+	s := &blockSource{readRows: format.Rows, limit: MaxBytes, path: path, revision: revision, cached: -1, page: -1, manifest: m}
 	if path == "" {
 		s.memory = r
 	}
@@ -223,48 +239,48 @@ func openBlocks(r io.ReaderAt, size int64, path string) (*Film, error) {
 	for i := 0; i < m.Blocks; i += indexPageSize {
 		part := buf[:min(indexPageSize, m.Blocks-i)*descriptorSize]
 		if _, e = r.ReadAt(part, m.IndexOffset+int64(i)*descriptorSize); e != nil {
-			return nil, e
+			return nil, nil, e
 		}
 		h.Write(part)
 		s.pages = append(s.pages, indexPage{at, s.count, sha256.Sum256(part)})
 		for j := 0; j < len(part); j += descriptorSize {
 			d := parseDescriptor(part[j:])
 			if !d.valid(i+j == 0) {
-				return nil, invalidBlock
+				return nil, nil, invalidBlock
 			}
 			at += descriptorSize + int64(d.Stored)
 			s.count += int(d.Count)
 			s.decoded += int64(d.Decoded)
 			if at > m.IndexOffset {
-				return nil, invalidBlock
+				return nil, nil, invalidBlock
 			}
 		}
 	}
 	if at != m.IndexOffset || fmt.Sprintf("%x", h.Sum(nil)) != m.IndexDigest {
-		return nil, invalidBlock
+		return nil, nil, invalidBlock
 	}
 	if e = s.loadPage(r, 0); e != nil {
-		return nil, e
+		return nil, nil, e
 	}
 	launch, e := decodeFrame(r, s.frames[0])
 	if e != nil {
-		return nil, e
+		return nil, nil, e
 	}
 	var start recordedStart
 	if e = strictJSON(launch, &start); e != nil {
-		return nil, e
+		return nil, nil, e
 	}
 	initial := start.Header
 	initial.Title = m.Header.Title
 	initial.Complete = m.Header.Complete
 	if initial != m.Header || len(start.Launch) == 0 || len(start.Launch) > MaxLaunchBytes {
-		return nil, invalidBlock
+		return nil, nil, invalidBlock
 	}
 	visible := m.Header
 	if pub != nil {
 		visible.Title = pub.title
 	}
-	return &Film{Header: visible, Launch: start.Launch, End: m.End, blocks: s}, nil
+	return &Film{Header: visible, Launch: start.Launch, End: m.End, blocks: s}, pub, nil
 }
 func (f *Film) BlockStorage() bool { return f != nil && f.blocks != nil }
 func (f *Film) OperationCount() int {
@@ -272,28 +288,6 @@ func (f *Film) OperationCount() int {
 		return f.blocks.count
 	}
 	return len(f.Operations)
-}
-func decodeRows(raw []byte, count uint32) ([]Operation, error) {
-	rows := make([]Operation, 0, min(count, 1024))
-	for len(raw) > 0 {
-		line, rest, ok := bytes.Cut(raw, []byte{'\n'})
-		if !ok || len(line) > maxRow || len(rows) >= int(count) {
-			return nil, invalidBlock
-		}
-		var op Operation
-		if e := strictJSON(line, &op); e != nil {
-			return nil, e
-		}
-		if e := validOperation(op); e != nil {
-			return nil, e
-		}
-		rows = append(rows, op)
-		raw = rest
-	}
-	if len(rows) != int(count) {
-		return nil, invalidBlock
-	}
-	return rows, nil
 }
 func (f *Film) OperationAt(i int) (Operation, error) {
 	if i < 0 || i >= f.OperationCount() {
@@ -342,11 +336,11 @@ func (f *Film) OperationAt(i int) (Operation, error) {
 		}
 	}
 	j := sort.Search(len(s.frames), func(j int) bool { return s.frames[j].first+int(s.frames[j].Count) > i })
-	raw, e := decodeFrame(r, s.frames[j])
+	raw, e := decodeCodecFrame(r, s.frames[j], s.manifest.Codec)
 	if e != nil {
 		return Operation{}, e
 	}
-	rows, e := decodeRows(raw, s.frames[j].Count)
+	rows, e := s.readRows(raw, s.frames[j].Count)
 	if e != nil {
 		return Operation{}, e
 	}
@@ -409,7 +403,7 @@ func InspectPrefix(path string) (blocks, operations int, verifiedBytes int64, er
 func inspectPrefix(r io.ReaderAt) (blocks, operations int, verifiedBytes int64, err error) {
 	var prefix [12]byte
 	_, err = r.ReadAt(prefix[:], 0)
-	if err == nil && !bytes.Equal(prefix[:], privatePrefix) && !bytes.Equal(prefix[:], publicPrefix) {
+	if err == nil && !bytes.Equal(prefix[:], privatePrefix) && !publishedPrefix(prefix[:]) {
 		err = checkPrefix(r)
 	}
 	if err != nil {
@@ -427,7 +421,11 @@ func inspectPrefix(r io.ReaderAt) (blocks, operations int, verifiedBytes int64, 
 			err = invalidBlock
 			return
 		}
-		raw, e := decodeFrame(r, frame{d, verifiedBytes, operations})
+		codec := protoS2
+		if blocks == 0 {
+			codec = ""
+		}
+		raw, e := decodeCodecFrame(r, frame{d, verifiedBytes, operations}, codec)
 		if e == nil {
 			if blocks == 0 {
 				var start recordedStart
@@ -435,7 +433,7 @@ func inspectPrefix(r io.ReaderAt) (blocks, operations int, verifiedBytes int64, 
 					e = invalidBlock
 				}
 			} else {
-				_, e = decodeRows(raw, d.Count)
+				_, e = decodeProtoRows(raw, d.Count)
 			}
 		}
 		if e != nil {

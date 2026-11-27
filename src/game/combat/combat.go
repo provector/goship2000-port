@@ -91,7 +91,8 @@ type Objective struct {
 }
 
 type State struct {
-	ResultObserver           func(Result) `json:"-"` // Film transport only; no gameplay/RNG.
+	carrierIsland            *carrierIsland // Immutable launch geometry and entity indices.
+	ResultObserver           func(Result)   `json:"-"` // Film transport only; no gameplay/RNG.
 	Slots                    [SlotCount]Projectile
 	NextSlot, LastSlot       uint16 // Source AC9 allocator and AC7 cooldown producer.
 	Credit                   [40]byte

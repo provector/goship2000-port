@@ -422,6 +422,12 @@ func identify(raw []byte, name string) (string, string, bool) {
 	return "opaque resource", "no supported content signature; no guessed container boundaries", false
 }
 
+// ErrPreparationSource identifies a failure reading or interpreting required
+// original resources. Output and internal errors must not select another store.
+var ErrPreparationSource = errors.New("required original resources")
+
+func sourceFailure(err error) error { return fmt.Errorf("%w: %w", ErrPreparationSource, err) }
+
 func PrepareAssetsWithAudio(input, output string, prepareAudio func(string, *Manifest) error) (*Manifest, error) {
 	return PrepareAssetsWithProgress(input, output, prepareAudio, nil)
 }
@@ -459,11 +465,11 @@ func prepareSelected(input, output string, prepareAudio func(string, *Manifest) 
 	var planned uint64
 	in, err = OriginalDirectory(in)
 	if err != nil {
-		return nil, err
+		return nil, sourceFailure(err)
 	}
 	files, err := selectedFiles(in, filesRequired)
 	if err != nil {
-		return nil, err
+		return nil, sourceFailure(err)
 	}
 	m.InputDirectory = in
 	process := func(d fs.DirEntry) error {
@@ -569,7 +575,7 @@ func prepareSelected(input, output string, prepareAudio func(string, *Manifest) 
 	}
 	for _, d := range files {
 		if err := process(d); err != nil {
-			return nil, fmt.Errorf("%s: %w", d.Name(), err)
+			return nil, sourceFailure(fmt.Errorf("%s: %w", d.Name(), err))
 		}
 	}
 	m.Summary.Containers = len(m.Containers)
@@ -589,7 +595,7 @@ func prepareSelected(input, output string, prepareAudio func(string, *Manifest) 
 	}
 	if membersRequired != nil {
 		if _, e := ResolveSourceInstallation(m); e != nil {
-			return fail(fmt.Errorf("supported source installation: %w", e))
+			return fail(sourceFailure(fmt.Errorf("supported source installation: %w", e)))
 		}
 	}
 	for index, r := range m.Resources {

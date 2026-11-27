@@ -37,6 +37,11 @@ func (e *MissingError) Error() string {
 func (e *MissingError) Unwrap() error { return os.ErrNotExist }
 func field(name, msg string) error    { return fmt.Errorf("%s: %s", name, msg) }
 func (c Config) Validate() error {
+	switch c.OriginalSource {
+	case "", OriginalCustom, OriginalSteam, OriginalGOG, OriginalUnselected:
+	default:
+		return fmt.Errorf("invalid original_source %q", c.OriginalSource)
+	}
 	if e := c.Logging.Validate(); e != nil {
 		return e
 	}
@@ -263,14 +268,14 @@ func decodeSettingsAt(path, install string, b []byte) (*Document, error) {
 	}
 	// Older SETUP versions serialized the stock size even though they had no
 	// window-size picker. Preserve every other previously valid custom size.
-	if c.WindowWidth == 960 && c.WindowHeight == 720 {
+	if _, current := raw["borderless_fullscreen"]; !current && c.WindowWidth == 960 && c.WindowHeight == 720 {
 		c.WindowWidth, c.WindowHeight = DefaultWindowWidth, DefaultWindowHeight
 	}
-	// Old source launches defaulted to the parent directory. A missing path
-	// can adopt the local fallback without changing any working selection.
-	if filepath.Clean(c.Original) == filepath.Join("..", DefaultOriginal) {
-		if _, err := os.Stat(Relative(install, c.Original)); os.IsNotExist(err) {
-			c.Original = DefaultOriginal
+	// An older settings file recorded a path but did not grant permission
+	// to switch stores when that path becomes unavailable.
+	if _, ok := raw["original_source"]; !ok {
+		if _, configured := raw["original"]; configured {
+			c.OriginalSource = OriginalCustom
 		}
 	}
 	switch c.Runtime.SimulationResolution {

@@ -49,7 +49,12 @@ func locatedData() (string, bool, error) {
 
 // Revalidate the complete source on retry. A previously copied film or pack
 // must never supersede a file added or changed since the interrupted switch.
-func verifySwitchCopy(src, dst string, items []string, tr transfer) error {
+func verifySwitchCopy(src, dst, install string, items []string, tr transfer) error {
+	doc, err := LoadAt(filepath.Join(src, Filename), install)
+	if err != nil {
+		return err
+	}
+	skipScreens := filepath.Join(SavePath(install, src, doc.Config.Saves), "screenshots")
 	for _, item := range items {
 		root := filepath.Join(src, item)
 		if _, e := os.Lstat(root); os.IsNotExist(e) {
@@ -60,6 +65,9 @@ func verifySwitchCopy(src, dst string, items []string, tr transfer) error {
 				return err
 			}
 			if d.IsDir() {
+				if path == skipScreens {
+					return filepath.SkipDir
+				}
 				return nil
 			}
 			rel, err := filepath.Rel(src, path)
@@ -88,7 +96,11 @@ func verifySwitchCopy(src, dst string, items []string, tr transfer) error {
 			return e
 		}
 	}
+	excludedDestination := filepath.Join(SavePath(install, dst, doc.Config.Saves), "screenshots")
 	return filepath.WalkDir(dst, func(path string, d fs.DirEntry, err error) error {
+		if err == nil && d.IsDir() && path == excludedDestination {
+			return filepath.SkipDir
+		}
 		if err != nil || d.IsDir() {
 			return err
 		}

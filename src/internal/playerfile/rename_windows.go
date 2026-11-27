@@ -1,8 +1,8 @@
-package replay
+package playerfile
 
 import "golang.org/x/sys/windows"
 
-func moveFilmNew(from, to string) error {
+func MoveNew(from, to string) error {
 	f, e := windows.UTF16PtrFromString(from)
 	if e != nil {
 		return e

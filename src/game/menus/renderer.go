@@ -53,6 +53,7 @@ func (c *tickAccumulator) Advance(seconds float64, paused bool) int {
 }
 
 type WindowOptions struct {
+	OnStarted           func()
 	InstallDirectory    string
 	DrawFPSCPU          bool
 	BrandSplash         bool   // Ordinary process startup only.
@@ -69,7 +70,8 @@ type WindowOptions struct {
 	SceneSmoke          bool
 	Development         bool
 	Width, Height       int
-	Fullscreen          bool
+	WindowMode          configuration.WindowMode
+	SavesDirectory      string
 	SquarePixels        bool
 	DrawPointer         bool
 	TickRate            float64

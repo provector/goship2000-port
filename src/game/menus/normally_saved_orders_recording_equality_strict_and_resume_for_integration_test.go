@@ -154,7 +154,7 @@ func TestAuthoredExportProjectsRuntimeObjectiveLineageForIntegration(t *testing.
 	if err = json.Unmarshal(film.Launch, &launch); err != nil || launch.AuthoredSource == nil {
 		t.Fatal("saved source document not frozen", err)
 	}
-	originalPath := filepath.Join(c.MissionDirectory, launch.AuthoredSource.ID+".g2m")
+	originalPath := savedMissionPath(t, c.MissionDirectory, launch.AuthoredSource.ID)
 	original, err := os.ReadFile(originalPath)
 	if err != nil {
 		t.Fatal(err)

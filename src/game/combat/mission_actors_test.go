@@ -454,3 +454,38 @@ func TestHealthySignedABSMinDoesNotInventSlowdown(t *testing.T) {
 		t.Fatal("signed JLE atABS8000 then unsigned firing cone", s.init.Entities[1], s.Slots[16])
 	}
 }
+
+func TestFlyToCandidateRequiresHostileBodyAndUsableStores(t *testing.T) {
+	s, _ := fireFixture(t)
+	contact := &s.init.Entities[9]
+	contact.FlightSlot = -1
+	contact.Side = "enemy"
+	check := func(want bool) {
+		t.Helper()
+		ok, err := s.CanAcquireFollowerTarget(1, 9, 256)
+		if err != nil || ok != want {
+			t.Fatal("acquisition", ok, err, "want", want)
+		}
+	}
+	check(true)
+	station := &s.init.Stores.Ships[1].Stations[1]
+	station.Ammunition = 0
+	check(false)
+	station.Ammunition = 10
+	contact.Object.Raw[31] = 3
+	check(false)
+	contact.Object.Raw[31] = 0
+	contact.Side = "friendly"
+	check(false)
+	contact.Side = "unknown"
+	check(false)
+	contact.Side = "enemy"
+	contact.Participation = 2
+	check(false)
+	contact.Participation = 1
+	contact.Kind = 0x17
+	check(false)
+	contact.Kind = 3
+	s.init.Stores.Damage[1][9] = 2
+	check(false)
+}

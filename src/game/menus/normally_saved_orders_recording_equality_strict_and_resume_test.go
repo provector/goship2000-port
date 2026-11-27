@@ -30,7 +30,7 @@ func authoredOrdersWithRuntime(t *testing.T, profile string, options configurati
 	c := authoredUIController(t)
 	c.Runtime = options
 	doc := authorThroughUI(t, c)
-	before, err := os.ReadFile(filepath.Join(c.MissionDirectory, doc.ID+".g2m"))
+	before, err := os.ReadFile(savedMissionPath(t, c.MissionDirectory, doc.ID))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -58,7 +58,7 @@ func authoredOrdersWithRuntime(t *testing.T, profile string, options configurati
 	if c.Rendering == nil || !c.Rendering.r5Mechanics || c.Rendering.filmRecorder == nil || c.Mission.ResultLaunch == nil || len(c.Rendering.Initialized.FlightRows) != 5 {
 		t.Fatal("ordinary five-aircraft R5/result/recorder launch missing", c.Mission.ResultUnavailable)
 	}
-	after, err := os.ReadFile(filepath.Join(c.MissionDirectory, doc.ID+".g2m"))
+	after, err := os.ReadFile(savedMissionPath(t, c.MissionDirectory, doc.ID))
 	if err != nil || !bytes.Equal(before, after) {
 		t.Fatal("BEGIN changed saved document", err)
 	}
@@ -245,7 +245,7 @@ func TestAuthoredExportProjectsRuntimeObjectiveLineage(t *testing.T) {
 	if err = json.Unmarshal(film.Launch, &launch); err != nil || launch.AuthoredSource == nil {
 		t.Fatal("saved source document not frozen", err)
 	}
-	originalPath := filepath.Join(c.MissionDirectory, launch.AuthoredSource.ID+".g2m")
+	originalPath := savedMissionPath(t, c.MissionDirectory, launch.AuthoredSource.ID)
 	original, err := os.ReadFile(originalPath)
 	if err != nil {
 		t.Fatal(err)

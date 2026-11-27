@@ -2,13 +2,44 @@
 
 **Gunship 2000 (MS-DOS, 1991) port for modern desktop platforms**
 
-**Version:** 1.RC1-W3.5 · **Platforms:** Windows x64, Linux x64 and Linux ARM64
+**Version:** 1.RC1-W5.4 · **Platforms:** Windows x64, Linux x64 and Linux ARM64
 
 **Validated On:** Windows x64 (10 and 11), Raspbian Worm (Raspberry Pi5), and Linux x64 (Ubuntu 26.04 LTS)
 
 **Requirements**: 1.5Ghz Potato CPU (Slowest tested on was AMD GX-215JJ) and 1Gb (linux)/2Gb (windows) of RAM for Legacy Mode (320x200, 10fps/60fps). Recommended 4Gb of RAM for smooth operations and large replays, and a half decent modern cpu for higher resolutions.
 
-**DIRECT DOWNLOAD (Latest Release 1.RC1-W3.5)**: [*[Windows x64](../../releases/download/1.RC1-W3.5/goship2000-prod-windows-amd64-v1.RC1-W3.5.zip)*] [*[Linux x64](../../releases/download/1.RC1-W3.5/goship2000-prod-linux-amd64-v1.RC1-W3.5.tar.gz)*] [*[Arm64](../../releases/download/1.RC1-W3.5/goship2000-prod-linux-arm64-v1.RC1-W3.5.tar.gz)*] (*Upon first run game will do a one time asset processing, it might take a moment*)
+## Update Log
+**DIRECT DOWNLOAD (Latest Release 1.RC1-W5.4)**: [*[Windows x64](../../releases/download/1.RC1-W5.4/goship2000-prod-windows-amd64-v1.RC1-W5.4.zip)*] [*[Linux x64](../../releases/download/1.RC1-W5.4/goship2000-prod-linux-amd64-v1.RC1-W5.4.tar.gz)*] [*[Arm64](../../releases/download/1.RC1-W5.4/goship2000-prod-linux-arm64-v1.RC1-W5.4.tar.gz)*] (*Upon first run game will do a one time asset processing, it might take a moment
+
+### Beta Release 1.RC1-W5.4 
+
+New Features:
+- **Optimized replay system** with protobuffers ans S2 compression. No more big stutters in fast forward mode. `IMPORTANT: If you have any existing replays that you would like to be able to play, run setup utility and select "Convert Replays" once`
+- Added in-flight **Save** feature! See [Save Feature](#save-feature-in-flight) for details.
+- **GOG Installation auto-detection**. (If you have both Steam and GOG copies, Steam is used by default. `You can change those settings in setup`)
+- **Setup now uses its own graphical** window instead of native terminal. Fixes **XBOX Controller** and other controller **axis mapping issues** on **windows** systems.
+- Added **Borderless Fullscreen** Option `F11`, Exclusive Fullscreen is now `Alt+F11`
+- Added **Screenshot** functionality `F12`. (Screenshots are saved by default to *saves* directory in **screenshots** folder)
+- Cleaned up Saves directory file structure and added system level error prompts. Should fix the potential issue in #7 `NOTE: Upon first run some files in the save directory will be moved around. I tested it on multiple systems but just in case make a backup`
+
+Bug Fixes:
+- In *Realistic* flight settings **collective** mode will always default to **absolute** regardless of *settings*
+- Auto Hover: Using *collective* or *yaw/rotor* will no longer break off the mode.
+- In some cases wingmen models could clip through carrier. Fixed.
+- Medal of Honor Ribbon was not properly displayed during award. Fixed.
+- Mission Editor files now have the same name as in game.
+- The game display windows *should* be now more **recording friendly** for external applications.
+- Fixed F behaviour during GPS route plotting. `Pres F to start route navigation plotting, then press F again without adding any point to cancel previous route`
+- Fixed some edge case scenario where wingmen would not attack enemy if he's default target acquisition was friendly or neutral object.
+- Fixed cosmetic glitch reported in #4
+
+### Beta Release 1.RC1-W3.5
+- Fixed issue where one time asset preparation could fail on pre-existing modified game installation #1
+- Fixed issue where friendly assets aircraft 3d models were missing in game #3
+- Fixed discrepancy in Selector#2 operations in GPS route mode #2
+### Beta Release 1.RC1-W3.3
+- Initial Release, see [Main Features](#main-features)
+
 
 *For almost 30 years **Gunship 2000** had a special place in my heart. Fond of childhood memories I revisited it now and then to replay the experience, but even on the original retro hardware the experience had some issue surviving the tooth of time. Now after a lot of work put into getting this port to life I can say with all confidence that Gunship 2000 **was way ahead of its time** in the technical terms. Designed to work on 286 cpu with no coprocessor and 640kb of RAM, the game full potential was locked for decades behind 10 ticks per second engine lock. (It's a shame Island&Ice addition from 1993 didn't address those issues like the amiga version did). As a programmer it was my dream to address those problems with game for years, but due to the lack of the source code anywhere on the internet (it was most likely lost in time) and the ancient assembly programming code in the original, the sheer scope of that project was beyond my available time and assembly analysis abilities. Now thanks to the recent advancements in large language models and reverse engineering frameworks this dream project finally became a reality, bringing **60 fps** and **floating point** rendering pipeline and **higher resolutions** with **Full HOTAS Support**. Playing the game with HOTAS on higher settings now really feels like a **true helicopter simulator** (for its time). As of the time of writing this already hundreds of compute hours went into the project, including countless hours of human retesting/document reading and analysis, dosbox comparisons, long nights...*
 
@@ -145,6 +176,23 @@ These options control original-file discovery, personal storage and selected com
 The installation directory is used as a fallback if the normal personal-data location is unavailable. You can override the location in SETUP. Back up the selected data directory before moving installations or testing a new release.
 
 Editable missions use **`.g2m`** files and published recordings use **`.g2r`** files. Copy them into the receiving installation’s configured `saves/missions` or `saves/replays` folder and reopen the relevant library. Compatible original game assets are still required.
+
+## Save Feature (In-Flight)
+
+- Press `Alt+L` to open **Save Popup**, then `ENTER` to **save** or `Esc` to **cancel**. You can only **save once per mission!** *use it wisely*.
+<p align="left">
+  <img src="docs/screenshots/SavePopup.png"
+       alt="Save"
+       width="600">
+</p>
+
+- Once saved, press `Alt+L` to open **Load Popup**, then `ENTER` to **load** or `Esc` to **cancel**. You can load as many times as you want during the mission.
+<p align="left">
+  <img src="docs/screenshots/LoadPopup.png"
+       alt="Load"
+       width="600">
+</p>
+
 
 ## Optional legacy copy protection
 

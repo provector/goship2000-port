@@ -14,7 +14,7 @@ func FrontEndServices(progress func(assetdata.PreparationProgress)) Services {
 			progress(work.Observe(p))
 		}
 	}
-	return Services{Discover: discoverSteam, Pack: assetdata.PackPrepared, Prepare: func(in, out string) (*assetdata.Manifest, error) {
+	return Services{Installations: InstalledGames, Pack: assetdata.PackPrepared, Prepare: func(in, out string) (*assetdata.Manifest, error) {
 		if err := audioopl.PrepareHelper(); err != nil {
 			return nil, err
 		}

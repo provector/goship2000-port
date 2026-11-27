@@ -54,3 +54,5 @@ func objectID(path string) (string, error) {
 	}
 	return fmt.Sprintf("@%x-%x", st.Dev, st.Ino), nil
 }
+
+func contended(err error) bool { return errors.Is(err, unix.EAGAIN) || errors.Is(err, unix.EACCES) }

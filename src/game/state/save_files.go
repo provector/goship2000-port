@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	assetdata "gunship2000-assets/game/assets"
+	"gunship2000-assets/internal/playerdirs"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -102,12 +103,13 @@ func decodePilot(raw []byte, id string) (*Pilot, error) {
 func (s *SaveStore) load() error { return s.loadWithSessions(false) }
 
 func (s *SaveStore) loadWithSessions(startup bool) error {
-	if info, err := os.Lstat(filepath.Join(s.Directory, "pilots")); err == nil && (!info.IsDir() || info.Mode()&os.ModeSymlink != 0) {
-		return fmt.Errorf("pilots must be a non-symlink directory")
-	} else if err != nil && !os.IsNotExist(err) {
-		return err
+	if s.packed == nil {
+		if info, err := os.Lstat(filepath.Join(s.Directory, "pilots")); err == nil && (!info.IsDir() || info.Mode()&os.ModeSymlink != 0) {
+			return fmt.Errorf("pilots must be a non-symlink directory")
+		} else if err != nil && !os.IsNotExist(err) {
+			return err
+		}
 	}
-
 	raw, err := s.readRecord(saveFilename)
 	if err != nil {
 		return err
@@ -190,19 +192,26 @@ func readArchivedRoster(directory string, l *legacyReference) ([]byte, error) {
 	if decoded, e := hex.DecodeString(l.SourceSHA256); e != nil || len(decoded) != 32 {
 		return nil, fmt.Errorf("invalid roster digest")
 	}
-	for _, part := range []string{"imports", filepath.Join("imports", l.SourceSHA256)} {
-		info, e := os.Lstat(filepath.Join(directory, part))
-		if e != nil {
-			return nil, e
-		}
-		if !info.IsDir() || info.Mode()&os.ModeSymlink != 0 {
-			return nil, fmt.Errorf("legacy import path must use non-symlink directories")
-		}
-	}
 	if l.PreservedPath != "imports/"+l.SourceSHA256+"/ROSTER.DAT" {
 		return nil, fmt.Errorf("legacy import reference path is not canonical")
 	}
-	return ReadRegularSave(filepath.Join(directory, filepath.FromSlash(l.PreservedPath)))
+	var last error = os.ErrNotExist
+	for _, archive := range playerdirs.ArchiveReaders(directory, "imports") {
+		parent := filepath.Join(archive, l.SourceSHA256)
+		if err := requirePackDirectory(parent); err != nil {
+			last = err
+			continue
+		}
+		b, err := ReadRegularSave(filepath.Join(parent, "ROSTER.DAT"))
+		if err == nil && len(b) == 7*LegacyRecordSize && assetdata.Hash(b) == l.SourceSHA256 {
+			return b, nil
+		}
+		if err == nil {
+			err = fmt.Errorf("archived roster digest differs at %s", parent)
+		}
+		last = err
+	}
+	return nil, fmt.Errorf("required archived roster %s: %w", l.SourceSHA256, last)
 }
 func stateFiles(state SaveState) (map[string][]byte, error) {
 	doc := rosterDocument{SchemaVersion: rosterSchemaVersion, Revision: state.Revision, SelectedPilotID: state.SelectedPilotID}

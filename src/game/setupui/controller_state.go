@@ -1,23 +1,19 @@
 package setupui
 
 import (
-	"context"
 	"crypto/rand"
 	"encoding/hex"
 	"fmt"
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 	"gunship2000-assets/game/controllers"
-	"gunship2000-assets/game/sdlraw"
+
 	"path/filepath"
-	"runtime"
+
 	"sort"
-	"sync"
-	"sync/atomic"
+
 	"time"
 )
-
-const controllerWake = tcell.Key(-4096)
 
 type controllerUI struct {
 	doc                  *controllers.Document
@@ -51,11 +47,6 @@ type controllerUI struct {
 	lastRune             rune
 	keyUntil             time.Time
 	swallowTransition    bool
-	mu                   sync.Mutex
-	latest               controllers.Snapshot
-	wake                 atomic.Bool
-	cancel               context.CancelFunc
-	done                 chan struct{}
 }
 
 func (u *UI) initControllers() {
@@ -78,69 +69,6 @@ func (u *UI) initControllers() {
 		p, ok := c.session.Profiles[c.session.Selected]
 		return p, c.snapshot.States[c.device.Instance], ok && c.connected
 	}
-}
-func (u *UI) startControllers() {
-	c := u.controllers
-	ctx, cancel := context.WithCancel(context.Background())
-	c.cancel = cancel
-	c.done = make(chan struct{})
-	go func() {
-		runtime.LockOSThread()
-		defer runtime.UnlockOSThread()
-		defer close(c.done)
-		open := u.ControllerBackend
-		if open == nil {
-			open = func() (controllers.Backend, error) { return sdlraw.Open() }
-		}
-		b, e := open()
-		if e != nil {
-			c.mu.Lock()
-			c.latest = controllers.Snapshot{Error: e.Error()}
-			c.mu.Unlock()
-			if c.wake.CompareAndSwap(false, true) {
-				u.App.QueueEvent(tcell.NewEventKey(controllerWake, 0, 0))
-			}
-			return
-		}
-		defer b.Close()
-		tick := time.NewTicker(40 * time.Millisecond)
-		defer tick.Stop()
-		for {
-			select {
-			case <-ctx.Done():
-				return
-			case <-tick.C:
-				s, e := b.Poll()
-				if e != nil {
-					s.Error = e.Error()
-				}
-				c.mu.Lock()
-				c.latest = s
-				c.mu.Unlock()
-				if c.wake.CompareAndSwap(false, true) {
-					u.App.QueueEvent(tcell.NewEventKey(controllerWake, 0, 0))
-				}
-			}
-		}
-	}()
-}
-func (u *UI) stopControllers() {
-	c := u.controllers
-	if c.cancel != nil {
-		c.cancel()
-		select {
-		case <-c.done:
-		case <-time.After(time.Second):
-		}
-	}
-}
-func (u *UI) receiveControllers() {
-	c := u.controllers
-	c.mu.Lock()
-	s := c.latest
-	c.mu.Unlock()
-	c.wake.Store(false)
-	u.applyControllerSnapshot(s)
 }
 func (u *UI) applyControllerSnapshot(s controllers.Snapshot) {
 	c := u.controllers

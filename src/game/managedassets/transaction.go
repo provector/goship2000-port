@@ -17,14 +17,14 @@ import (
 var ErrOriginalUnavailable = errors.New("original installation unavailable")
 
 type Services struct {
-	Discover       func() string
-	SourceSelected func(string) error
-	Pack           func(string, string) error
-	Prepare        func(string, string) (*assetdata.Manifest, error)
-	Load           func(string) (*assetdata.OfficeAssets, error)
-	Rename         func(string, string) error
-	Ready          func(*assetdata.OfficeAssets) error
-	Progress       func(assetdata.PreparationProgress)
+	Installations func() []Installation
+	SourceUsed    func(string)
+	Pack          func(string, string) error
+	Prepare       func(string, string) (*assetdata.Manifest, error)
+	Load          func(string) (*assetdata.OfficeAssets, error)
+	Rename        func(string, string) error
+	Ready         func(*assetdata.OfficeAssets) error
+	Progress      func(assetdata.PreparationProgress)
 }
 
 func Ensure(paths configuration.Paths, rebuild bool, log io.Writer, s Services) (*assetdata.OfficeAssets, error) {
@@ -54,6 +54,7 @@ func Ensure(paths configuration.Paths, rebuild bool, log io.Writer, s Services) 
 	if os.IsNotExist(journalErr) && !rebuild {
 		if a, e := load(paths.Assets); e == nil {
 			diagnostics.Info("assets", "Prepared asset cache reused", "path", paths.Assets)
+			publishUsed(paths.Assets, s.SourceUsed)
 			return a, nil
 		} else {
 			reason = e
@@ -68,7 +69,10 @@ func Ensure(paths configuration.Paths, rebuild bool, log io.Writer, s Services) 
 		}
 		return nil, fmt.Errorf("selected assets at %s are not ready: %w; this explicitly selected tree was preserved; select a current prepared tree or prepare a new output", paths.Assets, reason)
 	}
-	input, target, err := ManagedPaths(paths.Original, paths.Assets)
+	target, err := managedTarget(paths.Assets)
+	if _, e := assetdata.ResolvedNewPath(paths.Original); e == nil && err == nil {
+		_, target, err = ManagedPaths(paths.Original, paths.Assets)
+	}
 	if err != nil {
 		return nil, err
 	}
@@ -81,6 +85,7 @@ func Ensure(paths configuration.Paths, rebuild bool, log io.Writer, s Services) 
 	if !rebuild {
 		if assets, err := load(target); err == nil {
 			diagnostics.Info("assets", "Prepared asset cache reused after lock/recovery", "path", target)
+			publishUsed(target, s.SourceUsed)
 			return assets, nil
 		} else {
 			diagnostics.Info("assets", "Managed cache needs preparation", "path", target, "reason", err)
@@ -99,11 +104,6 @@ func Ensure(paths configuration.Paths, rebuild bool, log io.Writer, s Services) 
 		return nil, err
 	}
 	generated := filepath.Join(staging, "tree")
-	diagnostics.Info("assets", "Preparing assets from original installation", "input", input, "staging", generated, "rebuild", rebuild)
-	fmt.Fprintf(log, "Preparing assets from %s ...\n", input)
-	// The first progress event opens/raises the small native progress window.
-	// Lock/recovery checks may still reuse a cache, so publish only once actual
-	// processing is about to start. Missing-input errors use the startup dialog.
 
 	var manifest *assetdata.Manifest
 	if s.Pack != nil && managed && !rebuild {
@@ -122,73 +122,66 @@ func Ensure(paths configuration.Paths, rebuild bool, log io.Writer, s Services) 
 			}
 		}
 	}
-	loose := ""
-	selected := ""
+	loose, used, fallbackReason := "", "", ""
+	var fallbackSource Installation
 	if manifest == nil {
-		if s.Discover != nil {
-			configured := paths.Config.Original
-			if configured == "" {
-				configured = paths.Original
+		candidates := []Installation{{configuration.OriginalCustom, paths.Original}}
+		if s.Installations != nil {
+			var detected []Installation
+			if paths.Config.OriginalSource != "" && paths.Config.OriginalSource != configuration.OriginalCustom {
+				detected = s.Installations()
 			}
-			candidate, found := selectOriginal(paths.Directory, configured, s.Discover)
-			if !found {
-				return nil, missingOriginal(configuration.Relative(paths.Directory, candidate), paths.Directory)
+			var selectionErr error
+			candidates, selectionErr = sourceCandidates(paths.Config, paths.Directory, detected)
+			if selectionErr != nil {
+				_ = os.Remove(staging)
+				return nil, selectionErr
 			}
-			if candidate != configured {
-				selected = candidate
-				input, _, err = ManagedPaths(configuration.Relative(paths.Directory, candidate), target)
+		}
+		initialStaging := staging
+		var failures []error
+		for attempt, i := range candidates {
+			if attempt != 0 {
+				staging, err = os.MkdirTemp(filepath.Dir(target), "."+filepath.Base(target)+".preparing-")
 				if err != nil {
-					return nil, err
+					return nil, errors.Join(append(failures, err)...)
 				}
+				generated = filepath.Join(staging, "tree")
 			}
-		}
-		info, err := os.Stat(input)
-		if err != nil || !info.IsDir() {
-			return nil, missingOriginal(input, paths.Directory)
-		}
-		emit("Prepare assets from original installation", 0, 0)
-		output := generated
-		if s.Pack != nil {
-			loose = filepath.Join(staging, "conversion")
-			output = loose
-		}
-		diagnostics.Info("assets", "Selected installation for conversion", "original", input, "staging", output, "destination", target)
-		manifest, err = s.Prepare(input, output)
-		if manifest != nil {
-			diagnostics.Info("assets", "Preparation manifest summary", "version", manifest.PreparationVersion, "result", manifest.Result, "inputs", len(manifest.Resources), "counts", manifest.Summary, "unsupported_operations", manifest.UnsupportedVersionOperations, "fatal", manifest.FatalError)
-		}
-		if err == nil && s.Pack != nil {
-			emit("Create and validate asset packs", 0, 1)
-			err = s.Pack(loose, generated)
-		}
-		if err != nil {
-			var details []string
-			if manifest != nil {
-				for _, op := range manifest.UnsupportedVersionOperations {
-					details = append(details, op.Operation+": "+op.Reason)
+			manifest, loose, err = prepareCandidate(i, target, staging, generated, log, s, load, emit)
+			if err == nil {
+				used = manifest.InputDirectory
+				if used == "" {
+					used = i.Path
 				}
+				if attempt != 0 {
+					fallbackSource, fallbackReason = i, errors.Join(failures...).Error()
+				}
+				break
 			}
-			if len(details) > 0 {
-				err = fmt.Errorf("%w; preparation manifest: %s", err, strings.Join(details, "; "))
+			failures = append(failures, err)
+			if !errors.Is(err, assetdata.ErrPreparationSource) || attempt == len(candidates)-1 {
+				_ = os.Remove(initialStaging)
+				return nil, errors.Join(failures...)
 			}
-			return nil, fmt.Errorf("preparing %s for %s (attempt retained at %s): %w", input, target, staging, err)
 		}
+		if initialStaging != staging {
+			_ = os.Remove(initialStaging)
+		}
+	} else {
+		emit("Validate current prepared capabilities", 0, 1)
+		if _, err = load(generated); err != nil {
+			return nil, fmt.Errorf("generated office assets unusable at %s: %w; previous assets unchanged", staging, err)
+		}
+		used = manifest.InputDirectory
 	}
-	// Partial conversion includes unrelated unsupported formats/PHIL3MIS. Office
-	// readiness is determined by verified required outputs, never that aggregate.
-	emit("Validate current prepared capabilities", 0, 1)
-	if _, err = load(generated); err != nil {
-		// Partial raw extraction remains useful, but normal startup must expose the
-		// generator's actual unsupported identity rather than only missing UI.
-		details := ""
-		if manifest != nil && len(manifest.UnsupportedVersionOperations) != 0 {
-			var causes []string
-			for _, unsupported := range manifest.UnsupportedVersionOperations {
-				causes = append(causes, unsupported.Operation+": "+unsupported.Reason)
-			}
-			details = "; unsupported source profile: " + strings.Join(causes, "; ")
+	// The portable asset manifest deliberately omits the workstation source path.
+	// Keep the actual source in the same staged generation as local provenance.
+	if filepath.IsAbs(used) {
+		b, _ := json.Marshal(used)
+		if err = os.WriteFile(filepath.Join(generated, usedSourceFile), b, 0600); err != nil {
+			return nil, fmt.Errorf("write local asset source: %w", err)
 		}
-		return nil, fmt.Errorf("generated office assets unusable at %s: %w%s; previous assets unchanged; check supported source profile and configured original path", staging, err, details)
 	}
 	fmt.Fprintf(log, "Prepared %d entries, %d pictures; %d unsupported, %d conversion failures (office ready).\n", manifest.Summary.Entries, manifest.Summary.Pictures, manifest.Summary.Unsupported, manifest.Summary.ConversionFailures)
 	if manifest.Summary.ConversionFailures > 0 {
@@ -229,18 +222,111 @@ func Ensure(paths configuration.Paths, rebuild bool, log io.Writer, s Services) 
 		}
 		_ = os.Remove(staging)
 	}
-	if s.SourceSelected != nil && selected != "" {
-		if err := s.SourceSelected(selected); err != nil {
-			return nil, fmt.Errorf("prepared assets are ready; saving selected original path: %w", err)
-		}
+	if fallbackReason != "" {
+		fmt.Fprintf(log, "Using %s after source failure: %s\n", fallbackSource, fallbackReason)
+		diagnostics.Info("assets", "Alternate original installation validated", "used", fallbackSource.String(), "reason", fallbackReason)
+		diagnostics.StartupWarning("Prepared assets using "+fallbackSource.String()+" after the preferred installation failed.", fallbackReason)
+	}
+	if s.SourceUsed != nil && used != "" {
+		s.SourceUsed(used)
 	}
 	diagnostics.Info("assets", "DOS SETUP preferences, campaigns and saved missions were skipped. GoShip settings and careers remain in the player data store.")
 	emit("Prepared cache ready", 1, 1)
 	return assets, nil
 }
 
-func missingOriginal(path, directory string) error {
-	return fmt.Errorf("%w at %s; local fallback: %s; select Original Installation in SETUP > PORT SETTINGS", ErrOriginalUnavailable, path, filepath.Join(directory, configuration.DefaultOriginal))
+const usedSourceFile = "original-source.json"
+
+func preparedSource(target string) (string, []byte) {
+	path := filepath.Join(target, usedSourceFile)
+	if st, e := os.Lstat(path); e != nil || !st.Mode().IsRegular() {
+		return "", nil
+	}
+	b, e := assetdata.ReadLimitedFile(path, 32<<10)
+	var source string
+	if e == nil && json.Unmarshal(b, &source) == nil && filepath.IsAbs(source) {
+		return source, b
+	}
+	return "", nil
+}
+
+func publishUsed(target string, use func(string)) {
+	if use == nil {
+		return
+	}
+	if source, _ := preparedSource(target); source != "" {
+		diagnostics.Info("assets", "Prepared cache original source", "used", source)
+		use(source)
+	}
+}
+
+func prepareCandidate(i Installation, target, staging, generated string, log io.Writer, s Services, load func(string) (*assetdata.OfficeAssets, error), emit func(string, int, int)) (*assetdata.Manifest, string, error) {
+	if st, e := os.Stat(i.Path); e != nil || !st.IsDir() {
+		if e == nil {
+			e = fmt.Errorf("expected a directory")
+		}
+		return nil, "", fmt.Errorf("%s: %w: %w: %w; select Original Installation in SETUP > PORT SETTINGS", i, assetdata.ErrPreparationSource, ErrOriginalUnavailable, e)
+	}
+	input, _, err := ManagedPaths(i.Path, target)
+	if err != nil {
+		return nil, "", fmt.Errorf("%s: %w", i, err)
+	}
+	emit("Prepare assets from "+i.String(), 0, 0)
+	output, loose := generated, ""
+	if s.Pack != nil {
+		loose = filepath.Join(staging, "conversion")
+		output = loose
+	}
+	fmt.Fprintf(log, "Preparing assets from %s ...\n", i)
+	diagnostics.Info("assets", "Selected installation for conversion", "original", input, "staging", output, "destination", target)
+	manifest, err := s.Prepare(input, output)
+	if manifest != nil {
+		diagnostics.Info("assets", "Preparation manifest summary", "version", manifest.PreparationVersion, "result", manifest.Result, "inputs", len(manifest.Resources), "counts", manifest.Summary, "unsupported_operations", manifest.UnsupportedVersionOperations, "fatal", manifest.FatalError)
+	}
+	if err == nil && manifest == nil {
+		err = fmt.Errorf("preparation returned no manifest")
+	}
+	if err == nil && s.Pack != nil {
+		// Validate the fresh loose generation before packing. A missing prepared
+		// capability reported along with decoding errors is a source rejection.
+		var a *assetdata.OfficeAssets
+		a, err = s.Load(loose)
+		if err == nil && s.Ready != nil {
+			err = s.Ready(a)
+		}
+		if err != nil && len(manifest.UnsupportedVersionOperations) > 0 && !errors.Is(err, os.ErrPermission) {
+			err = fmt.Errorf("%w: %w", assetdata.ErrPreparationSource, err)
+		}
+		if err == nil {
+			emit("Create and validate asset packs", 0, 1)
+			err = s.Pack(loose, generated)
+		}
+	}
+	if err == nil {
+		emit("Validate current prepared capabilities", 0, 1)
+		_, err = load(generated)
+	}
+	if err != nil {
+		if manifest != nil && len(manifest.UnsupportedVersionOperations) > 0 {
+			var details []string
+			for _, op := range manifest.UnsupportedVersionOperations {
+				details = append(details, op.Operation+": "+op.Reason)
+			}
+			err = fmt.Errorf("%w; preparation manifest: %s", err, strings.Join(details, "; "))
+		}
+		return nil, "", fmt.Errorf("preparing %s for %s (attempt retained at %s): %w", i, target, staging, err)
+	}
+	return manifest, loose, nil
+}
+func managedTarget(output string) (string, error) {
+	out, err := assetdata.ResolvedNewPath(output)
+	if err != nil {
+		return "", err
+	}
+	if original, e := os.Lstat(output); e == nil && original.Mode()&os.ModeSymlink != 0 {
+		return "", fmt.Errorf("refusing to replace symlink asset directory %s", output)
+	}
+	return out, nil
 }
 
 func ManagedPaths(input, output string) (string, string, error) {
@@ -248,20 +334,16 @@ func ManagedPaths(input, output string) (string, string, error) {
 	if err != nil {
 		return "", "", err
 	}
-	out, err := assetdata.ResolvedNewPath(output)
+	out, err := managedTarget(output)
 	if err != nil {
 		return "", "", err
 	}
 	if assetdata.Within(in, out) || assetdata.Within(out, in) {
 		return "", "", fmt.Errorf("original and assets directories must not overlap")
 	}
-	// Reuse the frame writer's protected-tree/ancestor checks on a nonexistent
-	// sibling. This also protects canonical Step A/21 outputs during regeneration.
+	// Protect reference trees and original ancestors before creating output.
 	if _, err = assetdata.GeneratedPath(filepath.Join(out, ".preparation-safety-check"), in); err != nil {
 		return "", "", err
-	}
-	if original, err := os.Lstat(output); err == nil && original.Mode()&os.ModeSymlink != 0 {
-		return "", "", fmt.Errorf("refusing to replace symlink asset directory %s", output)
 	}
 	return in, out, nil
 }

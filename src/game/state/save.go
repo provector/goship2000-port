@@ -410,7 +410,7 @@ func openSaveStore(directory, original string, live bool, application, install s
 	store := &SaveStore{Directory: abs, liveOwner: live}
 	err = store.Locked(func() error {
 		if application == "" {
-			if existingPacks(abs) {
+			if _, receiptErr := os.Lstat(filepath.Join(abs, packLocation)); existingPacks(abs) || !os.IsNotExist(receiptErr) || existingPacks(filepath.Join(abs, "pilots")) {
 				application = filepath.Dir(abs)
 			} else {
 				return store.openLoose(original, startup)
@@ -474,7 +474,7 @@ func (store *SaveStore) openLoose(original string, startup bool) error {
 	} else if !os.IsNotExist(err) {
 		return err
 	}
-	for _, name := range []string{"technical-last-good.json", "backups", "pilots"} {
+	for _, name := range []string{"technical-last-good.json", "backups", "pilots", "sorties", careerBackup} {
 		if _, err := os.Lstat(filepath.Join(abs, name)); err == nil {
 			return fmt.Errorf("%s is missing but %s exists; explicitly recover preserved progress instead of initializing an empty roster", saveFilename, name)
 		} else if !os.IsNotExist(err) {

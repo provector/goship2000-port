@@ -109,7 +109,11 @@ func (g *gameController) Merge(c *FrontEnd, b Buttons, seconds, mouseDX, mouseDY
 	}
 	if g.live != nil {
 		g.live.TraceInput = g.trace != nil
-		s = g.live.Poll(epoch, focused)
+		// Recorded operations already contain translated controls. Only ordinary
+		// live flight uses its flight-model switch to override the device mode.
+		realistic := context == "flight" && c.Screen == ScreenScene && c.Rendering != nil &&
+			c.Rendering.Initialized != nil && c.Rendering.Initialized.Switches&4 != 0
+		s = g.live.PollFlight(epoch, focused, realistic)
 		g.notice(s.Status)
 		if policy := s.Mode + "/" + s.Source + "/" + s.SourceReason; s.Connected && policy != g.collectivePolicy {
 			g.collectivePolicy = policy

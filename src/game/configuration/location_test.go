@@ -2,6 +2,7 @@ package configuration
 
 import (
 	"encoding/json"
+	"gunship2000-assets/internal/playerdirs"
 	"gunship2000-assets/internal/userpack"
 	"os"
 	"path/filepath"
@@ -209,6 +210,95 @@ func TestNestedInstallAndData(t *testing.T) {
 		}
 		if _, err := os.Stat(data); !os.IsNotExist(err) {
 			t.Fatal("wrote rejected root", data, err)
+		}
+	}
+}
+
+func TestTransferPreservesDevelopmentCapturesAndMovesOwnedArchives(t *testing.T) {
+	src := t.TempDir()
+	dst := t.TempDir()
+	install := t.TempDir()
+	if _, _, e := InitializeAt(filepath.Join(src, Filename), install); e != nil {
+		t.Fatal(e)
+	}
+	saves := filepath.Join(src, "saves")
+	for _, name := range []string{"reports", "imports"} {
+		folder := playerdirs.Archive(saves, name, true)
+		if e := os.WriteFile(filepath.Join(folder, "preserved"), []byte(name), 0600); e != nil {
+			t.Fatal(e)
+		}
+	}
+	dev := filepath.Join(saves, "screenshots")
+	if e := os.MkdirAll(dev, 0700); e != nil {
+		t.Fatal(e)
+	}
+	if e := os.WriteFile(filepath.Join(dev, "example.png"), []byte("existing development capture"), 0600); e != nil {
+		t.Fatal(e)
+	}
+	if e := transferUserStore(src, dst, install, true); e != nil {
+		t.Fatal(e)
+	}
+	for _, name := range []string{"reports", "imports"} {
+		b, e := os.ReadFile(filepath.Join(dst, name, "preserved"))
+		if e != nil || string(b) != name {
+			t.Fatal(name, e)
+		}
+	}
+	if _, e := os.Stat(filepath.Join(dst, "saves", "screenshots")); !os.IsNotExist(e) {
+		t.Fatal("copied development screenshots", e)
+	}
+	if b, e := os.ReadFile(filepath.Join(dev, "example.png")); e != nil || string(b) != "existing development capture" {
+		t.Fatal("old screenshot changed", e)
+	}
+}
+
+func TestResumeStoreTransferLeavesExcludedCaptureSubtreeAlone(t *testing.T) {
+	for _, keep := range []bool{true, false} {
+		src, dst, install := t.TempDir(), t.TempDir(), t.TempDir()
+		doc, _, err := InitializeAt(filepath.Join(src, Filename), install)
+		if err != nil {
+			t.Fatal(err)
+		}
+		doc.Config.Saves = "careers"
+		if err = doc.Save(); err != nil {
+			t.Fatal(err)
+		}
+		rel := filepath.Join("careers", "screenshots")
+		path := filepath.Join(src, rel, "retained.png")
+		if err = os.MkdirAll(filepath.Dir(path), 0700); err != nil {
+			t.Fatal(err)
+		}
+		if err = os.WriteFile(path, []byte("old capture"), 0600); err != nil {
+			t.Fatal(err)
+		}
+		storeHash, err := userpack.HashFile(filepath.Join(src, Filename))
+		if err != nil {
+			t.Fatal(err)
+		}
+		captureHash, err := userpack.HashFile(path)
+		if err != nil {
+			t.Fatal(err)
+		}
+		tr := transfer{Version: 1, Source: src, Dirs: []string{"careers", rel}, Files: map[string]string{Filename: storeHash, filepath.Join(rel, "retained.png"): captureHash}}
+		marker := transferRecord
+		if keep {
+			marker = switchRecord
+		}
+		b, err := json.Marshal(tr)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err = safeRecord(filepath.Join(dst, marker), b); err != nil {
+			t.Fatal(err)
+		}
+		if err = transferUserStore(src, dst, install, keep); err != nil {
+			t.Fatal(err)
+		}
+		if _, err = os.Stat(filepath.Join(dst, rel)); !os.IsNotExist(err) {
+			t.Fatal("old transfer published the excluded directory", err)
+		}
+		if got, err := userpack.HashFile(path); err != nil || got != captureHash {
+			t.Fatal("retired an excluded file", err)
 		}
 	}
 }

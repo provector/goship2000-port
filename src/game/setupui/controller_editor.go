@@ -138,7 +138,7 @@ func (u *UI) basicTable() {
 			t.SetCell(row, 2, cc(v, true))
 		}
 	}
-	t.SetCell(basicSwap, 0, cc(u.Doc.Config.UI["swap_yaw_roll_axis"].Label, true))
+	t.SetCell(basicSwap, 0, cc(u.text("swap_yaw_roll_axis").Label, true))
 	swapText := "Off"
 	if c.draftSwap {
 		swapText = "On"
@@ -331,7 +331,12 @@ func (u *UI) restoreControllerTable() {
 func (u *UI) controllerOverlay(p tview.Primitive, width, height int) {
 	u.popup = true
 	panel := tview.NewFlex().AddItem(nil, 0, 1, false).AddItem(p, width, 0, true).AddItem(nil, 0, 1, false)
-	layout := tview.NewFlex().SetDirection(tview.FlexRow).AddItem(nil, 10, 0, false).AddItem(panel, height, 0, true).AddItem(nil, 0, 1, false)
+	layout := tview.NewFlex().SetDirection(tview.FlexRow).AddItem(nil, 0, 0, false).AddItem(panel, height, 0, true)
+	layout.SetDrawFunc(func(screen tcell.Screen, x, y, w, h int) (int, int, int, int) {
+		_, _, _, blueHeight := u.helpPanel.GetRect()
+		layout.ResizeItem(nil, min(blueHeight, max(0, h-height-1)), 0)
+		return x, y, w, h
+	})
 	u.Pages.AddPage("popup", layout, true, true)
 	u.App.SetFocus(p)
 }
@@ -435,10 +440,6 @@ func (u *UI) controllerInput(e *tcell.EventKey) (*tcell.EventKey, bool) {
 	c := u.controllers
 	if c == nil {
 		return e, false
-	}
-	if e.Key() == controllerWake {
-		u.receiveControllers()
-		return nil, true
 	}
 	if !c.wizard && !c.swallowTransition {
 		c.keyUntil = time.Time{}

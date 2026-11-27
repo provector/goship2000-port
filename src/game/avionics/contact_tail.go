@@ -93,6 +93,7 @@ func (s *State) advanceActorTail(in Input) error {
 		if in.DisableAutonomy {
 			continue
 		}
+		searchFloor := lower
 		best := uint16(0x800)
 		chosen := target
 		limit := Envelope(e.Pose.Height, 0, in.Switches&0x100 != 0, in.Switches&0x200 != 0, false)
@@ -123,21 +124,21 @@ func (s *State) advanceActorTail(in Input) error {
 		if err := s.followerQuery(&d, e.Pose, in.Entities[row], in, byte(actor)); err != nil {
 			return err
 		}
-		if d.Status == 0 {
-			if err := set(actor, 0); err != nil {
-				return err
+		if d.Status != 0 {
+			lower = best
+			c := &s.Contacts[row]
+			c.Flags = (c.Flags&0xfe|6)&7 | byte(actor<<3)
+			c.Kind, c.H0, c.H1 = in.Entities[row].Kind, in.Entities[row].Pose.H0, in.Entities[row].Pose.H1
+			// Source does not publish a new yaw in this5118 tail.
+			if c.Kind&0x10 == 0 {
+				continue
 			}
-			continue
 		}
-		lower = best
-		c := &s.Contacts[row]
-		c.Flags = (c.Flags&0xfe|6)&7 | byte(actor<<3)
-		c.Kind, c.H0, c.H1 = in.Entities[row].Kind, in.Entities[row].Pose.H0, in.Entities[row].Pose.H1
-		// Source does not publish a new yaw in this5118 tail.
-		if c.Kind&0x10 != 0 {
-			if err := set(actor, 0); err != nil {
-				return err
-			}
+		if err := set(actor, 0); err != nil {
+			return err
+		}
+		if d.Status != 0 {
+			c := &s.Contacts[row]
 			if in.ContactOrder != nil {
 				if err := in.ContactOrder(actor, row); err != nil {
 					return err
@@ -146,6 +147,17 @@ func (s *State) advanceActorTail(in Input) error {
 				return fmt.Errorf("source contact retask actor%d target%d needs route owner", actor, row)
 			}
 			s.ReachedContactOrderTail(c.Kind, in.Entities[row].Object[0])
+		}
+		if in.CanAcquireFollowerTarget != nil && e.Kind == 0x23 && e.Participation == 1 && e.Control[1] == 3 && e.Control[0] >= 1 && e.Control[0] <= 3 && e.Control[4] != 0 {
+			next, err := s.alternativeRouteTarget(&in, actor, row, int(target)-1, searchFloor, min(limit, uint16(0x800)))
+			if err != nil {
+				return err
+			}
+			if next >= 0 {
+				if err := set(actor, int8(next+1)); err != nil {
+					return err
+				}
+			}
 		}
 	}
 	return nil
@@ -169,4 +181,45 @@ func (s *State) followerQuery(d *Descriptor, from Pose, e Entity, in Input, obse
 	}
 	s.Contacts[e.Row].Yaw = oldYaw
 	return nil
+}
+
+// Keep the preferred live assignment if it is still eligible. Otherwise ties
+// between equally close candidates retain ascending runtime-row order.
+func (s *State) alternativeRouteTarget(in *Input, actor, first, previous int, floor, limit uint16) (int, error) {
+	from := in.Entities[actor].Pose
+	best := -1
+	bestDistance := limit
+	for row := range in.Entities {
+		c := &in.Entities[row]
+		if row == first || !c.Present || c.Participation != 1 || c.Kind&0x70 != 0 || row != previous && s.Contacts[row].Flags&7 == 2 {
+			continue
+		}
+		d := Metric(Delta(c.Pose.H0, from.H0), Delta(c.Pose.H1, from.H1))
+		if d >= limit || d <= floor || (row != previous && d >= bestDistance) {
+			continue
+		}
+		ok, err := in.CanAcquireFollowerTarget(actor, row, d)
+		if err != nil {
+			return -1, err
+		}
+		if ok {
+			best, bestDistance = row, d
+			if row == previous {
+				break
+			}
+		}
+	}
+	if best < 0 {
+		return -1, nil
+	}
+	// The source scan owns shared discovery, map contacts and the lower
+	// distance bound for later observers. This ray supplies only a decision.
+	contact := s.Contacts[best]
+	var sight Descriptor
+	err := s.followerQuery(&sight, from, in.Entities[best], *in, byte(actor))
+	s.Contacts[best] = contact
+	if err != nil || sight.Status == 0 {
+		return -1, err
+	}
+	return best, nil
 }

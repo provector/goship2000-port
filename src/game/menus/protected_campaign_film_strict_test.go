@@ -7,11 +7,25 @@ import (
 	"gunship2000-assets/game/configuration"
 	"gunship2000-assets/game/replay"
 	gamestate "gunship2000-assets/game/state"
+	"gunship2000-assets/internal/legacyreplay"
 	"os"
+	"path/filepath"
 	"reflect"
 	"testing"
 )
 
+func convertedHistoricalFilm(t *testing.T, original string) (*replay.Film, error) {
+	t.Helper()
+	path := filepath.Join(t.TempDir(), "converted.g2r")
+	if err := legacyreplay.Convert(original, path); err != nil {
+		return nil, err
+	}
+	b, err := os.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+	return replay.Unmarshal(b)
+}
 func retainedCampaign(t *testing.T) (*assetdata.OfficeAssets, *replay.Film, filmLaunch, *gamestate.PendingSortie) {
 	t.Helper()
 	path := os.Getenv("GS2000_P3_CAMPAIGN_FILM")
@@ -25,7 +39,7 @@ func retainedCampaign(t *testing.T) (*assetdata.OfficeAssets, *replay.Film, film
 	if assetdata.Hash(b) != "1b770b917001c1c945172722be31f122ba4e09ef20123966b341247c798d61ec" {
 		t.Fatal("wrong Campaign witness")
 	}
-	f, e := replay.Unmarshal(b)
+	f, e := convertedHistoricalFilm(t, path)
 	if e != nil {
 		t.Fatal(e)
 	}

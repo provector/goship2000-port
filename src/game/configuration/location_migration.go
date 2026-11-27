@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"gunship2000-assets/internal/playerdirs"
 	"gunship2000-assets/internal/userpack"
 	"io"
 	"io/fs"
@@ -43,12 +44,12 @@ func localPath(root, name string) (string, error) {
 	if e != nil {
 		return "", e
 	}
-	if real != path {
+	if rel, err := filepath.Rel(path, real); err != nil || rel != "." {
 		return "", fmt.Errorf("transfer path contains a link: %s", path)
 	}
 	return path, nil
 }
-func configuredItems(src, install string) ([]string, error) {
+func configuredItems(src, install string) ([]string, string, error) {
 	items := slices.Clone(legacyItems)
 	c := DefaultConfig()
 	configured := false
@@ -58,16 +59,21 @@ func configuredItems(src, install string) ([]string, error) {
 		}
 		d, e := LoadAt(filepath.Join(src, n), install)
 		if e != nil {
-			return nil, e
+			return nil, "", e
 		}
 		c = d.Config
 		configured = true
 		name := filepath.Clean(d.Config.Saves)
 		if filepath.IsLocal(name) {
 			if name == "." {
-				return nil, fmt.Errorf("installation root cannot be migrated as a saves tree")
+				return nil, "", fmt.Errorf("installation root cannot be migrated as a saves tree")
 			}
 			items = append(items, name)
+			for _, side := range []string{"imports", "reports"} {
+				if playerdirs.OwnedArchive(filepath.Join(src, name), side) {
+					items = append(items, filepath.Join(filepath.Dir(name), side))
+				}
+			}
 		}
 		break
 	}
@@ -79,19 +85,23 @@ func configuredItems(src, install string) ([]string, error) {
 	for _, name := range items {
 		path, e := ResolvedNewPath(filepath.Join(src, name))
 		if e != nil {
-			return nil, e
+			return nil, "", e
 		}
 		for _, asset := range []string{c.Original, c.Assets} {
 			keep, e := ResolvedNewPath(Relative(install, asset))
 			if e != nil {
-				return nil, e
+				return nil, "", e
 			}
 			if Within(path, keep) || Within(keep, path) {
-				return nil, fmt.Errorf("data migration overlaps original/prepared files: %s", path)
+				return nil, "", fmt.Errorf("data migration overlaps original/prepared files: %s", path)
 			}
 		}
 	}
-	return items, nil
+	excluded := ""
+	if filepath.IsLocal(c.Saves) {
+		excluded = filepath.Join(c.Saves, "screenshots")
+	}
+	return items, excluded, nil
 }
 func moveUserStore(src, dst string) error {
 	return transferUserStore(src, dst, src, false)
@@ -104,7 +114,7 @@ func transferUserStore(src, dst, install string, keepSource bool) error {
 	var tr transfer
 	raw, e := os.ReadFile(marker)
 	if os.IsNotExist(e) {
-		items, e := configuredItems(dst, install)
+		items, _, e := configuredItems(dst, install)
 		if e != nil {
 			return e
 		}
@@ -124,11 +134,12 @@ func transferUserStore(src, dst, install string, keepSource bool) error {
 				return err
 			}
 		}
-		items, e = configuredItems(src, install)
+		items, excluded, e := configuredItems(src, install)
 		if e != nil {
 			return e
 		}
 		tr = transfer{Version: 1, Source: src, Files: map[string]string{}}
+		skipScreens := filepath.Join(src, excluded)
 		for _, n := range []string{Filename, "config.cfg"} {
 			if _, e := os.Lstat(filepath.Join(src, n)); os.IsNotExist(e) {
 				continue
@@ -155,6 +166,9 @@ func transferUserStore(src, dst, install string, keepSource bool) error {
 			if e = filepath.WalkDir(from, func(path string, d fs.DirEntry, err error) error {
 				if err != nil {
 					return err
+				}
+				if d.IsDir() && excluded != "" && path == skipScreens {
+					return filepath.SkipDir
 				}
 				rel, e := filepath.Rel(src, path)
 				if e != nil {
@@ -224,9 +238,27 @@ func transferUserStore(src, dst, install string, keepSource bool) error {
 			break
 		}
 	}
-	items, e := configuredItems(configRoot, install)
+	items, excluded, e := configuredItems(configRoot, install)
 	if e != nil {
 		return e
+	}
+	// A resumed installation transfer can already have retired the source
+	// ownership marker. Its verified destination copy proves the same scope.
+	dstItems, _, err := configuredItems(dst, install)
+	if err != nil {
+		return err
+	}
+	items = append(items, dstItems...)
+	// Apply the same transfer scope to an unfinished inventory, including
+	// inventories made before the screenshot output directory changed.
+	if excluded != "" {
+		exclude := func(name string) bool { return Within(name, excluded) }
+		tr.Dirs = slices.DeleteFunc(tr.Dirs, exclude)
+		for name := range tr.Files {
+			if exclude(name) {
+				delete(tr.Files, name)
+			}
+		}
 	}
 	member := func(n string) bool {
 		for _, v := range items {
@@ -296,7 +328,7 @@ func transferUserStore(src, dst, install string, keepSource bool) error {
 		return e
 	}
 	if keepSource {
-		return verifySwitchCopy(src, dst, items, tr)
+		return verifySwitchCopy(src, dst, install, items, tr)
 	}
 	for _, n := range names {
 		old, e := localPath(src, n)

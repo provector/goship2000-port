@@ -149,13 +149,13 @@ func TestPreviewCompactFramesButtonsAndInvert(t *testing.T) {
 		u.App.GetBeforeDrawFunc()(screen)
 		u.Main.SetRect(0, 0, size[0], size[1])
 		u.Main.Draw(screen)
-		for _, point := range [][2]int{{14, 6}, {25, 6}} {
+		for _, point := range [][2]int{{14, 8}, {25, 8}} {
 			ch, _, _, _ := screen.GetContent(point[0], point[1])
 			if ch != '█' {
 				t.Fatal("wrong mapped cross", size, point, ch)
 			}
 		}
-		for _, point := range [][2]int{{53, 4}, {68, 6}} {
+		for _, point := range [][2]int{{53, 6}, {68, 8}} {
 			_, _, style, _ := screen.GetContent(point[0], point[1])
 			_, bg, _ := style.Decompose()
 			if bg.Hex() != yellow.Hex() {

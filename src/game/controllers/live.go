@@ -50,6 +50,12 @@ func (l *Live) Close() {
 }
 
 func (l *Live) Poll(epoch string, focused bool) LiveSample {
+	return l.PollFlight(epoch, focused, false)
+}
+
+// PollFlight selects the collective interpretation before applying calibration
+// and the focus/reconnect gate. The saved device profile remains read-only.
+func (l *Live) PollFlight(epoch string, focused, realistic bool) LiveSample {
 	o := LiveSample{Down: map[string]bool{}}
 	if l.backend == nil || l.Config.Selected == "" {
 		return o
@@ -88,6 +94,9 @@ func (l *Live) Poll(epoch string, focused bool) LiveSample {
 	}
 	source, reason := CollectiveSource(p)
 	mode := CollectiveMode(p)
+	if realistic {
+		mode = "absolute"
+	}
 	o.Source, o.SourceReason = source, reason
 	o.Mode, o.Slider, o.Absolute = mode, source == "slider", mode == "absolute"
 	// Suppress physical controls, not just action IDs: one held trigger cannot
@@ -139,8 +148,8 @@ func (l *Live) Poll(epoch string, focused bool) LiveSample {
 			}
 			// Cyclic/rudder must return to neutral after focus loss/reconnect.
 			// An absolute lever uses the flight owner's pickup gate instead.
-			if (changed || !focused) && (i != 2 || mode != "absolute" && source != "slider") {
-				l.axisBlocked[i] = math.Abs(v) > PreviewDeadZone
+			if changed || !focused {
+				l.axisBlocked[i] = (i != 2 || mode != "absolute" && source != "slider") && math.Abs(v) > PreviewDeadZone
 			}
 			if math.Abs(v) <= PreviewDeadZone {
 				l.axisBlocked[i] = false

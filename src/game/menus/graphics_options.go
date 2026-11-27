@@ -5,22 +5,18 @@ import (
 	"image"
 	"path/filepath"
 	"slices"
-	"strconv"
 
 	"gunship2000-assets/game/configuration"
 )
 
 type displayWindow struct {
 	width, height int
-	full          bool
+	x, y          int
+	monitor       int
+	mode          configuration.WindowMode
 }
 
-func (w displayWindow) String() string {
-	if w.full {
-		return "Fullscreen"
-	}
-	return fmt.Sprintf("%dx%d", w.width, w.height)
-}
+func (w displayWindow) String() string { return w.mode.Label(w.width, w.height) }
 
 type displayPreferences struct {
 	runtime configuration.RuntimeOptions
@@ -31,6 +27,7 @@ type graphicsOptions struct {
 	original, draft     displayPreferences
 	row                 int
 	windowChosen, dirty bool
+	windowCursor        string // Last requested list entry, even if the desktop refused its dimensions.
 	image               *image.RGBA
 }
 
@@ -97,12 +94,16 @@ func (g *graphicsOptions) cycle(delta int) {
 		d.runtime.SetFramerate(mode)
 		return
 	case 3:
-		choices = append(configuration.WindowResolutions(), "Fullscreen")
+		choices = configuration.WindowChoices()
 	case 4:
 		d.meter = !d.meter
 		return
 	}
-	i := slices.Index(choices, g.values()[g.row])
+	selected := g.values()[g.row]
+	if g.row == 3 && g.windowCursor != "" {
+		selected = g.windowCursor
+	}
+	i := slices.Index(choices, selected)
 	if i < 0 && delta < 0 {
 		i = 0
 	}
@@ -111,8 +112,14 @@ func (g *graphicsOptions) cycle(delta int) {
 		_ = d.runtime.SetResolution(choice)
 		return
 	}
-	d.window.full = choice == "Fullscreen"
-	if !d.window.full {
+	g.windowCursor = choice
+	switch choice {
+	case configuration.BorderlessLabel:
+		d.window.mode = configuration.Borderless
+	case configuration.FullScreenLabel:
+		d.window.mode = configuration.FullScreen
+	default:
+		d.window.mode = configuration.Windowed
 		fmt.Sscanf(choice, "%dx%d", &d.window.width, &d.window.height)
 	}
 	g.windowChosen = true
@@ -150,14 +157,9 @@ func (g *graphicsOptions) save(o WindowOptions) error {
 	d.Config.Runtime.PresentationMode = r.PresentationMode
 	d.Config.Runtime.PresentationFPS = r.PresentationFPS
 	d.Config.DrawFPSCPU = g.draft.meter
-	d.Config.Fullscreen = g.draft.window.full
 	if g.windowChosen {
-		for _, s := range configuration.WindowResolutions() {
-			if s == strconv.Itoa(g.draft.window.width)+"x"+strconv.Itoa(g.draft.window.height) {
-				d.Config.WindowWidth, d.Config.WindowHeight = g.draft.window.width, g.draft.window.height
-				break
-			}
-		}
+		d.Config.SetWindowMode(g.draft.window.mode)
+		d.Config.WindowWidth, d.Config.WindowHeight = g.draft.window.width, g.draft.window.height
 	}
 	return d.Save()
 }

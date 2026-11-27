@@ -44,6 +44,9 @@ func (p *RenderingPreview) advanceAvionics(random func() uint16, a *cockpit.Asse
 		head.Angles = p.ViewControls.Camera.Angles
 	}
 	in := avionics.Input{Entities: p.contactEntities(), Player: body, Head: head, Mast: p.ViewControls.Mode == 7, Speed: s.IndicatedSpeed, Switches: p.Initialized.Switches, PlayerRow: p.Initialized.PlayerRow, DamageMask: r.Systems.DamageMasks[0], World: p.Initialized.World, Assets: p.Renderer.Assets, Random: random}
+	if p.routeAcquisitionRetry {
+		in.CanAcquireFollowerTarget = r.Combat.CanAcquireFollowerTarget
+	}
 	in.ModernTail = p.p4Mechanics
 	in.ProgressAwareTargeting = p.r8Mechanics
 	in.DisableAutonomy = p.r1Mechanics && !p.wingmenAutonomy

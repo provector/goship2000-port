@@ -7,7 +7,7 @@ import (
 )
 
 // Exercise production append, sealing, random access and full sequential playback.
-// Large repeated checkpoint data crosses the former decoded-byte ceiling cheaply on disk.
+// Large repeated payload data crosses the former decoded-byte ceiling cheaply on disk.
 func TestStreamPastFormerLimits(t *testing.T) {
 	f := testFilm(strings.Repeat("c", 32))
 	store := Store{t.TempDir()}
@@ -16,7 +16,7 @@ func TestStreamPastFormerLimits(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer r.Close()
-	op := Operation{Kind: "boundary", Payload: json.RawMessage(`{"Kind":"reset"}`), Checkpoint: map[string]string{"flight": strings.Repeat("x", 1080)}}
+	op := Operation{Kind: "boundary", Payload: json.RawMessage(`{"Kind":"reset","pad":"` + strings.Repeat("x", 1080) + `"}`), Checkpoint: map[string]string{"flight": BytesDigest([]byte("capacity"))}}
 	const ops = 250003
 	for i := 0; i < ops; i++ {
 		if err = r.Append(op); err != nil {

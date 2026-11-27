@@ -29,7 +29,6 @@ type ReplayViewer struct {
 	Selected, Actor, PointerX, PointerY int
 	nextEvent                           uint64
 	credit                              time.Duration
-	cameraSkip                          int
 	yaw                                 uint16
 	pitch                               int16
 	camera                              render3d.Camera
@@ -192,13 +191,11 @@ func (c *FrontEnd) activateReplayControl(n int) error {
 		v.Fast = false
 		v.Next = false
 		v.credit = 0
-		v.cameraSkip = 0
 	case 2:
 		v.Stopped = false
 		v.Fast = false
 		v.Next = false
 		v.credit = 0
-		v.cameraSkip = 0
 		v.previousCamera = v.camera
 		v.previousInstances = append(v.previousInstances[:0], p.instances...)
 	case 3:
@@ -207,13 +204,11 @@ func (c *FrontEnd) activateReplayControl(n int) error {
 		v.Next = true
 		v.nextEvent = v.Playback.EventCount
 		v.credit = 0
-		v.cameraSkip = 0
 	case 4:
 		v.Stopped = false
 		v.Fast = true
 		v.Next = false
 		v.credit = 0
-		v.cameraSkip = 0
 	case 5:
 		v.pitch = max(-16384, v.pitch-(int16(v.df)<<6))
 		v.updateCamera()
@@ -359,7 +354,17 @@ func (c *FrontEnd) AdvanceReplay(seconds float64) error {
 		v.DemoSkip = 0
 	}
 	v.credit += time.Duration(seconds*float64(time.Second)) * time.Duration(rate)
-	for work := 0; work < 16 && !v.Playback.Done; work++ {
+	// Old films can contain thousands of modal boundaries between adjacent
+	// flight steps. Spend spare fast-forward time checking those boundaries,
+	// yielding between complete operations for the next input/present cycle.
+	var deadline time.Time
+	if v.Fast {
+		deadline = time.Now().Add(8 * time.Millisecond)
+	}
+	for work := 0; !v.Playback.Done; work++ {
+		if work >= 16 && (!v.Fast || work >= 256 || time.Now().After(deadline)) {
+			break
+		}
 		o, readErr := v.Playback.Film.OperationAt(v.Playback.Cursor)
 		if readErr != nil {
 			v.Stopped = true
@@ -368,7 +373,7 @@ func (c *FrontEnd) AdvanceReplay(seconds float64) error {
 			return nil
 		}
 		logical := o.Kind == "step" || o.Kind == "terminal"
-		if logical && v.credit < flight.StepDuration() {
+		if logical && (work >= 16 || v.credit < flight.StepDuration()) {
 			break
 		}
 		if logical {
@@ -386,16 +391,9 @@ func (c *FrontEnd) AdvanceReplay(seconds float64) error {
 			var consumed filmStep
 			_ = json.Unmarshal(o.Payload, &consumed)
 			v.df = consumed.Timing.DF
-			// Original15f2 skips conventional camera/draw work on the32
-			// intervening passes. This is private presentation bookkeeping.
-			if !v.Fast || v.cameraSkip == 0 {
-				v.updateCamera()
-				if v.Fast {
-					v.cameraSkip = 32
-				}
-			} else {
-				v.cameraSkip--
-			}
+			// Following each verified pose keeps the spectator camera in step with
+			// moving actors during fast-forward, including a stop at the next event.
+			v.updateCamera()
 		}
 		if v.Next && v.Playback.EventCount > v.nextEvent && v.Playback.EventCount > before {
 			v.Next = false

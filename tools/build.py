@@ -72,6 +72,9 @@ def runtime_files(dest, target):
             raise ValueError(f"SDL2 architecture differs from {target}")
         (dest/"lib").mkdir()
         shutil.copy2(lib, dest/"lib")
+        if target == "linux-arm64":
+            renderer = MODULE/"internal/raylibruntime/linux-arm64/libraylib.so.6.0.0"
+            shutil.copy2(renderer, dest/"lib")
         for p in (MODULE/"internal/distrib").glob("*.desktop"):
             shutil.copy2(p,dest)
         shutil.copytree(MODULE/"internal/distrib/share",dest/"share")
@@ -103,8 +106,16 @@ def main():
         ld = "-X main.applicationMode=installed"
         if name == "gs2000":
             ld += " -X gunship2000-assets/game/menus.buildSourceIdentity=" + ident
-        tags = ["-tags","devtools"] if args.flavor == "DEBUG" else []
-        go("build","-mod=readonly","-trimpath","-buildvcs=false",*tags,"-ldflags",ld,"-o",
+        if name == "setup" and osname == "windows":
+            ld += " -H=windowsgui"
+        tags = ["devtools"] if args.flavor == "DEBUG" else []
+        if args.target == "linux-arm64":
+            # The upstream embedded desktop GL build requires GL 3.3. Load
+            # our GLES build beside the executable, including during go init.
+            tags.append("raylib_no_embed")
+            ld += " -r $ORIGIN/lib"
+        tag_args = ["-tags", ",".join(tags)] if tags else []
+        go("build","-mod=readonly","-trimpath","-buildvcs=false",*tag_args,"-ldflags",ld,"-o",
            str(dest/(name+(".exe" if osname=="windows" else ""))),pkg)
     runtime_files(dest,args.target)
     if args.package:

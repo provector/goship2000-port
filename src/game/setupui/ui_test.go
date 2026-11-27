@@ -17,6 +17,16 @@ func uiUI(t *testing.T) *UI {
 	}
 	return New(d)
 }
+func settingRow(t *testing.T, u *UI, id string) int {
+	t.Helper()
+	for row, setting := range u.settings {
+		if setting.ID == id {
+			return row
+		}
+	}
+	t.Fatalf("missing %s setting on %s", id, u.menu)
+	return -1
+}
 func TestMenuOwnershipInlinePresetsAndBack(t *testing.T) {
 	u := uiUI(t)
 	for _, menu := range []string{"graphics", "sound", "controls", "settings", "debug", "advanced"} {
@@ -69,7 +79,7 @@ func TestMenuOwnershipInlinePresetsAndBack(t *testing.T) {
 		t.Fatal("cycle back")
 	}
 	for _, mode := range []string{"stepped", "smooth"} {
-		u.change(3, mode)
+		u.change(settingRow(t, u, "presentation"), mode)
 		if u.Doc.Config.Runtime.PresentationMode != mode || u.Doc.Config.Runtime.PresentationFPS != 60 {
 			t.Fatal(mode)
 		}

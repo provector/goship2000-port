@@ -30,7 +30,7 @@ func (s *LiveState) applyHeightCurve(in LiveInput, f *flight.State, params fligh
 		}
 		return
 	}
-	if manual || in.Digital[2][0] || in.Digital[2][1] || f.HeightControl != 0 || f.Hover != 0 || f.Rotor == 0 || f.ValidContact && in.Axes[2] <= 0 {
+	if manual || in.Digital[2][0] || in.Digital[2][1] || f.HeightControl != 0 || f.Hover != 0 && (power == nil || !power.IndependentHover) || f.Rotor == 0 || f.ValidContact && in.Axes[2] <= 0 {
 		s.HeightKnown, s.HeightArresting = false, false
 		return
 	}

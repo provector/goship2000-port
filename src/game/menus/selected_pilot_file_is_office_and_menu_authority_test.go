@@ -1,6 +1,7 @@
 package menus
 
 import (
+	"bytes"
 	"encoding/json"
 	assetdata "gunship2000-assets/game/assets"
 	gamestate "gunship2000-assets/game/state"
@@ -163,5 +164,36 @@ func TestRosterWhiteFillStatsPhoenixAndQuitSourceStyle(t *testing.T) {
 	}
 	if green == 0 {
 		t.Fatal("quit bitmap text not green")
+	}
+}
+
+func TestReplacementSheetHidesPhoenixAndRestoresItOnCancel(t *testing.T) {
+	c := sourceFrontEnd(t, true)
+	state := c.Store.State()
+	state.SelectedPilot().Statistics = &gamestate.PilotStatistics{PhoenixCounter: -2}
+	if err := c.Store.Commit(state); err != nil {
+		t.Fatal(err)
+	}
+	officeClick(t, c, 184, 70)
+	original := c.Frame(false)
+	act(t, c, Actions{X: 30, Y: 90, Inside: true, Selector2: true, PointerPressed: true})
+	if c.Draft == nil {
+		t.Fatal("replacement draft did not open")
+	}
+	editor := c.Frame(false)
+	sheet := c.Menus.Images["ROSTER.PIC"]
+	// The previous pilot's award and the space above the squadron records
+	// must both show the board's artwork while the name is being entered.
+	for _, rect := range [][4]int{{258, 13, 20, 20}, {100, 72, 124, 4}} {
+		for y := rect[1]; y < rect[1]+rect[3]; y++ {
+			x := y*320 + rect[0]
+			if !bytes.Equal(editor[x:x+rect[2]], sheet[x:x+rect[2]]) {
+				t.Fatalf("old artwork or paint on the replacement sheet at row %d", y)
+			}
+		}
+	}
+	act(t, c, Actions{Cancel: true})
+	if !bytes.Equal(original, c.Frame(false)) {
+		t.Fatal("cancel did not restore the previous pilot display")
 	}
 }

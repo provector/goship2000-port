@@ -55,7 +55,7 @@ func TestTemplateFreshExistingAndDamaged(t *testing.T) {
 		t.Fatal("reseeded existing store")
 	}
 	s.Close()
-	if e = os.Remove(filepath.Join(dir, playerPack(3))); e != nil {
+	if e = os.Remove(filepath.Join(dir, "pilots", playerPack(3))); e != nil {
 		t.Fatal(e)
 	}
 	if broken, e := OpenManagedCareer(dir, source, app, true); e == nil {
@@ -92,7 +92,10 @@ func TestTransferredAuthoredAndGeneratedDocuments(t *testing.T) {
 			if _, e = origin.SaveExport(doc); e != nil {
 				t.Fatal(e)
 			}
-			p, _ := origin.path(doc.ID)
+			p, err := origin.resolveDocument(doc.ID, false)
+			if err != nil {
+				t.Fatal(err)
+			}
 			b, e := os.ReadFile(p)
 			if e != nil {
 				t.Fatal(e)

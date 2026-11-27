@@ -405,6 +405,15 @@ func sortieDisqualifier(f SortieFacts) bool {
 	return false
 }
 
+// ServiceRetirement preserves the historical interpretation for pending results
+// written before the original remainder helper was identified.
+func (p *SortieProposal) ServiceRetirement(pilot *Pilot) bool {
+	if p.Facts.ResultContext != nil && p.Facts.ResultContext.RetireByMissions {
+		return pilot.Statistics.Missions() >= 50 && !(pilot.Campaign != nil && pilot.Campaign.Phase == CampaignActive && CampaignTerminal(pilot.Campaign, pilot.MissionType) == 0)
+	}
+	return pilot.Statistics.Campaigns() >= 50
+}
+
 // ProposeSortie follows GS scoring, commander selection, main award/rank commit
 // ordering, but does not write a save or mutate the caller's final facts/pilot.
 func ProposeSortie(p *Pilot, facts SortieFacts, tables SortieTables) (*SortieProposal, error) {
@@ -893,7 +902,7 @@ func resolveSortieBranch(out *SortieProposal, acceptCommission bool) (*Pilot, [8
 		sortiePutWord(p, 0x59, (half/100)*100)
 	}
 	activeCampaign := p.Campaign != nil && p.Campaign.Phase == CampaignActive && CampaignTerminal(p.Campaign, p.MissionType) == 0
-	retired := p.Rank.Raw() == 11 || p.Statistics.MissionCampaignCounter/100 >= 50 && !activeCampaign || sortieWord(p, 0xa3) >= 16
+	retired := p.Rank.Raw() == 11 || out.ServiceRetirement(p) && !activeCampaign || sortieWord(p, 0xa3) >= 16
 	if retired {
 		p.Status = StatusRetired
 		p.LegacyStatus = 2

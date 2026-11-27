@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"gunship2000-assets/internal/playerfile"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -167,7 +168,7 @@ func TestReadableFilmInterruptedNameEdit(t *testing.T) {
 			if cut == 3 {
 				must(os.WriteFile(dest, []byte("occupied"), 0600))
 			} else if cut > 0 {
-				must(moveFilmNew(p, dest))
+				must(playerfile.MoveNew(p, dest))
 				if cut == 2 {
 					must(renameSlot(dest, m.portable, x.Title))
 				}

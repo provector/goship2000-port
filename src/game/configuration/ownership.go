@@ -1,8 +1,10 @@
 package configuration
 
 import (
+	"errors"
 	"fmt"
 	"gunship2000-assets/internal/filelease"
+	"gunship2000-assets/internal/playerdirs"
 	"gunship2000-assets/internal/storeowner"
 	"os"
 	"path/filepath"
@@ -89,6 +91,15 @@ func beginOwnershipAt(dir, data, assets string, rebuild bool, outputs ...string)
 		if Within(roots[3].Path, original) || Within(roots[1].Path, original) || Within(original, roots[1].Path) || roots[2].Write && (Within(roots[2].Path, original) || Within(original, roots[2].Path)) {
 			return nil, c, fmt.Errorf("writable store overlaps original installation")
 		}
+		if err := validateSiblings(roots[1].Path, original, roots[2].Path); err != nil {
+			return nil, c, err
+		}
+		for _, name := range []string{"reports", "imports", "temp", "screenshots"} {
+			path := playerdirs.Sibling(roots[1].Path, name)
+			if !Within(path, data) && !Within(path, dir) {
+				roots = append(roots, storeowner.Tree{Path: path, Write: true})
+			}
+		}
 		return roots, c, nil
 	}
 	roots, _, e := inspect()
@@ -116,11 +127,23 @@ func beginOwnershipAt(dir, data, assets string, rebuild bool, outputs ...string)
 			writers = append(writers, roots[2].Path+".prepare.lock")
 		}
 		anchors := []string{filepath.Join(saves, ".career-owner.lease")}
-		reports := filepath.Join(saves, "reports")
-		if dirs, err := os.ReadDir(reports); err == nil {
-			for _, d := range dirs {
-				if d.IsDir() && strings.HasPrefix(d.Name(), "session-") {
-					anchors = append(anchors, filepath.Join(reports, d.Name(), "owner.lease"))
+		reportRoots := []string{filepath.Join(saves, "reports")}
+		if playerdirs.OwnedArchive(saves, "reports") {
+			reportRoots = append(reportRoots, playerdirs.Sibling(saves, "reports"))
+		}
+		for _, reports := range reportRoots {
+			if dirs, err := os.ReadDir(reports); err == nil {
+				for _, d := range dirs {
+					if d.IsDir() && strings.HasPrefix(d.Name(), "session-") {
+						anchor := filepath.Join(reports, d.Name(), "owner.lease")
+						if err := filelease.Retire(nil, []string{anchor}); err != nil {
+							if errors.Is(err, os.ErrPermission) && !strings.Contains(err.Error(), "already in use") {
+								fmt.Fprintf(os.Stderr, "Leaving inaccessible report session at %s: %v\n", anchor, err)
+							} else {
+								return nil, errors.Join(err, f.Close())
+							}
+						}
+					}
 				}
 			}
 		}

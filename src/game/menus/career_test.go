@@ -28,7 +28,7 @@ func careerRetained(t *testing.T) (*assetdata.OfficeAssets, *replay.Film, filmLa
 	if assetdata.Hash(raw) != "76ed390f3473333fe05d59738b9e7be996d5472ae02d7ef5e15a2ffdeb7c3410" {
 		t.Fatal("wrong protected film")
 	}
-	f, e := replay.Unmarshal(raw)
+	f, e := convertedHistoricalFilm(t, path)
 	if e != nil {
 		t.Fatal(e)
 	}

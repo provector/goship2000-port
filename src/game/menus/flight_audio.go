@@ -81,12 +81,15 @@ func (p *RenderingPreview) requestCollectiveRotor() {
 	if p == nil || p.Flight == nil || p.Flight.State == nil {
 		return
 	}
+	p.requestRotor(p.collectiveRotorPitch())
+}
+
+func (p *RenderingPreview) collectiveRotorPitch() uint16 {
 	r := p.Flight
 	if r.State.Rotor == 0 || len(r.Systems.Fuel) == 0 || r.Systems.Fuel[0] <= 0 {
-		p.requestRotor(0)
-		return
+		return 0
 	}
-	p.requestRotor(runningRotorPitch(r.State.Collective))
+	return runningRotorPitch(r.State.Collective)
 }
 
 // Zero is the mixer shutdown command. A running rotor at collective zero or one

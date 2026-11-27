@@ -5,6 +5,7 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
+	"gunship2000-assets/internal/playerfile"
 	"io"
 	"os"
 	"path/filepath"
@@ -260,7 +261,7 @@ func (s Store) publishSealed(f *Film, p string, pub publication) error {
 	if e = file.Close(); e != nil {
 		return e
 	}
-	if e = moveFilmNew(expected, p); e != nil {
+	if e = playerfile.MoveNew(expected, p); e != nil {
 		return e
 	}
 	activated = true
