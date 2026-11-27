@@ -14,7 +14,7 @@
 ### Beta Release 1.RC1-W5.4 
 
 New Features:
-- **Optimized replay system** with protobuffers ans S2 compression. No more big stutters in fast forward mode. `IMPORTANT: If you have any existing replays that you would like to be able to play, run setup utility and select "Convert Replays" once`
+- **Optimized replay system** with protobuffers and S2 compression. No more big stutters in fast forward mode. `IMPORTANT: If you have any existing replays that you would like to be able to play, run setup utility and select "Convert Replays" once`
 - Added in-flight **Save** feature! See [Save Feature](#save-feature-in-flight) for details.
 - **GOG Installation auto-detection**. (If you have both Steam and GOG copies, Steam is used by default. `You can change those settings in setup`)
 - **Setup now uses its own graphical** window instead of native terminal. Fixes **XBOX Controller** and other controller **axis mapping issues** on **windows** systems.
