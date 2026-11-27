@@ -11,7 +11,12 @@ Saves Location and the absolute GOSHIP2000_DATA_DIR override remain available.
 The installation fallback and configuration, pilot and replay layouts follow
 the shared game rules. Use a disposable data folder for experimental testing.
 
-Raylib is embedded. The native OPL helper is verified and unpacked on demand
-into the user's cache. SDL2.framework includes its upstream notices. This is
+Keep the supplied lib/libraylib.6.0.0.dylib with the game. It requests an
+accelerated OpenGL 2.1 pixel format first and allows software rendering if
+macOS rejects that request. From Terminal, ./gs2000 check-window tests the
+game window and a textured frame without original assets. If the separate log
+window cannot start, subsequent log records go to the launching Terminal.
+
+The native OPL helper is verified and unpacked on demand into the user's cache. SDL2.framework includes its upstream notices. This is
 a command-line distribution, without a Developer ID signature or notarization.
 Native CI and physical flight, sound and controller acceptance are separate.

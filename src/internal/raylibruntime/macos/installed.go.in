@@ -1,0 +1,20 @@
+// Installed-package replacement for the pinned raylib-go no_embed.go in installed Darwin packages.
+// Supply dlopen an absolute path even when launched from another directory.
+package rl
+
+import (
+	"os"
+	"path/filepath"
+)
+
+func extractLib() string {
+	exe, err := os.Executable()
+	if err != nil {
+		panic(err)
+	}
+	exe, err = filepath.EvalSymlinks(exe)
+	if err != nil {
+		panic(err)
+	}
+	return filepath.Join(filepath.Dir(exe), "lib", "libraylib.6.0.0.dylib")
+}

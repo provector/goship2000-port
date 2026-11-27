@@ -14,6 +14,7 @@ let app = Process()
 app.executableURL = URL(fileURLWithPath: CommandLine.arguments[1])
 app.arguments = Array(CommandLine.arguments.dropFirst(2))
 let logWindow = app.arguments == ["__log-console"]
+let gameCheck = app.arguments == ["check-window"]
 let channel = Pipe()
 if logWindow { app.standardInput = channel }
 do {
@@ -61,7 +62,7 @@ if observed {
 // Keep stdin open for the entire observation, then let the log viewer close on EOF.
 if logWindow { channel.fileHandleForWriting.closeFile() }
 var requestedTermination = false
-if logWindow { _ = waitForExit(seconds: 3) }
+if logWindow || gameCheck { _ = waitForExit(seconds: gameCheck ? 8 : 3) }
 if app.isRunning {
     requestedTermination = true
     app.terminate()
@@ -75,5 +76,5 @@ let signalled = app.terminationReason == .uncaughtSignal
 let status = app.terminationStatus
 print("Child exited with \(signalled ? "signal" : "status") \(status)")
 let cleanExit = !signalled && status == 0
-let expectedSetupClose = !logWindow && requestedTermination && signalled && status == SIGTERM
+let expectedSetupClose = !logWindow && !gameCheck && requestedTermination && signalled && status == SIGTERM
 exit(observed && (cleanExit || expectedSetupClose) ? 0 : 1)

@@ -19,10 +19,11 @@ var active atomic.Pointer[Runtime]
 
 type ConsoleFactory func(func(error)) (io.WriteCloser, error)
 type Options struct {
-	AsyncFile bool
-	Console   io.Writer
-	Detached  ConsoleFactory
-	Emergency io.Writer
+	AsyncFile       bool
+	Console         io.Writer
+	ConsoleFallback io.Writer
+	Detached        ConsoleFactory
+	Emergency       io.Writer
 }
 type Runtime struct {
 	fileQueue    chan string
@@ -106,22 +107,32 @@ func Start(directory string, c configuration.Logging, o Options) *Runtime {
 			r.consoleOK = true
 		} else if o.Detached != nil {
 			// Failure callbacks may arrive during construction; all fields are guarded.
+			windowFailed := func(err error) {
+				r.failLocked("console", err)
+				if o.ConsoleFallback != nil {
+					r.console = o.ConsoleFallback
+					r.consoleOK = true
+					fmt.Fprintln(r.console, "Graphical log unavailable; continuing log output here.")
+				}
+			}
 			writer, e := o.Detached(func(err error) {
 				r.mu.Lock()
 				defer r.mu.Unlock()
 				r.consoleOK = false
 				r.consoleEnded = true
 				if err != nil {
-					r.failLocked("console", err)
+					windowFailed(err)
 				}
 			})
 			r.mu.Lock()
 			if e != nil {
-				r.failLocked("console", e)
+				windowFailed(e)
 			} else {
-				r.console = writer
 				r.consoleClose = writer
-				r.consoleOK = !r.failed["console"] && !r.consoleEnded
+				if !r.consoleEnded {
+					r.console = writer
+					r.consoleOK = !r.failed["console"]
+				}
 			}
 			r.mu.Unlock()
 		} else {

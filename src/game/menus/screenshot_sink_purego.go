@@ -3,6 +3,8 @@
 package menus
 
 import (
+	"os"
+	"path/filepath"
 	"runtime"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -41,6 +43,15 @@ func ownFrameExports() (func(), error) {
 		name = "raylib.dll"
 	case "darwin":
 		name = "libraylib.6.0.0.dylib"
+		// Installed Mac builds load the compatible renderer from this exact path.
+		if exe, err := os.Executable(); err == nil {
+			if resolved, err := filepath.EvalSymlinks(exe); err == nil {
+				path := filepath.Join(filepath.Dir(resolved), "lib", name)
+				if _, err := os.Stat(path); err == nil {
+					name = path
+				}
+			}
+		}
 	}
 	lib, err := ffi.Load(name)
 	if err != nil && runtime.GOOS == "linux" {

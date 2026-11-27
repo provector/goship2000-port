@@ -21,7 +21,7 @@ test -x "$app/setup"
 test -f "$app/support.g2pak"
 cpu=$arch
 if [[ $arch == amd64 ]]; then cpu=x86_64; fi
-for f in "$app/gs2000" "$app/setup" "$app/lib/SDL2.framework/SDL2"; do
+for f in "$app/lib/libraylib.6.0.0.dylib" "$app/gs2000" "$app/setup" "$app/lib/SDL2.framework/SDL2"; do
     lipo "$f" -verify_arch "$cpu"
     otool -L "$f"
 done
@@ -29,6 +29,8 @@ export GOSHIP2000_DATA_DIR="$scratch/player store"
 (cd "$scratch/cwd"; "$app/gs2000" -help; "$app/setup" -init; "$app/setup" -check; "$app/gs2000" portable-films)
 (cd "$scratch/cwd"; DYLD_PRINT_LIBRARIES=1 "$app/setup" -list-controllers >"$scratch/devices.json" 2>"$scratch/loaded.txt")
 grep -F "$app/lib/SDL2.framework/Versions/A/SDL2" "$scratch/loaded.txt"
+(cd "$scratch/cwd"; DYLD_PRINT_LIBRARIES=1 "$app/gs2000" -help >"$scratch/help.txt" 2>"$scratch/game-libraries.txt")
+grep -F "$app/lib/libraylib.6.0.0.dylib" "$scratch/game-libraries.txt"
 python3 test/macos/opl_fixture.py "$app/gs2000" "$target"
 ln -s "$app/lib" "$scratch/bin/lib"
 (cd src

@@ -1,0 +1,20 @@
+--- a/external/glfw/src/nsgl_context.m
++++ b/external/glfw/src/nsgl_context.m
+@@ -311,6 +311,17 @@
+ 
+     window->context.nsgl.pixelFormat =
+         [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
++    // GoShip macOS: keep the accelerated choice on physical GPUs. On a VM,
++    // ask for the same framebuffer without the mandatory accelerator bit.
++    if (window->context.nsgl.pixelFormat == nil)
++    {
++        assert(attribs[0] == NSOpenGLPFAAccelerated);
++        window->context.nsgl.pixelFormat =
++            [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs + 1];
++        if (window->context.nsgl.pixelFormat != nil)
++            fprintf(stderr, "GoShip: NSGL accepted a pixel format without mandatory acceleration.\n");
++    }
++
+     if (window->context.nsgl.pixelFormat == nil)
+     {
+         _glfwInputError(GLFW_FORMAT_UNAVAILABLE,

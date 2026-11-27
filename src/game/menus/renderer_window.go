@@ -51,15 +51,8 @@ func RunOfficeWindow(o *Office, options WindowOptions) error {
 	if branding.DeveloperTools && options.Development && options.SceneSmoke {
 		level = rl.LogInfo
 	}
-	rl.SetTraceLogLevel(level)
-	rl.SetConfigFlags(rl.FlagWindowResizable)
-	preferPositionableGameWindow()
-	rl.InitWindow(int32(options.Width), int32(options.Height), "goship2000")
-	if !rl.IsWindowReady() {
-		if runtime.GOOS == "linux" && runtime.GOARCH == "arm64" {
-			return fmt.Errorf("could not open the game graphics window. The Linux ARM64 package needs an active X11 or XWayland display and a working EGL/OpenGL ES driver")
-		}
-		return fmt.Errorf("raylib could not create a window / graphics context")
+	if err := openGameWindow(int32(options.Width), int32(options.Height), level); err != nil {
+		return err
 	}
 	defer rl.CloseWindow()
 	releaseExport := bindScreenshotOutput(options.SavesDirectory)
@@ -973,4 +966,18 @@ func drawPerformanceOverlay(meter *presentationstats.Meter) {
 	x := max(0, w-width-4)
 	rl.DrawRectangle(x, 4, width, size+6, rl.NewColor(0, 0, 0, 220))
 	rl.DrawText(text, x+4, 7, size, rl.RayWhite)
+}
+
+func openGameWindow(width, height int32, level rl.TraceLogLevel) error {
+	rl.SetTraceLogLevel(level)
+	rl.SetConfigFlags(rl.FlagWindowResizable)
+	preferPositionableGameWindow()
+	rl.InitWindow(width, height, "goship2000")
+	if !rl.IsWindowReady() {
+		if runtime.GOOS == "linux" && runtime.GOARCH == "arm64" {
+			return fmt.Errorf("could not open the game graphics window. The Linux ARM64 package needs an active X11 or XWayland display and a working EGL/OpenGL ES driver")
+		}
+		return fmt.Errorf("raylib could not create a window / graphics context")
+	}
+	return nil
 }

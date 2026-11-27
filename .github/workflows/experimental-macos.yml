@@ -30,7 +30,17 @@ jobs:
       - name: Build, extract and exercise packaged runtime
         id: package
         run: bash test/macos/native-check.sh "${{ matrix.target }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: goship2000-prod-${{ matrix.target }}-v1.RC1-W5.4
+          path: ${{ runner.temp }}/goship-build/artifacts/*
+          if-no-files-found: error
+      - name: Probe ordinary game window and texture
+        if: ${{ !cancelled() && steps.package.outcome == 'success' }}
+        timeout-minutes: 2
+        run: bash test/macos/probe-window.sh "${{ matrix.target }}" gs2000 check-window
       - name: Probe gs2000 log window
+        if: ${{ !cancelled() && steps.package.outcome == 'success' }}
         timeout-minutes: 2
         env:
           GOSHIP2000_LOG_WINDOW_TRACE: '1'
@@ -39,8 +49,3 @@ jobs:
         if: ${{ !cancelled() && steps.package.outcome == 'success' }}
         timeout-minutes: 2
         run: bash test/macos/probe-window.sh "${{ matrix.target }}" setup
-      - uses: actions/upload-artifact@v4
-        with:
-          name: goship2000-prod-${{ matrix.target }}-v1.RC1-W5.4
-          path: ${{ runner.temp }}/goship-build/artifacts/*
-          if-no-files-found: error

@@ -7,6 +7,7 @@ import (
 	"gunship2000-assets/game/configuration"
 	"gunship2000-assets/game/diagnostics"
 	"gunship2000-assets/game/logview"
+	"gunship2000-assets/game/menus"
 	"gunship2000-assets/game/replay"
 	"gunship2000-assets/game/state"
 	"gunship2000-assets/internal/branding"
@@ -22,6 +23,15 @@ func main() { os.Exit(run(os.Args[1:])) }
 func run(args []string) int {
 	if len(args) > 0 {
 		switch args[0] {
+		case "check-window":
+			if len(args) != 1 {
+				return 1
+			}
+			if err := menus.CheckGameWindow(); err != nil {
+				fmt.Fprintln(os.Stderr, err)
+				return 1
+			}
+			return 0
 		case "__log-console":
 			if err := logview.Run(); err != nil {
 				fmt.Fprintln(os.Stderr, err)

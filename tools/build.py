@@ -7,6 +7,7 @@ import os
 from pathlib import Path
 import shutil
 import subprocess
+import tempfile
 import tarfile
 import zipfile
 
@@ -72,6 +73,9 @@ def runtime_files(dest, target):
             raise ValueError("Mac SDL2 framework archive differs from its manifest")
         with tarfile.open(archive) as framework:
             framework.extractall(dest/"lib", filter="data")
+        libname = "libraylib.6.0.0.dylib"
+        renderer = MODULE/"internal/raylibruntime"/target/libname
+        shutil.copy2(renderer, dest/"lib"/libname)
         shutil.copy2(ROOT/"distrib/macos.txt", dest/"MACOS.txt")
     else:
         lib = libs/"libSDL2-2.0.so.0"
@@ -111,21 +115,34 @@ def main():
         parser.error("Choose a new build directory outside the Go module")
     dest.mkdir(parents=True)
     ident = source_id()
-    for name, pkg in (("gs2000","./game"), ("setup","./cmd/setup")):
-        ld = "-X main.applicationMode=installed"
-        if name == "gs2000":
-            ld += " -X gunship2000-assets/game/menus.buildSourceIdentity=" + ident
-        if name == "setup" and osname == "windows":
-            ld += " -H=windowsgui"
-        tags = ["devtools"] if args.flavor == "DEBUG" else []
-        if args.target == "linux-arm64":
-            # The upstream embedded desktop GL build requires GL 3.3. Load
-            # our GLES build beside the executable, including during go init.
-            tags.append("raylib_no_embed")
-            ld += " -r $ORIGIN/lib"
-        tag_args = ["-tags", ",".join(tags)] if tags else []
-        go("build","-mod=readonly","-trimpath","-buildvcs=false",*tag_args,"-ldflags",ld,"-o",
-           str(dest/(name+(".exe" if osname=="windows" else ""))),pkg)
+    with tempfile.TemporaryDirectory(dir=dest.parent) as scratch:
+        build_module = MODULE
+        module_flag = "-mod=readonly"
+        if osname == "darwin":
+            # Use Go's normal vendoring workflow; the user's module cache stays read-only.
+            build_module = Path(scratch)/"src"
+            shutil.copytree(MODULE, build_module)
+            subprocess.run(["go", "mod", "vendor"], cwd=build_module, env=env, check=True)
+            binding = build_module/"vendor/github.com/gen2brain/raylib-go/raylib"
+            shutil.copyfile(MODULE/"internal/raylibruntime/macos/installed.go.in", binding/"no_embed.go")
+            module_flag = "-mod=vendor"
+        for name, pkg in (("gs2000","./game"), ("setup","./cmd/setup")):
+            ld = "-X main.applicationMode=installed"
+            if name == "gs2000":
+                ld += " -X gunship2000-assets/game/menus.buildSourceIdentity=" + ident
+            if name == "setup" and osname == "windows":
+                ld += " -H=windowsgui"
+            tags = ["devtools"] if args.flavor == "DEBUG" else []
+            if osname == "darwin":
+                tags.append("raylib_no_embed")
+            if args.target == "linux-arm64":
+                # The upstream embedded desktop GL build requires GL 3.3. Load
+                # our GLES build beside the executable, including during go init.
+                tags.append("raylib_no_embed")
+                ld += " -r $ORIGIN/lib"
+            tag_args = ["-tags", ",".join(tags)] if tags else []
+            subprocess.run(["go", "build", module_flag,"-trimpath","-buildvcs=false",*tag_args,"-ldflags",ld,"-o",
+               str(dest/(name+(".exe" if osname=="windows" else ""))),pkg], cwd=build_module, env=env, check=True)
     runtime_files(dest,args.target)
     if args.package:
         if osname=="windows":
